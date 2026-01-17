@@ -1,42 +1,26 @@
 package Team4450.Robot26.subsystems;
 
-import static Team4450.Robot26.Constants.alliance;
-
-import java.util.Objects;
-
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
+import Team4450.Robot26.Constants.DriveConstants;
+import Team4450.Robot26.Constants;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import Team4450.Lib.Util;
-import Team4450.Robot26.RobotContainer;
-import Team4450.Robot26.Constants;
-import Team4450.Robot26.Constants.DriveConstants;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
-import Team4450.Robot26.subsystems.LimelightHelpers;
+import Team4450.Lib.Util;
+import Team4450.Robot26.utility.ConsoleEveryX;
 
 public class QuestNavSubsystem extends SubsystemBase {
-    private boolean limelightEnabled = true;
-    private boolean allianceRed = false; // Set to true if the robot is on the red alliance
     QuestNav questNav;
-    Transform3d ROBOT_TO_QUEST = new Transform3d(-0.32, -0.29, 0, Rotation3d.kZero); //Original was -0.32, -0.29
-                                                                                     // Transform2d ROBOT_TO_QUEST = new Transform2d(0, 0, Rotation2d.kZero); //Use for characterization
+    Transform3d ROBOT_TO_QUEST = new Transform3d(Constants.ROBOT_TO_QUEST_X, Constants.ROBOT_TO_QUEST_Y, Constants.ROBOT_TO_QUEST_Z, Rotation3d.kZero);
+    
     Pose3d robotPose = DriveConstants.DEFAULT_STARTING_POSE_3D;
     final Pose3d nullPose = new Pose3d(-1, -1, -1, Rotation3d.kZero);
 
-
+    ConsoleEveryX questTestLogger = new ConsoleEveryX(100);
+    ConsoleEveryX questLogger = new ConsoleEveryX(100);
 
     PoseFrame[] poseFrames;
 
@@ -47,8 +31,6 @@ public class QuestNavSubsystem extends SubsystemBase {
         questNav = new QuestNav();
 
         resetToZeroPose();
-
-        allianceRed = alliance == Alliance.Red;
     }
 
     public void resetToZeroPose() {
@@ -58,83 +40,52 @@ public class QuestNavSubsystem extends SubsystemBase {
     }
 
     public Pose3d getQuestRobotPose() {
-
         return (poseFrames != null && poseFrames.length > 0) ?
             poseFrames[poseFrames.length - 1].questPose3d()
-            .transformBy(ROBOT_TO_QUEST.inverse()) :
-            nullPose;
-
-        // return qPose;
+            .transformBy(ROBOT_TO_QUEST.inverse()) : nullPose;
     }
 
     public double getQTimeStamp() {
         return (poseFrames != null && poseFrames.length > 0) ?
-            poseFrames[poseFrames.length - 1].dataTimestamp() :
-            0;
+            poseFrames[poseFrames.length - 1].dataTimestamp() : 0;
     }
 
     public double getQAppTimeStamp() {
         return (poseFrames != null && poseFrames.length > 0) ?
-            poseFrames[poseFrames.length - 1].appTimestamp() :
-            0;
+            poseFrames[poseFrames.length - 1].appTimestamp() : 0;
     }
 
     public Pose3d getQuestPose() {
         return (poseFrames != null && poseFrames.length > 0) ?
-            poseFrames[poseFrames.length - 1].questPose3d() :
-            nullPose;
+            poseFrames[poseFrames.length - 1].questPose3d() : nullPose;
     }
 
     public void resetQuestOdometry(Pose3d rP) {
-
         // Transform by the offset to get the Quest pose
         Pose3d questPose3d = rP.transformBy(ROBOT_TO_QUEST);
 
         // Send the reset operation
         questNav.setPose(questPose3d);
-        System.out.println("Quest Odometry Reset To: " + questPose3d.toString());
-        System.out.println("QRP: " + rP.toString());
+        Util.consoleLog("Quest Odometry Reset To: " + questPose3d.toString());
+        Util.consoleLog("QRP: " + rP.toString());
     }
 
     @Override
     public void periodic() {
-        // https://github.com/LimelightVision/limelight-examples/tree/main/java-wpilib/swerve-megatag-odometry
-        // https://docs.limelightvision.io/docs/docs-limelight/getting-started/summary
-        if (questNav.isTracking()) {
+        questTestLogger.update("Quest periodic");
+        if (questNav.isTracking()) { // Is connected was working as well but I would prefer that is tracking would work, but it has not been tested
             // This method will be called once per scheduler run
-            SmartDashboard.putString("qTranformedPose: ", getQuestRobotPose().toString());
-            SmartDashboard.putString("qTruePose: ", getQuestPose().toString());
-            SmartDashboard.putNumber("TimeStamp: ", getQTimeStamp());
-            SmartDashboard.putNumber("TimeStampA: ", getQAppTimeStamp());
-            SmartDashboard.putNumber("TimeStampFPGS: ", (getQTimeStamp()));
-            SmartDashboard.putString("Is Tracking", questNav.isTracking() ? "True" : "False");
             questNav.commandPeriodic();
 
-            //update pose Frames
+            // Update pose Frames
             poseFrames = questNav.getAllUnreadPoseFrames();
             // Display number of frames provided
             SmartDashboard.putNumber("qFrames", poseFrames.length);
             if(Constants.UPDATE_QUESTNAV) {
                 for (PoseFrame questFrame : poseFrames) {
-                    Util.consoleLog(String.valueOf(questFrame.questPose3d().getX()));
-                    
-                    Util.consoleLog("Quest Timestamp");
-                    Util.consoleLog(String.valueOf(questFrame.dataTimestamp()));
-
-                    // Is the dataTimestamp in seconds
-                    drivebase.addVisionMeasurement(questFrame.questPose3d().toPose2d(), questFrame.dataTimestamp());
-
-                    // Transform by the mount pose to get your robot pose
-                    // Pose2d robotPose = questPose3d.transformBy(ROBOT_TO_QUEST.inverse());
-
-                    // You can put some sort of filtering here if you would like!
-
-                    // Add the measurement to our estimator
-                    // RobotContainer.driveBase.updateOdometryQuest(getQuestRobotPose(), timestamp);
-
-
-
-
+                    // The dataTimestamp is in seconds
+                    questLogger.update(questFrame.questPose3d().toPose2d().toString());
+                    drivebase.addQuestMeasurement(questFrame.questPose3d().toPose2d(), questFrame.dataTimestamp());
                 }
             }
         }
