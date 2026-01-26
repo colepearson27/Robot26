@@ -4,8 +4,10 @@ package Team4450.Robot26;
 import static Team4450.Robot26.Constants.*;
 
 import Team4450.Lib.*;
+import Team4450.Robot26.utility.RobotOrientation;
 import Team4450.Robot26.wpilib.TimedRobot;
-import Team4450.Robot26.subsystems.LimelightHelpers;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -24,8 +26,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * Main.java file in the project.
  */
 
-public class Robot extends TimedRobot 
-{
+public class Robot extends TimedRobot {
   private RobotContainer  robotContainer;
 
   /**
@@ -33,8 +34,7 @@ public class Robot extends TimedRobot
    * for any initialization code.
    */
   @Override
-  public void robotInit() 
-  {
+  public void robotInit() {
     try {
       robot = this;   // Stored in Constants.
 
@@ -144,8 +144,7 @@ public class Robot extends TimedRobot
    * and SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() 
-  {
+  public void robotPeriodic() {
     // This function is called approx every .02 second.
     // Runs the Scheduler. It is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
@@ -160,7 +159,6 @@ public class Robot extends TimedRobot
     // The try/catch will catch any exceptions thrown in the commands run by the
     // scheduler and record them in our log file then stops execution of this program.
     //
-    if (tracing & isEnabled()) FunctionTracer.INSTANCE.enterFunction("Robot.robotPeriodic");
 
     try {
       CommandScheduler.getInstance().run();
@@ -168,16 +166,13 @@ public class Robot extends TimedRobot
       Util.logException(e);
       this.endCompetition();
     }
-
-		if (tracing & isEnabled()) FunctionTracer.INSTANCE.exitFunction("Robot.robotPeriodic");
   }
 
   /**
    * This function is called once each time the robot enters Disabled mode.
    */
   @Override
-  public void disabledInit()
-  {
+  public void disabledInit() {
     Util.consoleLog();
 
     LCD.printLine(LCD_1, "Mode: Disabled");
@@ -186,6 +181,11 @@ public class Robot extends TimedRobot
     //RobotContainer.driveBase.stop(); rich
 
     // Reset driver station LEDs.
+    //
+    // Set Limelight IMU mode to 1
+    // I don't really like calling this here, but something can only be disabled after enabled has ran so everything should exist
+    RobotOrientation rO = RobotContainer.drivebase.getRobotOrientation(); // IDK if RobotOrientation works correctly, look there to see
+    RobotContainer.visionSubsystem.zeroLimelightIMU(rO);
 
     RobotContainer.shuffleBoard.resetLEDs();
 
@@ -197,8 +197,7 @@ public class Robot extends TimedRobot
    * should be nothing here.
    */
   @Override
-  public void disabledPeriodic() 
-  {
+  public void disabledPeriodic() {
   }
 
   /**
@@ -206,8 +205,7 @@ public class Robot extends TimedRobot
    * the autonomous command selected by your {@link RobotContainer} class.
    */
   @Override
-  public void autonomousInit() 
-  {
+  public void autonomousInit() {
     Util.consoleLog(functionMarker);
 
     LCD.clearAll();
@@ -247,8 +245,7 @@ public class Robot extends TimedRobot
    * This function is called once at the start of teleop mode.
    */
   @Override
-  public void teleopInit() 
-  {
+  public void teleopInit() {
     Util.consoleLog(functionMarker);
 
     robotContainer.getMatchInformation();
@@ -261,12 +258,21 @@ public class Robot extends TimedRobot
     SmartDashboard.putBoolean("Disabled", false);
     SmartDashboard.putBoolean("Teleop Mode", true);
 
+    // Set Limelight imu mode to 2
+    RobotContainer.visionSubsystem.enableInternalIMU();
+
+    if (RobotContainer.drivebase.limelightPoseEstimate.getX() != 0 && RobotContainer.drivebase.limelightPoseEstimate.getY() != 0) {
+        RobotContainer.drivebase.robotPose = new Pose2d(RobotContainer.drivebase.limelightPoseEstimate.getX(), RobotContainer.drivebase.limelightPoseEstimate.getY(), RobotContainer.drivebase.limelightPoseEstimate.getRotation());
+        RobotContainer.drivebase.resetOdometry(RobotContainer.drivebase.robotPose);
+        RobotContainer.questNavSubsystem.resetQuestOdometry(new Pose3d(RobotContainer.drivebase.robotPose));
+    } else {
+        Util.consoleLog("Fail");
+    }
+
     //robotContainer.fixPathPlannerGyro(); rich // Because of this only use blue alliance during practice
 
     // Driving handled by DriveCommand which is default command for the DriveBase.
     // Other commands scheduled by joystick buttons.
-
-    if  (tracing) FunctionTracer.INSTANCE.reset();
 
     Util.consoleLog(functionMarker);
   }
@@ -276,9 +282,7 @@ public class Robot extends TimedRobot
    * be nothing here.
    */
   @Override
-  public void teleopPeriodic() 
-  {
-    if (tracing) FunctionTracer.INSTANCE.printFunctions(Util.logPrintStream);
+  public void teleopPeriodic() {
   }
 
   @Override
@@ -289,8 +293,7 @@ public class Robot extends TimedRobot
    * This function is called once at the start of test mode.
    */
   @Override
-  public void testInit() 
-  {
+  public void testInit() {
     Util.consoleLog();
 
     // Cancels all running commands at the start of test mode.
@@ -303,6 +306,7 @@ public class Robot extends TimedRobot
     // telop with LW enabled. Our code displays more detailed test/debug
     // data in LW mode.
 
+    // What is LiveWindow
     LiveWindow.enableAllTelemetry();
 
     teleopInit();
@@ -314,7 +318,6 @@ public class Robot extends TimedRobot
    * This function is called periodically during test mode.
    */
   @Override
-  public void testPeriodic() 
-  {
+  public void testPeriodic() {
   }
 }

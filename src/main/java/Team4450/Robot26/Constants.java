@@ -22,13 +22,13 @@ import edu.wpi.first.wpilibj.DriverStation;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-	public static String		PROGRAM_NAME = "ORF26-01.09.26";
+	public static String		PROGRAM_NAME = "ORF26-01.21.26";
 
 	public static Robot			robot;
 
 	public static Properties	robotProperties;
 	  
-	public static boolean		isClone = false, isComp = false, tracing = false;
+	public static boolean		isClone = false, isComp = false;
 	    	
 	public static DriverStation.Alliance	 alliance;
 	public static int                        location, matchNumber;
@@ -43,7 +43,7 @@ public final class Constants {
     
     // Pneumatic valve controller port assignments.
     
-    // CAMERAS 
+    // Cameras 
 
     // The names of the cameras in the PhotonVision software
 
@@ -59,13 +59,14 @@ public final class Constants {
 	public static final int		DRIVER_PAD = 0, UTILITY_PAD = 1;
 
     public static String LIMELIGHT_LEFT = "limelight-left";
+
     // Add limelight left offset
     public static String LIMELIGHT_RIGHT = "limelight-right";
     // Add limelight right offset
 
-    public static double ROBOT_TO_QUEST_X = 0.3;
-    public static double ROBOT_TO_QUEST_Y = 0.3;
-    public static double ROBOT_TO_QUEST_Z = 0.3;
+    public static Pose3d ROBOT_TO_QUEST = new Pose3d(0.304, 0, 0, new Rotation3d(Math.toRadians(0), Math.toRadians(32), Math.toRadians(0)));
+    public static Pose3d ROBOT_TO_LIMELIGHT_LEFT = new Pose3d(0, 0.282, 0, Rotation3d.kZero);
+    public static Pose3d ROBOT_TO_LIMELIGHT_RIGHT = new Pose3d(0, -0.282, 0, Rotation3d.kZero);
 
     public static int VISION_BUFFER_SIZE = 1;
 
@@ -113,17 +114,16 @@ public final class Constants {
     public static double ROBOT_STRAFE_KI_MAX = 0;
     public static double ROBOT_STRAFE_KD = 0;
 
-    public static double ROBOT_HEADING_KP = 0.012; // 0.03 seems resonable on the test field
+    public static double ROBOT_HEADING_KP = 0.02;
     public static double ROBOT_HEADING_KI = 0;
     public static double ROBOT_HEADING_KI_MAX = 0;
-    public static double ROBOT_HEADING_KD = 0;
+    public static double ROBOT_HEADING_KD = 0.001;
     // public static double ROBOT_HEADING_KF = 0;
-    public static double ROBOT_HEADING_TOLERANCE_DEG = 2;
+    public static double ROBOT_HEADING_TOLERANCE_DEG = 0.5;
     // public static double ROBOT_HEADING_MAX_OUTPUT = 1;
+    public static boolean ROBOT_HEADING_PID_TOGGLE = true;
 
     public static double FLYWHEEL_MAX_THEORETICAL_RPM = 4000;
-
-    public static boolean UPDATE_QUESTNAV = true;
 
     // Interpolation table
     public static double[] FLYWHEEL_SPEED_TABLE = {0.57, 0.595, 0.69, 0.715, 0.73, 0.82, 0.86};
@@ -177,7 +177,7 @@ public final class Constants {
         public static double kMaxAngularRate = RotationsPerSecond.of(1.0).in(RadiansPerSecond); // 1 rotation per second max angular velocity
 
         // Velocity dead bands applied in SDS code. Times max speed.
-        public static final double  DRIVE_DEADBAND = 0.01, ROTATION_DEADBAND = 0.1;
+        public static final double  DRIVE_DEADBAND = 0.01, ROTATION_DEADBAND = 0.01;
 
         // Factors used to reduce robot max speed to levels desired for lab/demo operation.
         // The split below matches the rotation speed to drive speed. Needs to be tuned for
@@ -197,8 +197,4 @@ public final class Constants {
         public static final Pose2d	DEFAULT_STARTING_POSE = new Pose2d(0, 0, Rotation2d.kZero);
         public static final Pose3d	DEFAULT_STARTING_POSE_3D = new Pose3d(0, 0, 0, Rotation3d.kZero);
     }
-
-  //-------------------- No student code above this line ------------------------------------------------------
-
-}
-;
+};

@@ -9,7 +9,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import Team4450.Lib.Util;
 import Team4450.Lib.XboxController;
 import Team4450.Robot26.commands.DriveCommand;
-import Team4450.Robot26.subsystems.DriveBase;
+import Team4450.Robot26.subsystems.Drivebase;
 import Team4450.Robot26.subsystems.QuestNavSubsystem;
 import Team4450.Robot26.subsystems.ShuffleBoard;
 import Team4450.Robot26.subsystems.TestSubsystem;
@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -38,8 +40,10 @@ import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
  */
 public class RobotContainer {
 	// Subsystems.
+	public static Drivebase drivebase;
 	public static ShuffleBoard shuffleBoard;
-	public static DriveBase driveBase;
+
+    // Vision based subsystems all send data to the drivebase for use
     public static VisionSubsystem visionSubsystem;
     public static QuestNavSubsystem questNavSubsystem;
 
@@ -49,29 +53,17 @@ public class RobotContainer {
 
     // General todo list for Cole Pearson
     //
-    // Remove any unused smartdashboard varuables
-    // Remove the candle
-    // Remove console logs that are causing radio issues
-    //
     // Feat.
     //
-    // Find accuracy of Limelight
-    // Test Questnav
     // Find accuracy of Qeustnav
     // Average between the Limelight and Questnav
-    //
-    // Add a boolean to disable the controller rotation intput to the drivebase
-    // Add a simple p-loop for heading targeting
-    // Add a little more detail into the drivebase heading target
-    //
-    // Hud swival rotation tracking and right stick intake targeting
-    //
-    // While not driveing for a little while move to x stationary
     //
     // When in the middle swap from hub heading targeting to left or right of the hub targeting driving
     //
     // Shoot on the move ability
-    //
+    
+    
+    
 	// Subsystem Default Commands.
 
     // Persistent Commands.
@@ -100,7 +92,6 @@ public class RobotContainer {
 	private PowerDistribution pdp = new PowerDistribution(REV_PDB, PowerDistribution.ModuleType.kRev);
 
 	// Trajectories we load manually.
-    // I'm am doing reading about how this works, how to 
 	public static PathPlannerTrajectory	ppTestTrajectory;
 
 	private static SendableChooser<Command>	autoChooser;
@@ -152,13 +143,17 @@ public class RobotContainer {
         // The pigeon is setup somewhere in the drivebase function.
         // It is important to note that the pigeon documentation says that the device does not need to be still on boot,
         // however the documentation also says that the drift is worse when started while moving.
-		driveBase = new DriveBase();
-        visionSubsystem = new VisionSubsystem(driveBase);
-        questNavSubsystem = new QuestNavSubsystem(driveBase);
+		drivebase = new Drivebase();
+        visionSubsystem = new VisionSubsystem(drivebase);
+        questNavSubsystem = new QuestNavSubsystem(drivebase);
 
 		throttlePID = new PIDController(Constants.ROBOT_THROTTLE_KP, Constants.ROBOT_THROTTLE_KI, Constants.ROBOT_THROTTLE_KD);
 		strafePID = new PIDController(Constants.ROBOT_STRAFE_KP, Constants.ROBOT_STRAFE_KI, Constants.ROBOT_STRAFE_KD);
 		headingPID = new PIDController(Constants.ROBOT_HEADING_KP, Constants.ROBOT_HEADING_KI, Constants.ROBOT_HEADING_KD);
+        SmartDashboard.putNumber("Heading P", Constants.ROBOT_HEADING_KP);
+		SmartDashboard.putNumber("Heading I", Constants.ROBOT_HEADING_KI);
+        SmartDashboard.putNumber("Heading D", Constants.ROBOT_HEADING_KD);
+		SmartDashboard.putBoolean("Heading PID Toggle", Constants.ROBOT_HEADING_PID_TOGGLE);
 
 		// Create any persistent commands.
 
@@ -196,13 +191,14 @@ public class RobotContainer {
 		// Note that the controller instance is passed to the drive command for use in displaying
 		// debugging information on Shuffleboard. It is not required for the driving function.
 
-		driveCommand = new DriveCommand(driveBase,
+		driveCommand = new DriveCommand(drivebase,
 		 							() -> driverController.getLeftY(),
 									driverController.getLeftXDS(), 
 									driverController.getRightXDS(),
 									driverController.getRightYDS(),
 									driverController, headingPID);
-		driveBase.setDefaultCommand(driveCommand);
+
+		drivebase.setDefaultCommand(driveCommand);
 
         // Create a new pid drive command when going to another target, it is then killed by force or once target is reached
         // pidDriveCommand = new PIDDriveCommand(driveBase, throttlePID, strafePID, headingPID)
@@ -218,7 +214,6 @@ public class RobotContainer {
         new Thread(() -> {
             try {
                 Timer.delay(30);    
-
                 DriverStation.silenceJoystickConnectionWarning(true);
             } catch (Exception e) { }
         }).start();
@@ -280,21 +275,24 @@ public class RobotContainer {
 
 		// Toggle slow-mode
 		new Trigger(() -> driverController.getLeftBumperButton())  // Rich
-		 	.onChange(new InstantCommand(driveBase::toggleSlowMode));
+		 	.onChange(new InstantCommand(drivebase::toggleSlowMode));
 
 		// Reset field orientation (direction).
 		new Trigger(() -> driverController.getStartButton()) // Rich
-			.onTrue(new InstantCommand(driveBase::resetFieldOrientation));
+			.onTrue(new InstantCommand(drivebase::resetFieldOrientation));
 
 		// Toggle field-oriented driving mode.
 		// new Trigger(() -> driverController.getAButton()) // Rich
 		//  	.onTrue(new InstantCommand(driveBase::toggleFieldRelativeDriving));
 
 		new Trigger(() -> driverController.getAButton())
-		 	.onTrue(new InstantCommand(testSubsystem::start));
+		 	.onTrue(new InstantCommand(questNavSubsystem::resetTestPose));
+
+		// new Trigger(() -> driverController.getBButton())
+		//  	.onTrue(new InstantCommand(questNavSubsystem::resetToZeroPose));
 
 		new Trigger(() -> driverController.getBButton())
-		 	.onTrue(new InstantCommand(testSubsystem::stop));
+		 	.onTrue(new InstantCommand(() -> drivebase.resetOdometry(new Pose2d(0, 0, Rotation2d.kZero))));
 
 		// // Toggle motor brake mode.
 		// new Trigger(() -> driverController.getBButton()) // Rich
@@ -302,16 +300,16 @@ public class RobotContainer {
 
 		// Right D-Pad button sets X pattern to stop movement.
 		new Trigger(() -> driverController.getPOV() == 90) // Rich
-			.onTrue(new InstantCommand(driveBase::setX));
+			.onTrue(new InstantCommand(drivebase::setX));
 			
 		// -------- Utility controller buttons ----------
 
 		// Driver controller A/B used for flywheel start/stop (TestSubsystem currently drives the motor)
-		new Trigger(() -> driverController.getAButton())
-			.onTrue(new InstantCommand(testSubsystem::start));
+		// new Trigger(() -> driverController.getAButton())
+		// 	.onTrue(new InstantCommand(testSubsystem::start));
 
-		new Trigger(() -> driverController.getBButton())
-			.onTrue(new InstantCommand(testSubsystem::stop));
+		// new Trigger(() -> driverController.getBButton())
+		// 	.onTrue(new InstantCommand(testSubsystem::stop));
 
 	}
 

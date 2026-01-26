@@ -16,6 +16,7 @@ import Team4450.Robot26.subsystems.SDS.Telemetry;
 import Team4450.Robot26.subsystems.SDS.TunerConstants;
 import Team4450.Robot26.utility.AdvantageScope;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -25,17 +26,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import Team4450.Robot26.utility.RobotOrientation;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.math.geometry.Transform2d;
+import Team4450.Robot26.RobotContainer;
 
 /**
  * This class wraps the SDS drive base subsystem allowing us to add/modify drive base
  * functions without modifyinig the SDS code generated from Tuner. Also allows for
  * convenience wrappers for more complex functions in SDS code.
  */
-public class DriveBase extends SubsystemBase {
+public class Drivebase extends SubsystemBase {
     private CommandSwerveDrivetrain     sdsDriveBase = TunerConstants.createDrivetrain();
 
-    public PigeonWrapper                gyro = new PigeonWrapper(sdsDriveBase.getPigeon2());
+    public PigeonWrapper pigeonWrapper = new PigeonWrapper(sdsDriveBase.getPigeon2());
+
+    // This should init to whatever the limelights see during the init period, otherwise set a smartdashboard and a console log into if it does not
     public Pose2d robotPose = new Pose2d(0, 0, Rotation2d.kZero);
+    public Pose2d limelightPoseEstimate = new Pose2d(0, 0, Rotation2d.kZero);
     
     private final Telemetry     		logger = new Telemetry(kMaxSpeed);
     // Field2d object creates the field display on the simulation and gives us an API
@@ -47,9 +53,6 @@ public class DriveBase extends SubsystemBase {
     private boolean                     neutralModeBrake = true;
     private double                      maxSpeed = kMaxSpeed * kDriveReductionPct; 
     private double                      maxRotRate = kMaxAngularRate * kRotationReductionPct;
-
-    private boolean swivalTracking;
-    private double headingTarget;
 
     private final SwerveRequest.SwerveDriveBrake driveBrake = new SwerveRequest.SwerveDriveBrake();
 
@@ -63,19 +66,17 @@ public class DriveBase extends SubsystemBase {
             .withRotationalDeadband(kMaxAngularRate * ROTATION_DEADBAND) // Add deadbands
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
-    public DriveBase() {
+    public Drivebase() {
         Util.consoleLog();
 
-        // Add gyro as a Sendable. Updates the dashboard heading indicator automatically.
+        // Add pigeon gyro as a Sendable. Updates the dashboard heading indicator automatically.
 
-		SmartDashboard.putData("Gyro2", gyro); 
-
+		SmartDashboard.putData("Pigeon Gyro", pigeonWrapper); 
         SmartDashboard.putData("Field2d", field2d);
 
 		// Check Gyro.
-	  
-		if (gyro.getPigeon().isConnected())
-			Util.consoleLog("Pigeon connected version=%s", gyro.getPigeon().getVersion());
+		if (pigeonWrapper.getPigeon().isConnected())
+			Util.consoleLog("Pigeon connected version=%s", pigeonWrapper.getPigeon().getVersion());
 		else
 		{
 			Exception e = new Exception("Pigeon is NOT connected!");
@@ -83,7 +84,6 @@ public class DriveBase extends SubsystemBase {
 		}
 
         // Set drive motors to brake when power is zero.
-
         sdsDriveBase.configNeutralMode(NeutralModeValue.Brake);
 
 		// Idle while the robot is disabled. This ensures the configured
@@ -99,6 +99,8 @@ public class DriveBase extends SubsystemBase {
         // note that this doesn't really do much because PathPlanner redoes this anyway.
         // More for a starting pose in sim testing.
 
+        // At some point move this to teleop init if it can be done quickly because
+        // we will be waiting for the Limelight to get an accurate position during init periodic
         resetOdometry(DriveConstants.DEFAULT_STARTING_POSE);
 
         // Under sim, we starting pose the robot (above) before you can change the alliance 
@@ -135,13 +137,12 @@ public class DriveBase extends SubsystemBase {
     }
 
     public void drive(double throttle, double strafe, double rotation) {
-        if (fieldRelativeDriving)
+        if (fieldRelativeDriving) {
             sdsDriveBase.setControl(
                 driveField.withVelocityX(throttle * maxSpeed) 
                         .withVelocityY(strafe * maxSpeed) 
                         .withRotationalRate(rotation * maxRotRate));
-        else if (swivalTracking) {
-            // Get the angle target to the hub
+        } else {
             sdsDriveBase.setControl(
                 driveRobot.withVelocityX(throttle * maxSpeed) 
                         .withVelocityY(strafe * maxSpeed) 
@@ -221,7 +222,7 @@ public class DriveBase extends SubsystemBase {
     {
         Util.consoleLog();
 
-        gyro.reset();
+        pigeonWrapper.reset();
     }
     
     /**
@@ -244,35 +245,44 @@ public class DriveBase extends SubsystemBase {
      */
     public void setStartingGyroYaw(double degrees)
     {
-        gyro.setStartingGyroYaw(degrees);
+        pigeonWrapper.setStartingGyroYaw(degrees);
     }
 
     /**
-     * Returns current pose of the robot.
-     * @return Robot pose.
+     * Returns current sds drivebase odometry pose of the robot.
+     * @return Robot odometry pose.
      */
     public Pose2d getODPose()
     {
         return sdsDriveBase.getState().Pose;
     }
 
+    /**
+     * Returns current pose estimate for the robot.
+     * @return Robot pose.
+     */
     public Pose2d getPose() {
         return robotPose;
     }
 
+    @Deprecated
+    public Pose3d getPose3d() {
+        // I think it should be fine to always assume zero z
+        return new Pose3d(getPose());
+    }
+
     public double getYaw()
     {
-        return gyro.getYaw();
+        return pigeonWrapper.getYaw();
     }
 
     public double getYaw180()
     {
-        return gyro.getYaw180();
+        return pigeonWrapper.getYaw180();
     }
 
-    // The PigeonWrapper is named gyro
-    public RobotOrientation getRobotOrientation() { // IDK if this will really work, I'm not sure if get AngularVelocityX, Y, Z are the yaw, pitch, and roll rates
-        return new RobotOrientation(gyro.pigeon.getYaw().getValueAsDouble(), gyro.pigeon.getAngularVelocityXWorld().getValueAsDouble(), gyro.pigeon.getPitch().getValueAsDouble(), gyro.pigeon.getAngularVelocityYDevice().getValueAsDouble(), gyro.pigeon.getRoll().getValueAsDouble(), gyro.pigeon.getAngularVelocityZWorld().getValueAsDouble());
+    public RobotOrientation getRobotOrientation() { // As far as I can tell these are the correct values
+        return new RobotOrientation(pigeonWrapper.pigeon.getYaw().getValueAsDouble(), pigeonWrapper.pigeon.getAngularVelocityXWorld().getValueAsDouble(), pigeonWrapper.pigeon.getPitch().getValueAsDouble(), pigeonWrapper.pigeon.getAngularVelocityYDevice().getValueAsDouble(), pigeonWrapper.pigeon.getRoll().getValueAsDouble(), pigeonWrapper.pigeon.getAngularVelocityZWorld().getValueAsDouble());
     }
 
     private void updateDS()
@@ -282,13 +292,13 @@ public class DriveBase extends SubsystemBase {
     }
 
     public void addQuestMeasurement(Pose2d pose, double timestampSeconds) {
-        // Some kind of fancy averaging
         robotPose = pose;
     }
 
 
     // AddVisionUpdate
     public void addVisionMeasurement(Pose2d pose, double timestampSeconds) {
+        // TODO: All the stuff below this
         // Use the visionBuffer
         // Truncate vision buffer
         // Append current vision measurement
@@ -296,7 +306,7 @@ public class DriveBase extends SubsystemBase {
         // Remove any vision poses the break the laws of physics
 
         // Basic vision update that just sets the pose, this is good enough for testing if it is working
-        robotPose = pose;
+        this.limelightPoseEstimate = pose;
     }
 
     public double getAngleToAim(Pose2d targetPose) {
@@ -417,8 +427,9 @@ public class DriveBase extends SubsystemBase {
         return new Pose2d(targetPose.getX() + xVelocityOffset, targetPose.getY() + yVelocityOffset, targetPose.getRotation());
     }
 
+    // Get the distance in meters between the current robot position and the target position
     public double getDistFromRobot(Pose2d targetPose) {
-        Pose2d currentPose = getODPose();
+        Pose2d currentPose = getODPose(); // TODO: Change this to the vision pose estimate
     
         double deltaX = targetPose.getX() - currentPose.getX();
         double deltaY = targetPose.getY() - currentPose.getY();
@@ -427,7 +438,6 @@ public class DriveBase extends SubsystemBase {
 
         return distance;
     }
-
 
     /**
      * Update the robot & swerve module displays on the "Field2d" field display in sim.
