@@ -39,7 +39,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        Pathfinding.setPathfinder(new LocalADStar());
         try {
             robot = this;   // Stored in Constants.
 
