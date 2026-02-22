@@ -160,6 +160,17 @@ public class Shooter extends SubsystemBase {
         this.infeedMotorLeft.getConfigurator().apply(infeedCFG);
         this.infeedMotorRight.getConfigurator().apply(infeedCFG);
 
+        TalonFXConfiguration hoodCFG = new TalonFXConfiguration();
+
+        // Neutral + inversion
+        hoodCFG.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        hoodCFG.CurrentLimits = new CurrentLimitsConfigs().withSupplyCurrentLimit(Constants.SHOOTER_HOOD_CURRENT_LIMIT);
+        hoodCFG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+        this.hoodLeft.getConfigurator().apply(hoodCFG);
+        this.hoodRight.getConfigurator().apply(hoodCFG);
+
+
         SmartDashboard.putNumber("Hood Target Position", 0);
 
         SmartDashboard.putNumber("Flywheel/TargetRPM", Constants.FLYWHEEL_TARGET_RPM);
@@ -355,12 +366,10 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putString("Diffs", String.format("%.2f, %.2f", xDiff, yDiff));
         SmartDashboard.putNumber("Robot Distance", distToGoal);
         
-        // Chose how to get the flywheel speed
-        // if (interpolate){
-        //     getNeededFlywheelSpeed(distToGoal);
-        // } else {
-        //     calculateLaunchValues(distToGoal);
-        // }
+        if (interpolate) {
+            SmartDashboard.putNumber("Flywheel/TargetRPM", interpolateFlywheelSpeedByDistance(distToGoal));
+            setHoodMotorPosition(interpolateHoodByDistance(distToGoal));
+        }   
     }
 
     public void calculateLaunchValues(double distToGoal){
@@ -444,6 +453,38 @@ public class Shooter extends SubsystemBase {
         return linearInterpolate(lowerSpeed, higherSpeed, (distToGoal - lowerPoint) / (higherPoint - lowerPoint));
     }
 
+        public double interpolateHoodByDistance(double distToGoal) {
+        
+        double lowerPoint = FLYWHEEL_SPEED_DISTANCE_TABLE[0];
+        int lowerPointIndex = 0;
+
+        double higherPoint = FLYWHEEL_SPEED_DISTANCE_TABLE[FLYWHEEL_SPEED_DISTANCE_TABLE.length - 1];
+        int higherPointIndex = FLYWHEEL_SPEED_DISTANCE_TABLE.length - 1;
+
+        double currentDistance;
+
+        for (int i = FLYWHEEL_SPEED_DISTANCE_TABLE.length - 2; i > 0; i--){
+            currentDistance = HOOD_ARC_TABLE[i];
+            if(currentDistance > distToGoal){
+                if (currentDistance <= higherPoint) {
+                    higherPoint = currentDistance;
+                    higherPointIndex = i;
+                }
+            }else if (currentDistance < distToGoal){
+                if (currentDistance >= lowerPoint) {
+                    lowerPoint = currentDistance;
+                    lowerPointIndex = i;
+                }
+            }else if (currentDistance == distToGoal){
+                return HOOD_ARC_TABLE[i];
+            }
+        }
+        double lowerSpeed = HOOD_ARC_TABLE[lowerPointIndex];
+        double higherSpeed = HOOD_ARC_TABLE[higherPointIndex];
+
+        return linearInterpolate(lowerSpeed, higherSpeed, (distToGoal - lowerPoint) / (higherPoint - lowerPoint));
+    }
+
     public static double linearInterpolate(double point1, double point2, double percentageSplit) {
         return point1 + ((point2 - point1) * percentageSplit);
     }
@@ -456,6 +497,11 @@ public class Shooter extends SubsystemBase {
 
     public double motorPositionToHoodAngle(double motorPosition) {
         return ((motorPosition * Constants.HOOD_GEAR_RATIO * 360) + Constants.HOOD_DOWN_ANGLE_DEGREES);
+    }
+
+    public void setHoodPosition(double pos){
+        hoodLeft.setPosition(pos);
+        hoodRight.setPosition(pos);
     }
 
     public void startFlywheel() {
@@ -532,7 +578,7 @@ public class Shooter extends SubsystemBase {
     public double getTransferRightMotorCurrent() {
         return infeedMotorRight.getSupplyCurrent(true).getValueAsDouble();
     }
-    
+
     public void setHoodPower(double power){
         if (canHood) {
             this.hoodLeft.set(power);
@@ -563,18 +609,13 @@ public class Shooter extends SubsystemBase {
         }
     }
     
-    public void setHoodMotorPosition(double targetPosition) {
-        hoodTargetMotorPosition = targetPosition;
-        hoodTargetAngle = motorPositionToHoodAngle(targetPosition);
+    // The position input is between 0 and 1 with 0 being up and 1 being down
+    public void setHoodMotorPosition(double position) {
+        hoodTargetMotorPosition = position;
     }
 
-    public void setHoodAngle(double targetAngle){
-        hoodTargetAngle = targetAngle;
-        hoodTargetMotorPosition = hoodAngleToMotorPosition(targetAngle);
-    }
-
-    public double getHoodAngleRadians(){
-        return (((hoodLeft.getPosition().getValueAsDouble() - hoodRotationOffset)  * Math.PI * 2 * 3) / 8) + (Math.PI / 2);
+    public double getHoodAngleRadians() {
+        return (hoodLeft.getPosition(true).getValueAsDouble() - this.hoodRotationOffset);
     }
 
     public double getHoodMotorPosition() {

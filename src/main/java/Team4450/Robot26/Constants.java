@@ -71,14 +71,17 @@ public final class Constants {
 
     public static int SHOOTER_FLYWHEEL_CURRENT_LIMIT = 40;
     public static int SHOOTER_INFEED_CURRENT_LIMIT = 30;
+    public static int SHOOTER_HOOD_CURRENT_LIMIT = 5;
     public static int INTAKE_CURRENT_LIMIT = 20;
     public static int HOPPER_CURRENT_LIMIT = 40;
 
-    public static double HOOD_TOLERENCE_MOTOR_ROTATIONS = 0.1;
+    public static double HOOD_TOLERENCE_MOTOR_ROTATIONS = 0.02;
     public static double HOOD_TOLERENCE_DEGREES = 5;
     public static double HOOD_GEAR_RATIO = 3.0/8.0;
     public static double HOOD_DOWN_ANGLE_DEGREES = 15;
     public static double HOOD_MOTOR_POWER = 0.1;
+    public static double SHOOTER_HOOD_TOLERENCE_MOTOR_RAIDIANS = 2;
+
     
     // Intake Constants
     public static int INTAKE_MOTOR_PIVIT_CAN_ID = 9;
@@ -174,25 +177,11 @@ public final class Constants {
     public static boolean HUB_TRACKING = false;
 
     // Interpolation table
-    public static double[] FLYWHEEL_SPEED_TABLE = {4600, 3875, 3500, 3738, 4275, 4920, 5160}; // Converted from percentages to RPM
-    public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = {4.091, 3.443, 1.845, 3.264, 103, 127, 152};
+    public static double[] FLYWHEEL_SPEED_TABLE = {3500, 3500, 3500, 3750, 3850, 4400}; // Converted from percentages to RPM
+    public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = {0.46, 0.91, 1.52, 2.13, 2.74, 3.35};
     public static double[] FUEL_AIR_TIME_TABLE_SEC = {0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6};
 
-    // ---------------- Turret motion profiling constants ---------------------------------
-    // Turret defaults (internal units are degrees/sec and degrees/sec^2).
-    // These are used as defaults; the runtime code exposes RPM-based tunables for convenience.
-    // Max angular velocity for turret (degrees per second). Tune to your hardware limits.
-    public static final double TURRET_MAX_VELOCITY_DEG_PER_SEC = 180.0;
-    // Max angular acceleration for turret (degrees per second squared). Tune to your hardware limits.
-    public static final double TURRET_MAX_ACCELERATION_DEG_PER_SEC2 = 360.0;
-    // Default turret velocity/accel expressed in RPM units for dashboard convenience.
-    // 1 rotation = 360 degrees, 1 RPM = 6 deg/sec
-    public static final double TURRET_DEFAULT_MAX_VELOCITY_RPM = TURRET_MAX_VELOCITY_DEG_PER_SEC / 6.0; // 30 RPM
-    public static final double TURRET_DEFAULT_MAX_ACCEL_RPMS = TURRET_MAX_ACCELERATION_DEG_PER_SEC2 / 6.0; // 60 RPM/s
-    // Enable/disable acceleration smoothing (true = enabled)
-    public static final boolean TURRET_ACCELERATION_ENABLED = true;
-    // When within this many degrees, snap to setpoint and zero velocity.
-    public static final double TURRET_ANGLE_TOLERANCE_DEG = 0.5;
+    public static double[] HOOD_ARC_TABLE = {0, 0.625, 1.48, 2.17, 2.17, 2.17};
 
     // -------------------------------------------------------------------------------------
     // Flywheel tuning defaults (used as Shuffleboard starting values)
