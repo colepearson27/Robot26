@@ -334,7 +334,6 @@ public class Shooter extends SubsystemBase {
         } else {
             calculateLaunchValues(distToGoal);
         }
-
     }
 
     public void calculateLaunchValues(double distToGoal){
