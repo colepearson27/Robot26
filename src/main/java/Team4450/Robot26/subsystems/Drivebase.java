@@ -391,8 +391,8 @@ public class Drivebase extends SubsystemBase {
                 double xVelocityOffset = driveField.VelocityX * airTime;
                 double yVelocityOffset = driveField.VelocityY * airTime;
         
-                // deltaX += xVelocityOffset;
-                // deltaY += yVelocityOffset;
+                deltaX += xVelocityOffset;
+                deltaY += yVelocityOffset;
 
                 double angleToAim = Math.toDegrees(Math.atan2(deltaY, deltaX));
 
@@ -412,8 +412,8 @@ public class Drivebase extends SubsystemBase {
         double xVelocityOffset = driveField.VelocityX * airTime;
         double yVelocityOffset = driveField.VelocityY * airTime;
         
-        // deltaX += xVelocityOffset;
-        // deltaY += yVelocityOffset;
+        deltaX += xVelocityOffset;
+        deltaY += yVelocityOffset;
 
         double angleToAim = Math.toDegrees(Math.atan2(deltaY, deltaX));
 

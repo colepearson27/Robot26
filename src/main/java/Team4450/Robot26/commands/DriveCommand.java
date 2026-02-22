@@ -143,6 +143,9 @@ public class DriveCommand extends Command
         double rotation = -headingPID.calculate(-drivebase.getPose().getRotation().getDegrees(), -targetHeading);
         double throttle = throttleSupplier.getAsDouble();
         double strafe = strafeSupplier.getAsDouble();
+
+        throttle = Util.squareInput(throttle);
+        strafe = Util.squareInput(strafe);
         
         headingPID.setP(SmartDashboard.getNumber("Heading P", Constants.ROBOT_HEADING_KP));
         headingPID.setI(SmartDashboard.getNumber("Heading I", Constants.ROBOT_HEADING_KI));
@@ -161,8 +164,8 @@ public class DriveCommand extends Command
         // Squaring input is one way to ramp JS inputs to reduce sensitivity.
         // Please do not square the headingPID
         
-        // throttle = Util.squareInput(throttle);
-        // strafe = Util.squareInput(strafe);
+        throttle = Util.squareInput(throttle);
+        strafe = Util.squareInput(strafe);
         // rotation = Util.squareInput(rotation);
         // rotation = Math.pow(rotation, 5);
         //
