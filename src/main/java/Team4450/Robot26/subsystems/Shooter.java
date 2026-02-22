@@ -288,7 +288,7 @@ public class Shooter extends SubsystemBase {
         double targetRPS;
 
         if (flywheelEnabled && canFlywheel) {
-            targetRPS = (targetRPM * robotContainer.getVolatgeMultiplier() * Constants.FLYWHEEL_VOLTAGE_MULTIPLIER) / 60.0;
+            targetRPS = (targetRPM) / 60.0;
             MotionMagicVelocityVoltage req =
                     new MotionMagicVelocityVoltage(targetRPS)
                             .withSlot(Constants.FLYWHEEL_PID_SLOT);
