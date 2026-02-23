@@ -131,11 +131,7 @@ public class DriveCommand extends Command
         
         SmartDashboard.putNumber("Target Heading", targetHeading);
 
-        // Adjusts for static friction, an F variable would also be an option but this works well
         double error = -targetHeading + drivebase.getPose().getRotation().getDegrees();
-        if (error > ROBOT_HEADING_TOLERANCE_DEG) {
-            targetHeading -= (3 * Math.signum(error));
-        }
 
         SmartDashboard.putNumber("Heading Error", error);
 

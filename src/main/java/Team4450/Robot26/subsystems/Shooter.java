@@ -170,6 +170,8 @@ public class Shooter extends SubsystemBase {
         this.hoodLeft.getConfigurator().apply(hoodCFG);
         this.hoodRight.getConfigurator().apply(hoodCFG);
 
+        this.hoodMotorPosition = 0;
+        this.hoodLeft.setPosition(this.hoodMotorPosition);
 
         SmartDashboard.putNumber("Hood Target Position", 0);
 
@@ -234,7 +236,6 @@ public class Shooter extends SubsystemBase {
         double kS = SmartDashboard.getNumber("Flywheel/kS", sd_kS);
         double kV = SmartDashboard.getNumber("Flywheel/kV", sd_kV);
         double kA = SmartDashboard.getNumber("Flywheel/kA", sd_kA);
-
 
                 // -------- Hood --------
 
@@ -432,7 +433,7 @@ public class Shooter extends SubsystemBase {
         double currentDistance;
 
         for (int i = FLYWHEEL_SPEED_DISTANCE_TABLE.length - 2; i > 0; i--){
-            currentDistance = FLYWHEEL_SPEED_TABLE[i];
+            currentDistance = FLYWHEEL_SPEED_DISTANCE_TABLE[i];
             if(currentDistance > distToGoal){
                 if (currentDistance <= higherPoint) {
                     higherPoint = currentDistance;
@@ -453,7 +454,7 @@ public class Shooter extends SubsystemBase {
         return linearInterpolate(lowerSpeed, higherSpeed, (distToGoal - lowerPoint) / (higherPoint - lowerPoint));
     }
 
-        public double interpolateHoodByDistance(double distToGoal) {
+    public double interpolateHoodByDistance(double distToGoal) {
         
         double lowerPoint = FLYWHEEL_SPEED_DISTANCE_TABLE[0];
         int lowerPointIndex = 0;
