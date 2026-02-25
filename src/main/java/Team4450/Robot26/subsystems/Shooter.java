@@ -69,7 +69,6 @@ public class Shooter extends SubsystemBase {
     private double hoodRotationOffset;
     // The format of this value is in rotations of the pivit motor
     private double hoodMotorPosition;
-    private double hoodTargetMotorPosition;
     // Current RPM of the flywheel
     private double flywheelCurrentRPM;
     // Target RPM of the flywheel
