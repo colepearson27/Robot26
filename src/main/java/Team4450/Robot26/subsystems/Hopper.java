@@ -39,6 +39,10 @@ public class Hopper extends SubsystemBase {
         hopperMotor.set(power * robotContainer.getVolatgePercent() * Constants.HOPPER_VOLTAGE_MULTIPLIER);
     }
 
+    public void startSlow() {
+        hopperMotor.set(0.2);
+    }
+
     public void stop() {
         hopperMotor.set(0);
     }

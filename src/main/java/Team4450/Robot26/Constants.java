@@ -69,10 +69,11 @@ public final class Constants {
 
     public static int SHOOTER_UPPER_BEAM_BREAK_PORT = 3;
 
-    public static int SHOOTER_FLYWHEEL_CURRENT_LIMIT = 40;
+    public static int SHOOTER_FLYWHEEL_CURRENT_LIMIT = 35;
     public static int SHOOTER_INFEED_CURRENT_LIMIT = 30;
     public static int SHOOTER_HOOD_CURRENT_LIMIT = 5;
     public static int INTAKE_CURRENT_LIMIT = 20;
+    public static int INTAKE_PIVIT_CURRENT_LIMIT = 5;
     public static int HOPPER_CURRENT_LIMIT = 40;
 
     public static double HOOD_TOLERENCE_MOTOR_ROTATIONS = 0.02;
@@ -202,13 +203,12 @@ public final class Constants {
     public static final double FLYWHEEL_kV = 0.11;
     public static final double FLYWHEEL_kA = 0.05;
     // ---------------- PID (Velocity) ----------------
-    public static final double FLYWHEEL_kP = 1.8;
+    public static final double FLYWHEEL_kP = 999999; // This is called Bang Bang
     public static final double FLYWHEEL_kI = 0;
     public static final double FLYWHEEL_kD = 0.2;
 
     // ---------------- Motion Magic Velocity ----------------
     // These only affect ramp rate
-    // public static final boolean FLYWHEEL_USE_MOTION_MAGIC = true;
 
     public static final double FLYWHEEL_MOTION_ACCEL_RPMS = 3500.0; // RPM/s
     public static final double FLYWHEEL_MOTION_JERK = 0.0;
@@ -224,7 +224,7 @@ public final class Constants {
     public static final double HOPPER_MOTOR_SPEED_RPM = 1000.0; // Default speed in RPM
     public static final double HOPPER_MOTOR_POWER = 1;
 
-    public static final int INTAKE_DEFAULT_TARGET_RPM = 3000;
+    public static final int INTAKE_DEFAULT_TARGET_RPM = 4500;
     // PID constants for Intake
     public static final double INTAKE_kP = 0.8;
 
