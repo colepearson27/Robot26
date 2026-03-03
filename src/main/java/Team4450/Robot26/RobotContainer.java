@@ -5,7 +5,6 @@ import static Team4450.Robot26.Constants.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import Team4450.Robot26.commands.DriveCommand;
 import Team4450.Robot26.commands.Shoot;
@@ -31,11 +30,12 @@ import Team4450.Robot26.subsystems.TestSubsystem;
 import Team4450.Robot26.subsystems.VisionSubsystem;
 import Team4450.Robot26.subsystems.Hopper;
 import edu.wpi.first.math.controller.PIDController;
-
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -377,7 +377,7 @@ public class RobotContainer {
     new Trigger(() -> driverController.getLeftTrigger())
         // .onTrue(new InstantCommand(shooter::startFlywheel))
         // .onFalse(new InstantCommand(shooter::stopFlywheel));
-        .whileTrue(new Shoot(shooter, hopper));
+        .whileTrue(new Shoot(drivebase, shooter, hopper));
 
     new Trigger(() -> driverController.getRightTrigger())
         .onTrue(new InstantCommand(shooter::startInfeed))
@@ -401,7 +401,57 @@ public class RobotContainer {
 
     new Trigger(() -> driverController.getXButton())
         .onTrue(new InstantCommand(drivebase::toggleHubTracking));
-  }
+
+	// 	new Trigger(() -> driverController.getYButton())
+	// 		.onTrue(new InstantCommand(drivebase::driveToOrigin));
+
+  // Shoot without driver control
+  // new Trigger(() -> driverController.getXButton())
+  //       .onTrue(new InstantCommand(drivebase::toggleHubTracking))
+  //       .onTrue(new InstantCommand(drivebase::stopHumanDriving))
+  //       .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
+  //       .onTrue(new InstantCommand(shooter::enabledHood))
+
+  //       .whileTrue(new Shoot(shooter, hopper))
+
+  //       .onFalse(new InstantCommand(drivebase::toggleHubTracking))
+  //       .onFalse(new InstantCommand(drivebase::startHumanDriving))
+  //       .onFalse(new InstantCommand(shooter::disableAutomaticFlywheelUpdate))
+  //       .onFalse(new InstantCommand(shooter::distableHood));
+
+  // Shoot with driver control
+  // new Trigger(() -> driverController.getXButton())
+  //     .onTrue(new InstantCommand(drivebase::toggleHubTracking))
+  //     .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
+  //     .onTrue(new InstantCommand(shooter::enabledHood))
+      
+  //     .whileTrue(new Shoot(shooter, hopper))
+
+  //     .onFalse(new InstantCommand(drivebase::toggleHubTracking))
+  //     .onFalse(new InstantCommand(shooter::disableAutomaticFlywheelUpdate))
+  //     .onFalse(new InstantCommand(shooter::distableHood));
+
+  // Ferry from middle
+  // new Trigger(() -> driverController.getXButton())
+  //     .onTrue(new InstantCommand(drivebase::toggleHubTracking))
+  //     .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
+  //     .onTrue(new InstantCommand(shooter::enabledHood))
+  //     .onTrue(new InstantCommand(drivebase::driveToNearestOpening))
+      
+  //     .whileTrue(new Shoot(shooter, hopper))
+
+  //     .onFalse(new InstantCommand(drivebase::toggleHubTracking))
+  //     .onFalse(new InstantCommand(shooter::disableAutomaticFlywheelUpdate))
+  //     .onFalse(new InstantCommand(shooter::distableHood))
+  //.    .onFalse(new InstantCommand(drivebase::disableAutoDriving));
+  
+  // Prepare for shooting
+  // new Trigger(() -> driverController.getXButton())
+  //     .onTrue(new InstantCommand(drivebase::toggleHubTracking))
+  //     .onTrue(new InstantCommand(drivebase::toggleSlowMode))
+  //     .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
+  //     .onTrue(new InstantCommand(shooter::enabledHood));
+}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -458,8 +508,16 @@ public class RobotContainer {
     gameMessage = DriverStation.getGameSpecificMessage();
 
     Util.consoleLog("Alliance=%s, Location=%d, FMS=%b event=%s match=%d msg=%s",
-        alliance.name(), location, DriverStation.isFMSAttached(), eventName, matchNumber,
-        gameMessage);
+      alliance.name(), location, DriverStation.isFMSAttached(), eventName, matchNumber,
+      gameMessage);
+  }
+
+  public double getVolatgePercent(){
+    return RobotController.getBatteryVoltage() / Constants.MAX_BATTERY_VOLTAGE;
+  }
+
+  public double getVolatgeMultiplier(){
+    return Constants.MAX_BATTERY_VOLTAGE / RobotController.getBatteryVoltage();
   }
 
   // public void fixPathPlannerGyro() { rich

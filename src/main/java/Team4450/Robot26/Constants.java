@@ -76,12 +76,13 @@ public final class Constants {
     public static int INTAKE_PIVIT_CURRENT_LIMIT = 5;
     public static int HOPPER_CURRENT_LIMIT = 40;
 
-    public static double HOOD_TOLRENCE_MOTOR_ROTATIONS = 0.02;
+    public static double HOOD_TOLERENCE_MOTOR_ROTATIONS = 0.02;
     public static double HOOD_TOLERENCE_DEGREES = 5;
-    public static double HOOD_GEAR_RATIO = 3/8; //Make sure to change this constant in Shooter class for the hood angle calculation
+    public static double HOOD_GEAR_RATIO = 3.0/8.0;
     public static double HOOD_DOWN_ANGLE_DEGREES = 15;
+    public static double HOOD_MOTOR_POWER = 0.1;
+    public static double SHOOTER_HOOD_TOLERENCE_MOTOR_RAIDIANS = 2;
 
-    public static double SHOOTER_HOOD_TOLERENCE_MOTOR_RAIDIANS = 0.5;
 
     // Hood PID / Feedforward / MotionMagic
     public static final double HOOD_kP = 15;
@@ -129,6 +130,13 @@ public final class Constants {
     public static int VISION_BUFFER_SIZE = 1;
 
     public static double LIMELIGHT_QUEST_ERROR_AMOUNT_METERS = 0.2;
+
+    // Voltage Modifiers
+    public static double MAX_BATTERY_VOLTAGE = 13.5;
+    public static double INFEED_VOLTAGE_MULTIPLIER = 1.0;
+    public static double HOPPER_VOLTAGE_MULTIPLIER = 1.0;
+    public static double INTAKE_VOLTAGE_MULTIPLIER = 1.0;
+    public static double FLYWHEEL_VOLTAGE_MULTIPLIER = 1.0;
 
     // Assume all field measurements are in meters
     // Field Limits (The Origin of the field should be the bottom left corner therefore all pose should be in +, +)
@@ -291,6 +299,9 @@ public final class Constants {
         // 2026 robot max speed is 5.29 m/s.
         public static double kMaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // top speed
         public static double kMaxAngularRate = RotationsPerSecond.of(1.0).in(RadiansPerSecond); // 1 rotation per second max angular velocity
+
+        public static double kMaxAcceleration = -1;
+        public static double kMaxAngularAcceleration = -1;
 
         // Velocity dead bands applied in SDS code. Times max speed.
         public static final double  DRIVE_DEADBAND = 0.01, ROTATION_DEADBAND = 0.001;

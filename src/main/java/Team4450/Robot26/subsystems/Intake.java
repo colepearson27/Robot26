@@ -1,6 +1,7 @@
 package Team4450.Robot26.subsystems;
 
 import Team4450.Robot26.Constants;
+import Team4450.Robot26.RobotContainer;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
@@ -37,6 +38,8 @@ public class Intake extends SubsystemBase {
     private double pivitCurrentPositionMotorPosition;
 
     private boolean runIntake;
+
+    private RobotContainer robotContainer;
 
     public Intake() {
         this.canPivit = pivitMotor.isConnected();
@@ -265,6 +268,15 @@ public class Intake extends SubsystemBase {
         double error = targetRPM - currentRPM;
         double adjustment = Constants.INTAKE_kP * error; // Adjustment to approach target
         double newRPM = targetRPM + adjustment; // Adjust current RPM towards target
+        this.intakeMotorLeft.set(newRPM / Constants.INTAKE_MAX_THEORETICAL_RPM);
+        this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
+    }
+
+    public void setIntakeRPMWithScaling(double targetRPM) {
+        double currentRPM = getIntakeRPM();
+        double error = targetRPM - currentRPM;
+        double adjustment = Constants.INTAKE_kP * error; // Adjustment to approach target
+        double newRPM = (targetRPM + adjustment) * robotContainer.getVolatgePercent() * Constants.INTAKE_VOLTAGE_MULTIPLIER; // Adjust current RPM towards target
         this.intakeMotorLeft.set(newRPM / Constants.INTAKE_MAX_THEORETICAL_RPM);
         this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
     }

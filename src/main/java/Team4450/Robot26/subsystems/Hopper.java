@@ -1,20 +1,20 @@
 package Team4450.Robot26.subsystems;
 
 import Team4450.Robot26.Constants;
+import Team4450.Robot26.RobotContainer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 import com.ctre.phoenix6.CANBus;
 
 public class Hopper extends SubsystemBase {
     private final TalonFX hopperMotor = new TalonFX(Constants.HOPPER_MOTOR_CAN_ID, new CANBus(Constants.CANIVORE_NAME));
-
+    private RobotContainer robotContainer;
     public Hopper() {
         // Configure motor neutral mode
         hopperMotor.setNeutralMode(NeutralModeValue.Coast);
@@ -33,6 +33,10 @@ public class Hopper extends SubsystemBase {
 
     public void start() {
         hopperMotor.set(1);
+    }
+
+    public void startWithScaling() {
+        hopperMotor.set(1 * robotContainer.getVolatgePercent() * Constants.HOPPER_VOLTAGE_MULTIPLIER);
     }
 
     public void startSlow() {
