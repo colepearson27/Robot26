@@ -57,6 +57,24 @@ public class Drivebase extends SubsystemBase {
     public Pose2d robotPose = new Pose2d(0, 0, Rotation2d.kZero);
     public Pose2d limelightPoseEstimate = new Pose2d(0, 0, Rotation2d.kZero);
 
+    private Pose2d lastPose;
+    private static final int VELOCITY_WINDOW_SIZE = 5;
+
+    private final double[] velocityWindowX = new double[VELOCITY_WINDOW_SIZE];
+    private final double[] velocityWindowY = new double[VELOCITY_WINDOW_SIZE];
+
+    private int velocityIndexX = 0;
+    private int velocityIndexY = 0;
+
+    private int velocityCountX = 0;
+    private int velocityCountY = 0;
+
+    private double lastRawVelocityX = 0;
+    private double lastRawVelocityY = 0;
+
+    public double fieldRelativeVelocityX = 0;
+    public double fieldRelativeVelocityY = 0;
+
     private final Telemetry logger = new Telemetry(kMaxSpeed);
 
     // Field2d object creates the field display on the simulation and gives us an
@@ -140,6 +158,8 @@ public class Drivebase extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("velocityX", fieldRelativeVelocityX);
+        SmartDashboard.putNumber("velocityY", fieldRelativeVelocityY);
         sdsDrivebase.periodic();
 
         // update 3d simulation: look in AdvantageScope.java for more
@@ -456,10 +476,10 @@ public class Drivebase extends SubsystemBase {
             } else {
                 airTime = FUEL_AIR_TIME_TABLE_SEC[i];
 
-                double xVelocityOffset = driveField.VelocityX * airTime;
-                double yVelocityOffset = driveField.VelocityY * airTime;
+                double xVelocityOffset = fieldRelativeVelocityX * airTime;
+                double yVelocityOffset = fieldRelativeVelocityY * airTime;
 
-                offsetTargetPose = new Pose2d(targetPose.getX() + xVelocityOffset, targetPose.getY() + yVelocityOffset,
+                offsetTargetPose = new Pose2d(targetPose.getX() - xVelocityOffset, targetPose.getY() - yVelocityOffset,
                         targetPose.getRotation());
 
                 return offsetTargetPose;
@@ -475,10 +495,10 @@ public class Drivebase extends SubsystemBase {
             airTime = lowerTime + ((higherTime - lowerTime) * (distance - lowerPoint) / (higherPoint - lowerPoint));
         }
 
-        double xVelocityOffset = driveField.VelocityX * airTime;
-        double yVelocityOffset = driveField.VelocityY * airTime;
+        double xVelocityOffset = fieldRelativeVelocityX * airTime;
+        double yVelocityOffset = fieldRelativeVelocityY * airTime;
 
-        offsetTargetPose = new Pose2d(targetPose.getX() + xVelocityOffset, targetPose.getY() + yVelocityOffset,
+        offsetTargetPose = new Pose2d(targetPose.getX() - xVelocityOffset, targetPose.getY() - yVelocityOffset,
                 targetPose.getRotation());
 
         return offsetTargetPose;
@@ -635,5 +655,77 @@ public class Drivebase extends SubsystemBase {
 
     public void disableSlowMode() {
         this.slowMode = false;
+    }
+
+    public void updateVelocity(double timeSinceLastUpdateSec) {
+        if (lastPose == null) {
+            lastPose = getPose();
+            return;
+        }
+
+        Pose2d currentPose = getPose();
+
+        double deltaX = currentPose.getTranslation().getX() - lastPose.getTranslation().getX();
+        double deltaY = currentPose.getTranslation().getY() - lastPose.getTranslation().getY();
+
+        double rawVelocityX = deltaX / timeSinceLastUpdateSec;
+        double rawVelocityY = deltaY / timeSinceLastUpdateSec;
+
+        if (Math.abs(rawVelocityX) <= 3 && Math.abs(rawVelocityX - lastRawVelocityX) < 0.4) {
+
+            if (Math.abs(rawVelocityX - lastRawVelocityX) > 0.4) {
+                rawVelocityX = lastRawVelocityX;
+            }
+
+            if (Math.abs(rawVelocityX) < 0.1) {
+                rawVelocityX = 0;
+            }
+
+            velocityWindowX[velocityIndexX] = rawVelocityX;
+            velocityIndexX = (velocityIndexX + 1) % VELOCITY_WINDOW_SIZE;
+
+            if (velocityCountX < VELOCITY_WINDOW_SIZE) {
+                velocityCountX++;
+            }
+
+            double sumX = 0;
+            for (int i = 0; i < velocityCountX; i++) {
+                sumX += velocityWindowX[i];
+            }
+
+            fieldRelativeVelocityX = sumX / velocityCountX;
+        }
+
+        if (Math.abs(rawVelocityY) <= 3 && Math.abs(rawVelocityY - lastRawVelocityY) < 0.4) {
+
+            if (Math.abs(rawVelocityY - lastRawVelocityY) > 0.4) {
+                rawVelocityY = lastRawVelocityY;
+            }
+
+            if (Math.abs(rawVelocityY) < 0.1) {
+                rawVelocityY = 0;
+            }
+
+            velocityWindowY[velocityIndexY] = rawVelocityY;
+            velocityIndexY = (velocityIndexY + 1) % VELOCITY_WINDOW_SIZE;
+
+            if (velocityCountY < VELOCITY_WINDOW_SIZE) {
+                velocityCountY++;
+            }
+
+            double sumY = 0;
+            for (int i = 0; i < velocityCountY; i++) {
+                sumY += velocityWindowY[i];
+            }
+
+            fieldRelativeVelocityY = sumY / velocityCountY;
+        }
+
+        SmartDashboard.putNumber("Rolling Velocity X", fieldRelativeVelocityX);
+        SmartDashboard.putNumber("Rolling Velocity Y", fieldRelativeVelocityY);
+
+        lastRawVelocityX = rawVelocityX;
+        lastRawVelocityY = rawVelocityY;
+        lastPose = currentPose;
     }
 }

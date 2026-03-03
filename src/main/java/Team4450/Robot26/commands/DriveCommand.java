@@ -84,6 +84,8 @@ public class DriveCommand extends Command
         
         if (robot.isAutonomous()) return;
 
+        drivebase.updateVelocity(Constants.ROBOT_PERIOD_SEC);
+
         if (Constants.HUB_TRACKING) {
         
         // This finds where the correct hub position is
@@ -103,13 +105,13 @@ public class DriveCommand extends Command
             delayCounter = 0;
             // Checks if robot is currently in the Alliance Zone then aims at the hub
             if (drivebase.getPose().getX() < NEUTRAL_BLUE_ZONE_BARRIER_X) {
-                targetHeading = drivebase.getAngleToAim(hubPosition);
+                targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(hubPosition));
             } else {
                 // Checks what side the robot is on, and aims at the nearest ferrying target point predefined in Constants
                 if (drivebase.getPose().getY() < FIELD_MIDDLE_Y) {
-                    targetHeading = drivebase.getAngleToAim(FERRY_BLUE_OUTPOST_CORNER);
+                    targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_BLUE_OUTPOST_CORNER));
                 } else {
-                    targetHeading = drivebase.getAngleToAim(FERRY_BLUE_BLANK_CORNER);
+                    targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_BLUE_BLANK_CORNER));
                 }
             }
             // This does the same thing but for the red alliance
@@ -118,9 +120,9 @@ public class DriveCommand extends Command
                 targetHeading = drivebase.getAngleToAim(hubPosition);
             } else {
                 if (drivebase.getPose().getY() < FIELD_MIDDLE_Y) {
-                    targetHeading = drivebase.getAngleToAim(FERRY_RED_BLANK_CORNER);
+                    targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_RED_BLANK_CORNER));
                 } else {
-                    targetHeading = drivebase.getAngleToAim(FERRY_RED_OUTPOST_CORNER);
+                    targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_RED_OUTPOST_CORNER));
                 }
             }
             // If there IS input, set the target heading to where the joystick si facing in relation to the driver

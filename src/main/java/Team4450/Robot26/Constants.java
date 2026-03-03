@@ -192,7 +192,7 @@ public final class Constants {
     public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = {2, 2.5, 3, 3.5, 4, 4.5};
     public static double[] HOOD_ARC_TABLE = {0.9, 1.65, 1.8, 1.85, 1.85, 2.3};
 
-    public static double[] FUEL_AIR_TIME_TABLE_SEC = {0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6};
+    public static double[] FUEL_AIR_TIME_TABLE_SEC = {0.75, 0.95, 1.15, 1.3, 1.45, 1.55, 1.65};
 
     // -------------------------------------------------------------------------------------
     // Flywheel tuning defaults (used as Shuffleboard starting values)
