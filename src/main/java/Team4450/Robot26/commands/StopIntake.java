@@ -25,7 +25,7 @@ public class StopIntake extends Command {
   public void execute() {
     state = State.STOPPED;
     intake.stopIntake();
-    end();
+    end(false);
   }
 
   public boolean isFinished() {
@@ -33,7 +33,8 @@ public class StopIntake extends Command {
 
   }
 
-  public void end() {
+  @Override
+  public void end(boolean interrupted) {
     SmartDashboard.putString("Intake Stopped?", "Yup");
 
   }

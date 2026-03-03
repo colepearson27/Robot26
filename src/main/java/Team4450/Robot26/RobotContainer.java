@@ -197,7 +197,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("startIntake", new StartIntake(intake));
     NamedCommands.registerCommand("stopIntake", new StopIntake(intake));
     NamedCommands.registerCommand("startShooter", new StartShoot(shooter, hopper));
-    NamedCommands.registerCommand("shoot", new Shoot(shooter, hopper));
+    NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper));
     NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
     NamedCommands.registerCommand("end", new StopAuto(drivebase));
 
@@ -402,56 +402,56 @@ public class RobotContainer {
     new Trigger(() -> driverController.getXButton())
         .onTrue(new InstantCommand(drivebase::toggleHubTracking));
 
-	// 	new Trigger(() -> driverController.getYButton())
-	// 		.onTrue(new InstantCommand(drivebase::driveToOrigin));
+    // new Trigger(() -> driverController.getYButton())
+    // .onTrue(new InstantCommand(drivebase::driveToOrigin));
 
-  // Shoot without driver control
-  // new Trigger(() -> driverController.getXButton())
-  //       .onTrue(new InstantCommand(drivebase::toggleHubTracking))
-  //       .onTrue(new InstantCommand(drivebase::stopHumanDriving))
-  //       .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
-  //       .onTrue(new InstantCommand(shooter::enabledHood))
+    // Shoot without driver control
+    // new Trigger(() -> driverController.getXButton())
+    // .onTrue(new InstantCommand(drivebase::toggleHubTracking))
+    // .onTrue(new InstantCommand(drivebase::stopHumanDriving))
+    // .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
+    // .onTrue(new InstantCommand(shooter::enabledHood))
 
-  //       .whileTrue(new Shoot(shooter, hopper))
+    // .whileTrue(new Shoot(shooter, hopper))
 
-  //       .onFalse(new InstantCommand(drivebase::toggleHubTracking))
-  //       .onFalse(new InstantCommand(drivebase::startHumanDriving))
-  //       .onFalse(new InstantCommand(shooter::disableAutomaticFlywheelUpdate))
-  //       .onFalse(new InstantCommand(shooter::distableHood));
+    // .onFalse(new InstantCommand(drivebase::toggleHubTracking))
+    // .onFalse(new InstantCommand(drivebase::startHumanDriving))
+    // .onFalse(new InstantCommand(shooter::disableAutomaticFlywheelUpdate))
+    // .onFalse(new InstantCommand(shooter::distableHood));
 
-  // Shoot with driver control
-  // new Trigger(() -> driverController.getXButton())
-  //     .onTrue(new InstantCommand(drivebase::toggleHubTracking))
-  //     .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
-  //     .onTrue(new InstantCommand(shooter::enabledHood))
-      
-  //     .whileTrue(new Shoot(shooter, hopper))
+    // Shoot with driver control
+    // new Trigger(() -> driverController.getXButton())
+    // .onTrue(new InstantCommand(drivebase::toggleHubTracking))
+    // .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
+    // .onTrue(new InstantCommand(shooter::enabledHood))
 
-  //     .onFalse(new InstantCommand(drivebase::toggleHubTracking))
-  //     .onFalse(new InstantCommand(shooter::disableAutomaticFlywheelUpdate))
-  //     .onFalse(new InstantCommand(shooter::distableHood));
+    // .whileTrue(new Shoot(shooter, hopper))
 
-  // Ferry from middle
-  // new Trigger(() -> driverController.getXButton())
-  //     .onTrue(new InstantCommand(drivebase::toggleHubTracking))
-  //     .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
-  //     .onTrue(new InstantCommand(shooter::enabledHood))
-  //     .onTrue(new InstantCommand(drivebase::driveToNearestOpening))
-      
-  //     .whileTrue(new Shoot(shooter, hopper))
+    // .onFalse(new InstantCommand(drivebase::toggleHubTracking))
+    // .onFalse(new InstantCommand(shooter::disableAutomaticFlywheelUpdate))
+    // .onFalse(new InstantCommand(shooter::distableHood));
 
-  //     .onFalse(new InstantCommand(drivebase::toggleHubTracking))
-  //     .onFalse(new InstantCommand(shooter::disableAutomaticFlywheelUpdate))
-  //     .onFalse(new InstantCommand(shooter::distableHood))
-  //.    .onFalse(new InstantCommand(drivebase::disableAutoDriving));
-  
-  // Prepare for shooting
-  // new Trigger(() -> driverController.getXButton())
-  //     .onTrue(new InstantCommand(drivebase::toggleHubTracking))
-  //     .onTrue(new InstantCommand(drivebase::toggleSlowMode))
-  //     .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
-  //     .onTrue(new InstantCommand(shooter::enabledHood));
-}
+    // Ferry from middle
+    // new Trigger(() -> driverController.getXButton())
+    // .onTrue(new InstantCommand(drivebase::toggleHubTracking))
+    // .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
+    // .onTrue(new InstantCommand(shooter::enabledHood))
+    // .onTrue(new InstantCommand(drivebase::driveToNearestOpening))
+
+    // .whileTrue(new Shoot(shooter, hopper))
+
+    // .onFalse(new InstantCommand(drivebase::toggleHubTracking))
+    // .onFalse(new InstantCommand(shooter::disableAutomaticFlywheelUpdate))
+    // .onFalse(new InstantCommand(shooter::distableHood))
+    // . .onFalse(new InstantCommand(drivebase::disableAutoDriving));
+
+    // Prepare for shooting
+    // new Trigger(() -> driverController.getXButton())
+    // .onTrue(new InstantCommand(drivebase::toggleHubTracking))
+    // .onTrue(new InstantCommand(drivebase::toggleSlowMode))
+    // .onTrue(new InstantCommand(shooter::enableAutomaticFlywheelUpdate))
+    // .onTrue(new InstantCommand(shooter::enabledHood));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -508,15 +508,15 @@ public class RobotContainer {
     gameMessage = DriverStation.getGameSpecificMessage();
 
     Util.consoleLog("Alliance=%s, Location=%d, FMS=%b event=%s match=%d msg=%s",
-      alliance.name(), location, DriverStation.isFMSAttached(), eventName, matchNumber,
-      gameMessage);
+        alliance.name(), location, DriverStation.isFMSAttached(), eventName, matchNumber,
+        gameMessage);
   }
 
-  public double getVolatgePercent(){
+  public double getVolatgePercent() {
     return RobotController.getBatteryVoltage() / Constants.MAX_BATTERY_VOLTAGE;
   }
 
-  public double getVolatgeMultiplier(){
+  public double getVolatgeMultiplier() {
     return Constants.MAX_BATTERY_VOLTAGE / RobotController.getBatteryVoltage();
   }
 
