@@ -5,7 +5,6 @@ import static Team4450.Robot26.Constants.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import Team4450.Robot26.commands.DriveCommand;
 import Team4450.Robot26.commands.Shoot;
@@ -31,11 +30,12 @@ import Team4450.Robot26.subsystems.TestSubsystem;
 import Team4450.Robot26.subsystems.VisionSubsystem;
 import Team4450.Robot26.subsystems.Hopper;
 import edu.wpi.first.math.controller.PIDController;
-
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -401,7 +401,10 @@ public class RobotContainer {
 
     new Trigger(() -> driverController.getXButton())
         .onTrue(new InstantCommand(drivebase::toggleHubTracking));
-  }
+
+	// 	new Trigger(() -> driverController.getYButton())
+	// 		.onTrue(new InstantCommand(drivebase::driveToOrigin));
+	}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -458,8 +461,16 @@ public class RobotContainer {
     gameMessage = DriverStation.getGameSpecificMessage();
 
     Util.consoleLog("Alliance=%s, Location=%d, FMS=%b event=%s match=%d msg=%s",
-        alliance.name(), location, DriverStation.isFMSAttached(), eventName, matchNumber,
-        gameMessage);
+      alliance.name(), location, DriverStation.isFMSAttached(), eventName, matchNumber,
+      gameMessage);
+  }
+
+  public double getVolatgePercent(){
+    return RobotController.getBatteryVoltage() / Constants.MAX_BATTERY_VOLTAGE;
+  }
+
+  public double getVolatgeMultiplier(){
+    return Constants.MAX_BATTERY_VOLTAGE / RobotController.getBatteryVoltage();
   }
 
   // public void fixPathPlannerGyro() { rich
