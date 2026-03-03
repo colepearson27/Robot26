@@ -1,7 +1,9 @@
 package Team4450.Robot26.subsystems;
 
 import Team4450.Robot26.Constants;
+import Team4450.Robot26.RobotContainer;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -10,6 +12,7 @@ import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
 import Team4450.Lib.Util;
 import Team4450.Robot26.utility.ConsoleEveryX;
+import edu.wpi.first.math.geometry.Pose2d;
 
 public class QuestNavSubsystem extends SubsystemBase {
     private boolean hasQuest;
@@ -17,6 +20,7 @@ public class QuestNavSubsystem extends SubsystemBase {
     private Transform3d ROBOT_TO_QUEST = new Transform3d(Constants.ROBOT_TO_QUEST.getX(), Constants.ROBOT_TO_QUEST.getY(), Constants.ROBOT_TO_QUEST.getZ(), Constants.ROBOT_TO_QUEST.getRotation());
     
     final Pose3d nullPose = new Pose3d(-1, -1, -1, Rotation3d.kZero);
+    final Pose2d nullPose2d = new Pose2d(-1, -1, Rotation2d.kZero);
     final Pose3d zeroPose = new Pose3d(0, 0, 0, Rotation3d.kZero);
 
     private ConsoleEveryX questTestLogger = new ConsoleEveryX("Quest Test Logger", 100);
@@ -27,14 +31,14 @@ public class QuestNavSubsystem extends SubsystemBase {
 
     /** Creates a new QuestNavSubsystem. */
     private Drivebase drivebase;
-    private double resetTimer = 0; // Change this to a real timer at some point;
+    private long lastResetTime = 0;
     public QuestNavSubsystem(Drivebase drivebase) {
         this.drivebase = drivebase;
         questNav = new QuestNav();
 
         this.hasQuest = questNav.isConnected();
 
-        this.resetTimer = 0;
+        this.lastResetTime = System.currentTimeMillis();
 
         resetToZeroPose();
     }
@@ -92,15 +96,18 @@ public class QuestNavSubsystem extends SubsystemBase {
             hasQuest = true;
             // If the x or y difference from the robots current pose to the limelight estimate pose update the current quest estimate for the position
             SmartDashboard.putBoolean("Quest Connected", true);
-            if (resetTimer > 200) {
-                if (Math.abs(drivebase.getPose().getX() - drivebase.limelightPoseEstimate.getX()) > Constants.LIMELIGHT_QUEST_ERROR_AMOUNT_METERS || Math.abs(drivebase.getPose().getX() - drivebase.limelightPoseEstimate.getY()) > Constants.LIMELIGHT_QUEST_ERROR_AMOUNT_METERS) {
-                    Pose3d limelightEstimatePose = new Pose3d(drivebase.limelightPoseEstimate);
-                    resetQuestOdometry(limelightEstimatePose);
-                    Util.consoleLog("Updated quest odomety to pose: ", limelightEstimatePose.toString());
-                    resetTimer = 0;
+            // 5000 miliseconds is 5 seconds
+            if (System.currentTimeMillis() - this.lastResetTime > 5000 && drivebase.getDrivebaseVelocity() < 2) {
+                if (RobotContainer.visionSubsystem.frontLimelightSee || RobotContainer.visionSubsystem.rightLimelightSee) { // One of the limelight must be seeing tags
+                    if (Math.abs(drivebase.getPose().getX() - drivebase.limelightPoseEstimate.getX()) > Constants.LIMELIGHT_QUEST_ERROR_AMOUNT_METERS || Math.abs(drivebase.getPose().getX() - drivebase.limelightPoseEstimate.getY()) > Constants.LIMELIGHT_QUEST_ERROR_AMOUNT_METERS) {
+                        Pose3d limelightEstimatePose = new Pose3d(drivebase.limelightPoseEstimate);
+                        resetQuestOdometry(limelightEstimatePose);
+                        drivebase.limelightPoseEstimate = nullPose2d;
+                        this.lastResetTime = System.currentTimeMillis();
+                    }
+                } else {
+                    this.lastResetTime = System.currentTimeMillis();
                 }
-            } else {
-                resetTimer++;
             }
         } else {
             hasQuest = false;
@@ -116,7 +123,8 @@ public class QuestNavSubsystem extends SubsystemBase {
         }
 
         questTestLogger.update("Quest periodic");
-        // This method will be called once per scheduler run
+
+        // This method must be called once per scheduler run
         questNav.commandPeriodic();
 
         // Update pose Frames

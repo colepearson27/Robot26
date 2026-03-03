@@ -8,6 +8,7 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import Team4450.Robot26.commands.DriveCommand;
+import Team4450.Robot26.commands.Shoot;
 import Team4450.Robot26.commands.StartIntake;
 import Team4450.Robot26.commands.StartShoot;
 import Team4450.Robot26.commands.StopIntake;
@@ -65,8 +66,8 @@ public class RobotContainer {
 
   public final DriveCommand driveCommand;
 
-  public Intake intake;
-  public Shooter shooter;
+  public static Intake intake;
+  public static Shooter shooter;
   // public TestSubsystem testSubsystem;
 
   private final Hopper hopper = new Hopper();
@@ -368,20 +369,15 @@ public class RobotContainer {
         .onTrue(new InstantCommand(drivebase::setX));
 
     // -------- Utility controller buttons ----------
-
-    // Driver controller A/B used for flywheel start/stop (TestSubsystem currently
-    // drives the motor)
-    // new Trigger(() -> driverController.getAButton())
-    // .onTrue(new InstantCommand(testSubsystem::start));
-
-    // new Trigger(() -> driverController.getBButton())
-    // .onTrue(new InstantCommand(testSubsystem::stop));
     //
+    new Trigger(() -> driverController.getRightBumperButton())
+        .toggleOnTrue(new InstantCommand(intake::togglePivit));
+
+
     new Trigger(() -> driverController.getLeftTrigger())
-        .onTrue(new InstantCommand(shooter::startFlywheel))
-        // .onTrue(new InstantCommand(drivebase::toggleHubTracking))
-        .onFalse(new InstantCommand(shooter::stopFlywheel));
-    // .onFalse(new InstantCommand(drivebase::toggleHubTracking));
+        // .onTrue(new InstantCommand(shooter::startFlywheel))
+        // .onFalse(new InstantCommand(shooter::stopFlywheel));
+        .whileTrue(new Shoot(shooter, hopper));
 
     new Trigger(() -> driverController.getRightTrigger())
         .onTrue(new InstantCommand(shooter::startInfeed))

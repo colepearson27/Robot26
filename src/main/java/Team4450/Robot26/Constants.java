@@ -70,7 +70,7 @@ public final class Constants {
     public static int SHOOTER_UPPER_BEAM_BREAK_PORT = 3;
 
     public static int SHOOTER_FLYWHEEL_CURRENT_LIMIT = 35;
-    public static int SHOOTER_INFEED_CURRENT_LIMIT = 30;
+    public static int SHOOTER_INFEED_CURRENT_LIMIT = 35;
     public static int SHOOTER_HOOD_CURRENT_LIMIT = 5;
     public static int INTAKE_CURRENT_LIMIT = 20;
     public static int INTAKE_PIVIT_CURRENT_LIMIT = 5;
@@ -82,7 +82,17 @@ public final class Constants {
     public static double HOOD_DOWN_ANGLE_DEGREES = 15;
 
     public static double SHOOTER_HOOD_TOLERENCE_MOTOR_RAIDIANS = 0.5;
-    
+
+    // Hood PID / Feedforward / MotionMagic
+    public static final double HOOD_kP = 15;
+    public static final double HOOD_kI = 0;
+    public static final double HOOD_kD = 0;
+    public static final double HOOD_kS = 0.47;
+    public static final double HOOD_kV = 0.1;
+    public static final double HOOD_kA = 0.1;
+    public static final double HOOD_MOTION_ACCEL = 5.0;
+    public static final double HOOD_MOTION_JERK = 0.0;
+
     // Intake Constants
     public static int INTAKE_MOTOR_PIVIT_CAN_ID = 9;
     public static int INTAKE_MOTOR_LEFT_CAN_ID = 10;
@@ -170,11 +180,11 @@ public final class Constants {
     public static boolean HUB_TRACKING = false;
 
     // Interpolation table
-    public static double[] FLYWHEEL_SPEED_TABLE = {3500, 3500, 3500, 3750, 3850, 4400}; // Converted from percentages to RPM
-    public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = {0.46, 0.91, 1.52, 2.13, 2.74, 3.35};
-    public static double[] FUEL_AIR_TIME_TABLE_SEC = {0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6};
+    public static double[] FLYWHEEL_SPEED_TABLE = {3550, 3650, 3850, 3850, 4300, 4400}; // Converted from percentages to RPM
+    public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = {2, 2.5, 3, 3.5, 4, 4.5};
+    public static double[] HOOD_ARC_TABLE = {0.9, 1.65, 1.8, 1.85, 1.85, 2.3};
 
-    public static double[] HOOD_ARC_TABLE = {0, 0.625, 1.48, 2.17, 2.17, 2.17};
+    public static double[] FUEL_AIR_TIME_TABLE_SEC = {0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6};
 
     // -------------------------------------------------------------------------------------
     // Flywheel tuning defaults (used as Shuffleboard starting values)
@@ -195,7 +205,7 @@ public final class Constants {
     public static final double FLYWHEEL_kV = 0.11;
     public static final double FLYWHEEL_kA = 0.05;
     // ---------------- PID (Velocity) ----------------
-    public static final double FLYWHEEL_kP = 0.2; // This is called Bang Bang
+    public static final double FLYWHEEL_kP = 0.2;
     public static final double FLYWHEEL_kI = 0;
     public static final double FLYWHEEL_kD = 0;
 
@@ -213,8 +223,6 @@ public final class Constants {
 
     // Hopper motor constants
     public static final int HOPPER_MOTOR_CAN_ID = 12; // Example CAN ID for the Kraken X60 motor
-    public static final double HOPPER_MOTOR_SPEED_RPM = 1000.0; // Default speed in RPM
-    public static final double HOPPER_MOTOR_POWER = 1;
 
     public static final int INTAKE_DEFAULT_TARGET_RPM = 4500;
     // PID constants for Intake
@@ -223,6 +231,45 @@ public final class Constants {
     public static final int INFEED_DEFAULT_TARGET_RPM = 4000;
     // PID constants for Shooter Infeed
     public static final double INFEED_kP = 0.8;
+
+    // SmartDashboard key constants for Shooter
+    public static final class ShooterKeys {
+        // Hood
+        public static final String HOOD_POSITION        = "Hood Position";
+        public static final String HOOD_ANGLE           = "Hood Angle";
+        public static final String HOOD_MOTOR_POSITION  = "Hood Motor Position";
+        public static final String HOOD_TARGET_POSITION  = "Hood Target Position";
+        public static final String HOOD_POWER           = "Hood Power";
+
+        // Flywheel telemetry
+        public static final String FLYWHEEL_TARGET_RPM      = "Flywheel/TargetRPM";
+        public static final String FLYWHEEL_MEASURED_RPM    = "Flywheel/MeasuredRPM";
+        public static final String FLYWHEEL_MEASURED_RPM_LEGACY = "Flywheel measured RPM";
+        public static final String FLYWHEEL_PERCENT_OUT     = "Flywheel/PercentOutApprox";
+        public static final String FLYWHEEL_CURRENT_DRAW    = "Flywheel Current Draw";
+
+        // Flywheel PID / FF tuning
+        public static final String FLYWHEEL_KP = "Flywheel/kP";
+        public static final String FLYWHEEL_KI = "Flywheel/kI";
+        public static final String FLYWHEEL_KD = "Flywheel/kD";
+        public static final String FLYWHEEL_KS = "Flywheel/kS";
+        public static final String FLYWHEEL_KV = "Flywheel/kV";
+        public static final String FLYWHEEL_KA = "Flywheel/kA";
+
+        // Infeed
+        public static final String INFEED_TARGET_RPM  = "Infeed Target RPM";
+        public static final String INFEED_RPM         = "Infeed RPM";
+        public static final String INFEED_CURRENT_DRAW = "Infeed Current Draw";
+
+        // Misc
+        public static final String BEAM_BREAK                       = "Beam Break";
+        public static final String DISABLE_AUTO_FLYWHEEL_UPDATE     = "disableAutomaticFlywheelUpdate";
+        public static final String ROBOT_LAUNCH_X                   = "RobotLaunchX";
+        public static final String ROBOT_LAUNCH_Y                   = "RobotLaunchY";
+        public static final String GOAL_POSE                        = "Goal Pose";
+        public static final String DIFFS                            = "Diffs";
+        public static final String ROBOT_DISTANCE                   = "Robot Distance";
+    }
 
     // What is the LCD
 	// LCD display line number constants showing class where the line is set.
@@ -246,7 +293,7 @@ public final class Constants {
         public static double kMaxAngularRate = RotationsPerSecond.of(1.0).in(RadiansPerSecond); // 1 rotation per second max angular velocity
 
         // Velocity dead bands applied in SDS code. Times max speed.
-        public static final double  DRIVE_DEADBAND = 0.01, ROTATION_DEADBAND = 0.1;
+        public static final double  DRIVE_DEADBAND = 0.01, ROTATION_DEADBAND = 0.001;
 
         // Factors used to reduce robot max speed to levels desired for lab/demo operation.
         // The split below matches the rotation speed to drive speed. Needs to be tuned for
