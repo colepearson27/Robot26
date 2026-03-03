@@ -194,7 +194,7 @@ public class RobotContainer {
 
     // Pathplanner NamedCommands
 
-    NamedCommands.registerCommand("runIntake", new StartIntake(intake));
+    NamedCommands.registerCommand("startIntake", new StartIntake(intake));
     NamedCommands.registerCommand("stopIntake", new StopIntake(intake));
     NamedCommands.registerCommand("startShooter", new StartShoot(shooter, hopper));
     NamedCommands.registerCommand("shoot", new Shoot(shooter, hopper));

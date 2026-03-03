@@ -10,34 +10,31 @@ public class StartIntake extends Command {
   private State state;
 
   private static enum State {
-    MOVING, INTAKE, STOP
+    STOPPING, STOPPED, END
   };
 
   public StartIntake(Intake intake) {
     this.intake = intake;
   }
 
-  @Override
   public void initialize() {
-    state = State.MOVING;
+    state = State.STOPPING;
 
   }
 
-  @Override
   public void execute() {
-    state = State.INTAKE;
-    intake.startIntakeSlow();
+    state = State.STOPPED;
+    intake.startIntake();
+    end();
   }
 
-  @Override
   public boolean isFinished() {
-    return state == State.STOP;
+    return state == State.END;
 
   }
 
-  @Override
-  public void end(boolean interrupted) {
-    SmartDashboard.putString("Done with starting intake?", "Yup");
+  public void end() {
+    SmartDashboard.putString("Intake Stopped?", "Yup");
 
   }
 }
