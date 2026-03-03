@@ -6,30 +6,32 @@ import Team4450.Robot26.subsystems.Hopper;
 
 public class StopShoot extends Command {
 
-    Shooter shooter;
-    Hopper hopper;
+  Shooter shooter;
+  Hopper hopper;
 
-    public StopShoot(Shooter shooter, Hopper hopper) {
-        this.shooter = shooter;
-        this.hopper = hopper;
-    }
+  public StopShoot(Shooter shooter, Hopper hopper) {
+    this.shooter = shooter;
+    this.hopper = hopper;
+  }
 
-    @Override
-    public void initialize() {
-        shooter.flywheelEnabled = false;
-    }
+  @Override
+  public void initialize() {
+  }
 
-    @Override
-    public void execute() {
-        hopper.stop();
-    }
+  @Override
+  public void execute() {
+    shooter.distableHood();
+    shooter.stopFlywheel();
+    shooter.stopInfeed();
+    hopper.stop();
+  }
 
-    @Override
-    public boolean isFinished() {
-        return shooter.flywheelEnabled = false;
-    }
+  @Override
+  public boolean isFinished() {
+    return shooter.flywheelEnabled = false;
+  }
 
-    @Override
-    public void end(boolean inturrupted) {
-    }
+  @Override
+  public void end(boolean inturrupted) {
+  }
 }

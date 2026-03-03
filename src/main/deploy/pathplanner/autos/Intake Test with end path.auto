@@ -5,15 +5,21 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "true straight path"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "startIntake"
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "true straight path"
+            "waitTime": 5.0
           }
         },
         {
@@ -23,33 +29,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 10.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopShooter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "end"
+            "pathName": "endtoend"
           }
         }
       ]

@@ -11,15 +11,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": null
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 4.0
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 10.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
+                }
+              }
+            ]
           }
         },
         {

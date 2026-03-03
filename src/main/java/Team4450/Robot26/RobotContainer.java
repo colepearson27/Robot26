@@ -197,6 +197,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("runIntake", new StartIntake(intake));
     NamedCommands.registerCommand("stopIntake", new StopIntake(intake));
     NamedCommands.registerCommand("startShooter", new StartShoot(shooter, hopper));
+    NamedCommands.registerCommand("shoot", new Shoot(shooter, hopper));
     NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
     NamedCommands.registerCommand("end", new StopAuto(drivebase));
 
@@ -372,7 +373,6 @@ public class RobotContainer {
     //
     new Trigger(() -> driverController.getRightBumperButton())
         .toggleOnTrue(new InstantCommand(intake::togglePivit));
-
 
     new Trigger(() -> driverController.getLeftTrigger())
         // .onTrue(new InstantCommand(shooter::startFlywheel))
