@@ -2,10 +2,6 @@ package Team4450.Robot26.subsystems;
 
 import static Team4450.Robot26.Constants.*;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import Team4450.Robot26.RobotContainer;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import Team4450.Robot26.Constants;
 import Team4450.Robot26.RobotContainer;
 import com.ctre.phoenix6.CANBus;
@@ -47,29 +43,17 @@ public class Shooter extends SubsystemBase {
     // This motor is a Kraken x44
     private final TalonFX infeedMotorRight = new TalonFX(Constants.INFEED_MOTOR_RIGHT_CAN_ID, new CANBus(Constants.CANIVORE_NAME));
 
-    // Link the two roller motors for use when setting the power
-    private final LinkedMotors infeedMotors = new LinkedMotors(infeedMotorLeft, infeedMotorRight);
-
-    private RobotContainer robotContainer;
-
     private boolean canFlywheel;
     private boolean canHood;
     private boolean canInfeed;
 
     private boolean runInfeed;
 
-    // This value is expected to be between 0 and 2PI
-    private double hoodTargetAngle;
-    // The format of this value is in rotations of the hood motor
-    private double hoodTargetMotorPosition;
-    // This value is expected to be between 0 and 2PI
-    private double hoodCurrentAngle;
-    // The Current Error of the hood in radians
-    private double hoodError;
-    // This value is the starting rotaions of the hood motor
-    private double hoodRotationOffset;
     // The format of this value is in rotations of the pivit motor
     private double hoodMotorPosition;
+    private double hoodTargetMotorPosition;
+    //Hood Rotation Offset
+    private double hoodRotationOffset;
 
     DigitalInput beamBreak;
 
@@ -78,7 +62,7 @@ public class Shooter extends SubsystemBase {
     private static final double DESIRED_MAX_HEIGHT = 2.5; // meters (8.2 feet)
     private static final double GOAL_HEIGHT = 1.8288; // meters (6 feet)
     private static final double FLYWHEEL_HEIGHT = 0.5334; // meters (21 inches)
-    private static final double CONVERSION_FACTOR_MPS_TO_RPM = 2000 / 3.15; // Needs to be tested
+    private static final double CONVERSION_FACTOR_MPS_TO_RPM = 10000 / 47.93;
 
     private double targetRPM = Constants.FLYWHEEL_TARGET_RPM;
     private double currentRPM = 0.0;
@@ -97,6 +81,8 @@ public class Shooter extends SubsystemBase {
     private double sd_kP, sd_kI, sd_kD;
     private double sd_kS, sd_kV, sd_kA;
 
+    private Drivebase drivebase;
+
     public Shooter(Drivebase drivebase) {
         this.drivebase = drivebase;
 
@@ -104,15 +90,7 @@ public class Shooter extends SubsystemBase {
         this.canHood = hoodLeft.isConnected() && hoodRight.isConnected();
         this.canInfeed = infeedMotorLeft.isConnected() && infeedMotorRight.isConnected();
 
-        this.hoodTargetAngle = 0;
-        this.hoodTargetMotorPosition = 0;
-        this.hoodTargetMotorPosition = 0;
-        this.hoodCurrentAngle = 0;
         this.hoodMotorPosition = 0;
-
-        this.flywheelCurrentRPM = 0;
-        this.flywheelTargetRPM = 0;
-        this.flywheelError = 0;
 
         this.hoodRotationOffset = this.hoodLeft.getPosition(true).getValueAsDouble();
 
@@ -172,10 +150,14 @@ public class Shooter extends SubsystemBase {
 
         hoodMotorPosition = hoodLeft.getPosition().getValueAsDouble();
 
-        updateHoodPosition(SmartDashboard.getNumber("Hood Target Position", this.hoodMotorPosition));
-
-        SmartDashboard.putNumber("Hood Angle", getHoodMotorAngleRadians());
-        SmartDashboard.putNumber("Hood Motor Position", getHoodMotorPosition());
+        if (this.enabledHood) {
+            updateHoodPosition(SmartDashboard.getNumber(Constants.ShooterKeys.HOOD_TARGET_POSITION, 0));
+        } else {
+            updateHoodPosition(0);
+        }
+        
+        SmartDashboard.putNumber(Constants.ShooterKeys.HOOD_ANGLE, getHoodMotorAngleRadians());
+        SmartDashboard.putNumber(Constants.ShooterKeys.HOOD_MOTOR_POSITION, getHoodMotorPosition());
 
         double measuredRps =
                 flywheelMotorTopLeft.getRotorVelocity()
@@ -187,17 +169,13 @@ public class Shooter extends SubsystemBase {
 
         // -------- Shuffleboard tuning --------
 
-        targetRPM = SmartDashboard.getNumber(
-                "Flywheel/TargetRPM",
-                Constants.FLYWHEEL_TARGET_RPM);
+        double kP = SmartDashboard.getNumber(Constants.ShooterKeys.FLYWHEEL_KP, sd_kP);
+        double kI = SmartDashboard.getNumber(Constants.ShooterKeys.FLYWHEEL_KI, sd_kI);
+        double kD = SmartDashboard.getNumber(Constants.ShooterKeys.FLYWHEEL_KD, sd_kD);
 
-        double kP = SmartDashboard.getNumber("Flywheel/kP", sd_kP);
-        double kI = SmartDashboard.getNumber("Flywheel/kI", sd_kI);
-        double kD = SmartDashboard.getNumber("Flywheel/kD", sd_kD);
-
-        double kS = SmartDashboard.getNumber("Flywheel/kS", sd_kS);
-        double kV = SmartDashboard.getNumber("Flywheel/kV", sd_kV);
-        double kA = SmartDashboard.getNumber("Flywheel/kA", sd_kA);
+        double kS = SmartDashboard.getNumber(Constants.ShooterKeys.FLYWHEEL_KS, sd_kS);
+        double kV = SmartDashboard.getNumber(Constants.ShooterKeys.FLYWHEEL_KV, sd_kV);
+        double kA = SmartDashboard.getNumber(Constants.ShooterKeys.FLYWHEEL_KA, sd_kA);
 
         // Apply only if changed
         if (!sdInit ||
@@ -220,7 +198,7 @@ public class Shooter extends SubsystemBase {
         double targetRPS;
 
         if (flywheelEnabled && canFlywheel) {
-            targetRPS = (targetRPM) / 60.0;
+            targetRPS = targetRPM / 60.0;
             MotionMagicVelocityVoltage req =
                     new MotionMagicVelocityVoltage(targetRPS)
                             .withSlot(Constants.FLYWHEEL_PID_SLOT);
@@ -245,10 +223,10 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber(Constants.ShooterKeys.FLYWHEEL_MEASURED_RPM, currentRPM);
         SmartDashboard.putNumber(Constants.ShooterKeys.FLYWHEEL_PERCENT_OUT, percent);
 
-        SmartDashboard.putNumber("Infeed RPM", getInfeedRPM());
-        
+        SmartDashboard.putNumber(Constants.ShooterKeys.INFEED_RPM, getInfeedRPM());
+
         if (this.runInfeed) {
-            setInfeedRPM(SmartDashboard.getNumber("Infeed Target RPM", Constants.INFEED_DEFAULT_TARGET_RPM));
+            setInfeedRPM(SmartDashboard.getNumber(Constants.ShooterKeys.INFEED_TARGET_RPM, Constants.INFEED_DEFAULT_TARGET_RPM));
         }
 
         SmartDashboard.putNumber(Constants.ShooterKeys.FLYWHEEL_CURRENT_DRAW, getFlywheelCurrent());
@@ -380,11 +358,6 @@ public class Shooter extends SubsystemBase {
         this.hoodRight.setControl(new Follower(this.hoodLeft.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
-    public void startShootingSequence(){
-        startFlywheel();
-        drivebase.stopHumanDriving();
-    }
-
     public void startFlywheel() {
         this.flywheelEnabled = true;
     }
@@ -462,55 +435,17 @@ public class Shooter extends SubsystemBase {
         return infeedMotorRight.getSupplyCurrent(true).getValueAsDouble();
     }
 
-    public void setHoodPower(double power){
-        if (canHood) {
-            this.hoodLeft.set(power);
-            this.hoodRight.set(power);
-        }
-    }
-
-    public void hoodUp() {
-        if (canHood) {
-            double power = SmartDashboard.getNumber("Hood Power", 0.05);
-            this.hoodLeft.set(power);
-            this.hoodRight.set(power);
-        }
-    }
-
-    public void hoodDown() {
-        if (canHood) {
-            double power = SmartDashboard.getNumber("Hood Power", 0.05);
-            this.hoodLeft.set(-power);
-            this.hoodRight.set(-power);
-        }
-    }
-
-    public void stopHood() {
-        if (canHood) {
-            this.hoodLeft.set(0);
-            this.hoodRight.set(0);
-        }
-    }
-    
     // The position input is between 0 and 1 with 0 being up and 1 being down
     public void setHoodMotorPosition(double position) {
         hoodTargetMotorPosition = position;
     }
 
-    public double getHoodAngleRadians() {
+    public double getHoodMotorAngleRadians() {
         return (hoodLeft.getPosition(true).getValueAsDouble() - this.hoodRotationOffset);
     }
 
     public double getHoodMotorPosition() {
         return hoodLeft.getPosition().getValueAsDouble();
-    }
-
-    public double getHoodTargetAngle(){
-        return hoodTargetAngle;
-    }
-
-    public double getHoodTargetMotorPosition(){
-        return hoodTargetMotorPosition;
     }
 
     public double getHoodCurrent() {
@@ -608,5 +543,80 @@ public class Shooter extends SubsystemBase {
         double newRPM = targetRPM + adjustment; // Adjust current RPM towards target
         this.infeedMotorLeft.set(newRPM / Constants.KRAKEN_X44_MAX_THEORETICAL_RPM);
         this.infeedMotorRight.setControl(new Follower(this.infeedMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
+    }
+
+    // -------------------------------------------------------------------------
+    // Motor config helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Builds and applies a TalonFX configuration to all four flywheel motors.
+     * Called from the constructor and from periodic() whenever PID/FF values change.
+     */
+    private void applyFlywheelConfig(double kP, double kI, double kD,
+                                     double kS, double kV, double kA) {
+        TalonFXConfiguration cfg = new TalonFXConfiguration();
+
+        cfg.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        cfg.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        cfg.CurrentLimits = new CurrentLimitsConfigs()
+                .withSupplyCurrentLimit(Constants.SHOOTER_FLYWHEEL_CURRENT_LIMIT);
+
+        cfg.Slot0.kP = kP;
+        cfg.Slot0.kI = kI;
+        cfg.Slot0.kD = kD;
+        cfg.Slot0.kS = kS;
+        cfg.Slot0.kV = kV;
+        cfg.Slot0.kA = kA;
+
+        cfg.MotionMagic.MotionMagicAcceleration = Constants.FLYWHEEL_MOTION_ACCEL_RPMS / 60.0;
+        cfg.MotionMagic.MotionMagicJerk = Constants.FLYWHEEL_MOTION_JERK;
+
+        for (int i = 0; i < flywheelMotors.getTotalMotors(); i++) {
+            TalonFX motor = flywheelMotors.getMotorByIndex(i);
+            if (motor != null) motor.getConfigurator().apply(cfg);
+        }
+    }
+
+    /**
+     * Builds and applies a TalonFX configuration to both hood motors.
+     * Values come entirely from Constants so there is one source of truth.
+     */
+    private void applyHoodConfig() {
+        TalonFXConfiguration hoodCFG = new TalonFXConfiguration();
+
+        hoodCFG.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        hoodCFG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        hoodCFG.CurrentLimits = new CurrentLimitsConfigs()
+                .withSupplyCurrentLimit(Constants.SHOOTER_HOOD_CURRENT_LIMIT);
+
+        hoodCFG.Slot0.kP = Constants.HOOD_kP;
+        hoodCFG.Slot0.kI = Constants.HOOD_kI;
+        hoodCFG.Slot0.kD = Constants.HOOD_kD;
+        hoodCFG.Slot0.kS = Constants.HOOD_kS;
+        hoodCFG.Slot0.kV = Constants.HOOD_kV;
+        hoodCFG.Slot0.kA = Constants.HOOD_kA;
+
+        hoodCFG.MotionMagic.MotionMagicAcceleration = Constants.HOOD_MOTION_ACCEL;
+        hoodCFG.MotionMagic.MotionMagicJerk = Constants.HOOD_MOTION_JERK;
+
+        this.hoodLeft.getConfigurator().apply(hoodCFG);
+        this.hoodRight.getConfigurator().apply(hoodCFG);
+    }
+
+    /**
+     * Builds and applies a TalonFX configuration to both infeed motors.
+     * Inversion is kept local here to avoid vendor-specific enums in Constants.
+     */
+    private void applyInfeedConfig() {
+        TalonFXConfiguration infeedCFG = new TalonFXConfiguration();
+
+        infeedCFG.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        infeedCFG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        infeedCFG.CurrentLimits = new CurrentLimitsConfigs()
+                .withSupplyCurrentLimit(Constants.SHOOTER_INFEED_CURRENT_LIMIT);
+
+        this.infeedMotorLeft.getConfigurator().apply(infeedCFG);
+        this.infeedMotorRight.getConfigurator().apply(infeedCFG);
     }
 }

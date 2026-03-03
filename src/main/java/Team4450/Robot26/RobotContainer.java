@@ -402,14 +402,6 @@ public class RobotContainer {
     new Trigger(() -> driverController.getXButton())
         .onTrue(new InstantCommand(drivebase::toggleHubTracking));
 
-    new Trigger(() -> driverController.getLeftBumper())
-        .onTrue(new InstantCommand(shooter::hoodUp))
-        .onFalse(new InstantCommand(shooter::stopHood));
-
-		 new Trigger(() -> driverController.getRightBumper())
-		 	.onTrue(new InstantCommand(shooter::hoodDown))
-            .onFalse(new InstantCommand(shooter::stopHood));
-
 	// 	new Trigger(() -> driverController.getYButton())
 	// 		.onTrue(new InstantCommand(drivebase::driveToOrigin));
 	}

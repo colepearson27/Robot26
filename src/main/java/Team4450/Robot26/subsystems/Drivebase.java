@@ -26,6 +26,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -66,6 +67,7 @@ public class Drivebase extends SubsystemBase {
     private boolean neutralModeBrake = true;
     private double maxSpeed = kMaxSpeed * kDriveReductionPct;
     private double maxRotRate = kMaxAngularRate * kRotationReductionPct;
+    private boolean driverControlled = true;
 
     private final SwerveRequest.SwerveDriveBrake driveBrake = new SwerveRequest.SwerveDriveBrake();
 

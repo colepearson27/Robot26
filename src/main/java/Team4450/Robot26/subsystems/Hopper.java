@@ -36,8 +36,7 @@ public class Hopper extends SubsystemBase {
     }
 
     public void startWithScaling() {
-        double power = SmartDashboard.getNumber("Hopper Power", Constants.HOPPER_MOTOR_POWER);
-        hopperMotor.set(power * robotContainer.getVolatgePercent() * Constants.HOPPER_VOLTAGE_MULTIPLIER);
+        hopperMotor.set(1 * robotContainer.getVolatgePercent() * Constants.HOPPER_VOLTAGE_MULTIPLIER);
     }
 
     public void startSlow() {
