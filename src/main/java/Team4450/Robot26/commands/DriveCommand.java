@@ -10,11 +10,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import Team4450.Lib.LCD;
 import Team4450.Lib.Util;
 import Team4450.Robot26.Constants;
-import Team4450.Robot26.RobotContainer;
 import Team4450.Robot26.subsystems.Drivebase;
 import static Team4450.Robot26.Constants.*;
 import Team4450.Robot26.utility.ConsoleEveryX;
-import Team4450.Robot26.utility.RobotOrientation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveCommand extends Command 
@@ -88,76 +86,71 @@ public class DriveCommand extends Command
 
         if (Constants.HUB_TRACKING) {
         
-            // This finds where the correct hub position is
-            Pose2d hubPosition;
-            if (alliance == DriverStation.Alliance.Blue) {
-                hubPosition = new Pose2d(HUB_BLUE_WELDED_POSE.getX(), HUB_BLUE_WELDED_POSE.getY(), Rotation2d.kZero);
-            } else {
-                hubPosition = new Pose2d(HUB_RED_WELDED_POSE.getX(), HUB_RED_WELDED_POSE.getY(), Rotation2d.kZero);
-            }
-            
-            
-            double targetHeading;
-            
-            // Decides where to track
-            // If both inputs are zero and the alliance is blue then
-            if (rotationXSupplier.getAsDouble() == 0 && rotationYSupplier.getAsDouble() == 0 && alliance == DriverStation.Alliance.Blue) {
-                delayCounter = 0;
-                // Checks if robot is currently in the Alliance Zone then aims at the hub
-                if (drivebase.getPose().getX() < NEUTRAL_BLUE_ZONE_BARRIER_X) {
-                    targetHeading = drivebase.getAngleToAim(hubPosition);
-                } else {
-                    // Checks what side the robot is on, and aims at the nearest ferrying target point predefined in Constants
-                    if (drivebase.getPose().getY() < FIELD_MIDDLE_Y) {
-                        targetHeading = drivebase.getAngleToAim(FERRY_BLUE_OUTPOST_CORNER);
-                    } else {
-                        targetHeading = drivebase.getAngleToAim(FERRY_BLUE_BLANK_CORNER);
-                    }
-                }
-                // This does the same thing but for the red alliance
-            } else if (rotationXSupplier.getAsDouble() == 0 && rotationYSupplier.getAsDouble() == 0 && alliance == DriverStation.Alliance.Red) {
-                if (drivebase.getPose().getX() > NEUTRAL_RED_ZONE_BARRIER_X) {
-                    targetHeading = drivebase.getAngleToAim(hubPosition);
-                } else {
-                    if (drivebase.getPose().getY() < FIELD_MIDDLE_Y) {
-                        targetHeading = drivebase.getAngleToAim(FERRY_RED_BLANK_CORNER);
-                    } else {
-                        targetHeading = drivebase.getAngleToAim(FERRY_RED_OUTPOST_CORNER);
-                    }
-                }
-                // If there is input, set the target heading to where the joystick is facing in relation to the driver
-            } else {
-                if (RobotContainer.drivebase.getDriverControled()) {
-                    targetHeading = -Math.toDegrees(Math.atan2(rotationYSupplier.getAsDouble(), rotationXSupplier.getAsDouble())) - 90;
-                } else {
-                    targetHeading = drivebase.getPose().getRotation().getDegrees();
-                }
-
-            }
-            
-            
-            SmartDashboard.putNumber("Target Heading", targetHeading);
-
-            double error = -targetHeading + Math.toDegrees(drivebase.getPose().getRotation().getDegrees());
-
-            SmartDashboard.putNumber("Heading Error", error);
-
-            // Uses a PID and the previous assigned target heading to rotate there
-            double rotation = -headingPID.calculate(-Math.toDegrees(drivebase.getPose().getRotation().getDegrees()), -targetHeading);
-            double throttle = throttleSupplier.getAsDouble();
-            double strafe = strafeSupplier.getAsDouble();
-
-            throttle = Util.squareInput(throttle);
-            strafe = Util.squareInput(strafe);
-            
-            headingPID.setP(SmartDashboard.getNumber("Heading P", Constants.ROBOT_HEADING_KP));
-            headingPID.setI(SmartDashboard.getNumber("Heading I", Constants.ROBOT_HEADING_KI));
-            headingPID.setD(SmartDashboard.getNumber("Heading D", Constants.ROBOT_HEADING_KD));
-
-            drivebase.drive(throttle, strafe, rotation);
-
-            return;
+        // This finds where the correct hub position is
+        Pose2d hubPosition;
+        if (alliance == DriverStation.Alliance.Blue) {
+            hubPosition = new Pose2d(HUB_BLUE_WELDED_POSE.getX(), HUB_BLUE_WELDED_POSE.getY(), Rotation2d.kZero);
+        } else {
+            hubPosition = new Pose2d(HUB_RED_WELDED_POSE.getX(), HUB_RED_WELDED_POSE.getY(), Rotation2d.kZero);
         }
+        
+        
+        double targetHeading;
+        
+        // Decides where to track
+        // If both inputs are zero and the alliance is blue then
+        if (rotationXSupplier.getAsDouble() == 0 && rotationYSupplier.getAsDouble() == 0 && alliance == DriverStation.Alliance.Blue) {
+            delayCounter = 0;
+            // Checks if robot is currently in the Alliance Zone then aims at the hub
+            if (drivebase.getPose().getX() < NEUTRAL_BLUE_ZONE_BARRIER_X) {
+                targetHeading = drivebase.getAngleToAim(hubPosition);
+            } else {
+                // Checks what side the robot is on, and aims at the nearest ferrying target point predefined in Constants
+                if (drivebase.getPose().getY() < FIELD_MIDDLE_Y) {
+                    targetHeading = drivebase.getAngleToAim(FERRY_BLUE_OUTPOST_CORNER);
+                } else {
+                    targetHeading = drivebase.getAngleToAim(FERRY_BLUE_BLANK_CORNER);
+                }
+            }
+            // This does the same thing but for the red alliance
+        } else if (rotationXSupplier.getAsDouble() == 0 && rotationYSupplier.getAsDouble() == 0 && alliance == DriverStation.Alliance.Red) {
+            if (drivebase.getPose().getX() > NEUTRAL_RED_ZONE_BARRIER_X) {
+                targetHeading = drivebase.getAngleToAim(hubPosition);
+            } else {
+                if (drivebase.getPose().getY() < FIELD_MIDDLE_Y) {
+                    targetHeading = drivebase.getAngleToAim(FERRY_RED_BLANK_CORNER);
+                } else {
+                    targetHeading = drivebase.getAngleToAim(FERRY_RED_OUTPOST_CORNER);
+                }
+            }
+            // If there IS input, set the target heading to where the joystick si facing in relation to the driver
+        } else {
+            targetHeading = -Math.toDegrees(Math.atan2(rotationYSupplier.getAsDouble(), rotationXSupplier.getAsDouble())) - 90;
+        }
+        
+        
+        SmartDashboard.putNumber("Target Heading", targetHeading);
+
+        double error = -targetHeading + Math.toDegrees(drivebase.getPose().getRotation().getDegrees());
+
+        SmartDashboard.putNumber("Heading Error", error);
+
+        // Uses a PID and the previous assigned target heading to rotate there
+        double rotation = -headingPID.calculate(-Math.toDegrees(drivebase.getPose().getRotation().getDegrees()), -targetHeading);
+        double throttle = throttleSupplier.getAsDouble();
+        double strafe = strafeSupplier.getAsDouble();
+
+        throttle = Util.squareInput(throttle);
+        strafe = Util.squareInput(strafe);
+        
+        headingPID.setP(SmartDashboard.getNumber("Heading P", Constants.ROBOT_HEADING_KP));
+        headingPID.setI(SmartDashboard.getNumber("Heading I", Constants.ROBOT_HEADING_KI));
+        headingPID.setD(SmartDashboard.getNumber("Heading D", Constants.ROBOT_HEADING_KD));
+
+        drivebase.drive(throttle, strafe, rotation);
+
+        return;
+    }
 
         double rotation = rotationXSupplier.getAsDouble();
         double throttle = throttleSupplier.getAsDouble();
@@ -172,8 +165,7 @@ public class DriveCommand extends Command
         // rotation = Util.squareInput(rotation);
         // rotation = Math.pow(rotation, 5);
         //
-
-        if (drivebase.getDriverControled()) drivebase.drive(throttle, strafe, rotation);
+        drivebase.drive(throttle, strafe, rotation);
     }
 
     @Override 
