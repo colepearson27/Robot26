@@ -2,6 +2,10 @@ package Team4450.Robot26;
 
 import static Team4450.Robot26.Constants.*;
 
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinder;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+
 import Team4450.Lib.*;
 import Team4450.Robot26.utility.RobotOrientation;
 import Team4450.Robot26.wpilib.TimedRobot;

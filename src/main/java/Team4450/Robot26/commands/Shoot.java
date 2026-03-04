@@ -1,21 +1,25 @@
 package Team4450.Robot26.commands;
 
-import Team4450.Robot26.subsystems.Shooter;
+import Team4450.Robot26.subsystems.Drivebase;
 import Team4450.Robot26.subsystems.Hopper;
+import Team4450.Robot26.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shoot extends Command {
     private Shooter shooter;
     private Hopper hopper;
+    private Drivebase drivebase;
 
-    public Shoot(Shooter shooter, Hopper hopper) {
+    public Shoot(Drivebase drivebase, Shooter shooter, Hopper hopper) {
         this.shooter = shooter;
         this.hopper = hopper;
+        this.drivebase = drivebase;
     }
 
     @Override
     public void initialize() {
+        drivebase.enabledSlowMode();
         shooter.enabledHood();
         shooter.startFlywheel();
     }
@@ -27,7 +31,6 @@ public class Shoot extends Command {
             hopper.start();
         } else {
             shooter.stopInfeed();
-            hopper.stop();
         }
     }
 
@@ -39,6 +42,7 @@ public class Shoot extends Command {
 
     @Override
     public void end(boolean interuppted) {
+        drivebase.disableSlowMode();
         shooter.distableHood();
         shooter.stopFlywheel();
         shooter.stopInfeed();
