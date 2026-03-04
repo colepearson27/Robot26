@@ -192,7 +192,7 @@ public final class Constants {
     public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = {2, 2.5, 3, 3.5, 4, 4.5};
     public static double[] HOOD_ARC_TABLE = {0.9, 1.65, 1.8, 1.85, 1.85, 2.3};
 
-    public static double[] FUEL_AIR_TIME_TABLE_SEC = {0.75, 0.95, 1.15, 1.3, 1.45, 1.55, 1.65};
+    public static double[] FUEL_AIR_TIME_TABLE_SEC = {1.1, 1.3, 1.4, 1.5, 1.8, 1.9, 2.1};
 
     // -------------------------------------------------------------------------------------
     // Flywheel tuning defaults (used as Shuffleboard starting values)
@@ -232,7 +232,7 @@ public final class Constants {
     // Hopper motor constants
     public static final int HOPPER_MOTOR_CAN_ID = 12; // Example CAN ID for the Kraken X60 motor
 
-    public static final int INTAKE_DEFAULT_TARGET_RPM = 4500;
+    public static final int INTAKE_DEFAULT_TARGET_RPM = 2500;
     // PID constants for Intake
     public static final double INTAKE_kP = 0.8;
 

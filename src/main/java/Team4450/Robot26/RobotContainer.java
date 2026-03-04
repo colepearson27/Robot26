@@ -393,11 +393,10 @@ public class RobotContainer {
         .onTrue(new InstantCommand(intake::stopIntake))
         .onTrue(new InstantCommand(hopper::stop));
 
-    /*
-     * new Trigger(() -> driverController.getYButton())
-     * .onTrue(new InstantCommand(hopper::start))
-     * .onFalse(new InstantCommand(hopper::stop));
-     */
+    new Trigger(() -> driverController.getYButton())
+    .onTrue(new InstantCommand(shooter::reverseInfeed))
+    .onFalse(new InstantCommand(shooter::stopInfeed));
+    
 
     new Trigger(() -> driverController.getXButton())
         .onTrue(new InstantCommand(drivebase::toggleHubTracking));

@@ -48,6 +48,7 @@ public class Shooter extends SubsystemBase {
     private boolean canInfeed;
 
     private boolean runInfeed;
+    private boolean reverseInfeed;
 
     // The format of this value is in rotations of the pivit motor
     private double hoodMotorPosition;
@@ -150,6 +151,7 @@ public class Shooter extends SubsystemBase {
 
         hoodMotorPosition = hoodLeft.getPosition().getValueAsDouble();
 
+        SmartDashboard.putBoolean("Will Enter Trench", drivebase.willEnterTrench());
         if (drivebase.willEnterTrench()) {
             updateHoodPosition(0);
         } else if (this.enabledHood) {
@@ -228,7 +230,11 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber(Constants.ShooterKeys.INFEED_RPM, getInfeedRPM());
 
         if (this.runInfeed) {
-            setInfeedRPM(SmartDashboard.getNumber(Constants.ShooterKeys.INFEED_TARGET_RPM, Constants.INFEED_DEFAULT_TARGET_RPM));
+            if (this.reverseInfeed) {
+                setInfeedRPM(-SmartDashboard.getNumber(Constants.ShooterKeys.INFEED_TARGET_RPM, Constants.INFEED_DEFAULT_TARGET_RPM));
+            } else {
+                setInfeedRPM(SmartDashboard.getNumber(Constants.ShooterKeys.INFEED_TARGET_RPM, Constants.INFEED_DEFAULT_TARGET_RPM));
+            }
         }
 
         SmartDashboard.putNumber(Constants.ShooterKeys.FLYWHEEL_CURRENT_DRAW, getFlywheelCurrent());
@@ -237,9 +243,9 @@ public class Shooter extends SubsystemBase {
 
     public void updateLaunchValues(boolean interpolate){
         // Calculate distance to goal & diffs
-        double xDiff = Math.abs(getGoalPose().getX() - drivebase.getPose().getX());
-
-        double yDiff = Math.abs(getGoalPose().getY() - drivebase.getPose().getY());
+        Pose2d goalPose = drivebase.getPoseToAim(getGoalPose());
+        double xDiff = Math.abs(goalPose.getX() - drivebase.getPose().getX());
+        double yDiff = Math.abs(goalPose.getY() - drivebase.getPose().getY());
         double distToGoal = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 
         SmartDashboard.putNumber(Constants.ShooterKeys.ROBOT_LAUNCH_X, drivebase.getPose().getX());
@@ -406,6 +412,13 @@ public class Shooter extends SubsystemBase {
         }
     }
 
+    public void reverseInfeed() {
+        if (canInfeed) {
+            this.runInfeed = true;
+            this.reverseInfeed = true;
+        }
+    }
+
     public void testInfeed() {
         if (canInfeed) {
             this.infeedMotorLeft.set(0.05);
@@ -416,6 +429,7 @@ public class Shooter extends SubsystemBase {
     public void stopInfeed() {
         if (canInfeed) {
             this.runInfeed = false;
+            this.reverseInfeed = false;
             this.infeedMotorLeft.set(0);
             this.infeedMotorRight.setControl(new Follower(this.infeedMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
         }

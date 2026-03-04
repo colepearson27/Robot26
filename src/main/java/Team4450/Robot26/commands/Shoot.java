@@ -19,7 +19,6 @@ public class Shoot extends Command {
 
     @Override
     public void initialize() {
-        drivebase.enabledSlowMode();
         shooter.enabledHood();
         shooter.startFlywheel();
     }
@@ -42,7 +41,6 @@ public class Shoot extends Command {
 
     @Override
     public void end(boolean interuppted) {
-        drivebase.disableSlowMode();
         shooter.distableHood();
         shooter.stopFlywheel();
         shooter.stopInfeed();
