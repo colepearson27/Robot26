@@ -111,7 +111,7 @@ public final class Constants {
     // The format of this value is in rotations of the pivit motor
     public static int INTAKE_PIVIT_MOTOR_POSITION_UP = 0;
     // This is an assumed value and not exact
-    public static double INTAKE_PIVIT_POSITION_DOWN_DEGREES = 100;
+    public static double INTAKE_PIVIT_POSITION_DOWN_DEGREES = 105;
     // The format of this value is in rotations of the pivit motor
     public static double INTAKE_PIVIT_MOTOR_POSITION_DOWN = (INTAKE_PIVIT_POSITION_DOWN_DEGREES / 360) * INTAKE_PIVIT_GEAR_RATIO;
     // The format of this value is in rotations of the pivit motor
