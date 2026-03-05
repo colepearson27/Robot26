@@ -17,13 +17,11 @@ public class Shoot extends Command {
     this.drivebase = drivebase;
   }
 
-  @Override
-  public void initialize() {
-    drivebase.enabledSlowMode();
-    shooter.enabledHood();
-    shooter.startFlywheel();
-
-  }
+    @Override
+    public void initialize() {
+        shooter.enabledHood();
+        shooter.startFlywheel();
+    }
 
   @Override
   public void execute() {
@@ -41,12 +39,11 @@ public class Shoot extends Command {
     return false;
   }
 
-  @Override
-  public void end(boolean interuppted) {
-    drivebase.disableSlowMode();
-    shooter.distableHood();
-    shooter.stopFlywheel();
-    shooter.stopInfeed();
-    hopper.stop();
-  }
+    @Override
+    public void end(boolean interuppted) {
+        shooter.distableHood();
+        shooter.stopFlywheel();
+        shooter.stopInfeed();
+        hopper.stop();
+    }
 }

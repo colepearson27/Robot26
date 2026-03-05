@@ -170,23 +170,23 @@ public class Drivebase extends SubsystemBase {
     // See this function for more information.
     updateModulePoses(sdsDrivebase);
 
-    SmartDashboard.putString("Limelight Pose Estimate", this.limelightPoseEstimate.toString());
-    // Basic telemetry
-    SmartDashboard.putNumber("Gyro angle", getYaw());
-    SmartDashboard.putString("Robot od pose", getODPose().toString());
-    if (robotPose != null) {
-      SmartDashboard.putString("Robot pose", robotPose.toString());
-    }
-    SmartDashboard.putNumber("DriveBase Current", getDrivetrainCurrent());
+        SmartDashboard.putString("Limelight Pose Estimate", this.limelightPoseEstimate.toString());
+        // Basic telemetry
+        SmartDashboard.putNumber("Gyro angle", getYaw());
+        SmartDashboard.putString("Robot od pose", getODPose().toString());
+        if (robotPose != null) {
+            SmartDashboard.putString("Robot pose", robotPose.toString());
+        }
+        SmartDashboard.putNumber("DriveBase Current", getDrivetrainCurrent());
 
-    SmartDashboard.putBoolean("Hub Tracking", Constants.HUB_TRACKING);
+        SmartDashboard.putBoolean("Will Enter Trench", willEnterTrench());
 
-    if (willEnterTrench() && !slowFortrench) {
-      toggleSlowMode();
-      slowFortrench = true;
-    } else if (!willEnterTrench() && slowFortrench) {
-      toggleSlowMode();
-    }
+        if (willEnterTrench() && !slowFortrench){
+            slowMode = true;
+            slowFortrench = true;
+        } else if (!willEnterTrench() && slowFortrench){
+            slowMode = false;
+        }
 
   }
 
@@ -527,10 +527,10 @@ public class Drivebase extends SubsystemBase {
     return distance;
   }
 
-  public boolean willCrashTrench() {
-    double velocityX = driveField.VelocityX;
-    double velocityY = driveField.VelocityY;
-    double bufferTime = 0.05;
+    public boolean willCrashTrench() {
+       double velocityX = fieldRelativeVelocityX;
+       double velocityY = fieldRelativeVelocityY;
+       double bufferTime = 0.50;
 
     double predictionX = robotPose.getX() + (velocityX * bufferTime);
     double predictionY = robotPose.getY() + (velocityY * bufferTime);
@@ -568,10 +568,10 @@ public class Drivebase extends SubsystemBase {
       return false;
   }
 
-  public boolean willEnterTrench() {
-    double velocityX = driveField.VelocityX;
-    double velocityY = driveField.VelocityY;
-    double bufferTime = 0.05;
+    public boolean willEnterTrench() {
+       double velocityX = fieldRelativeVelocityX;
+       double velocityY = fieldRelativeVelocityY;
+       double bufferTime = 0.50;
 
     double predictionX = robotPose.getX() + (velocityX * bufferTime);
     double predictionY = robotPose.getY() + (velocityY * bufferTime);
@@ -707,9 +707,9 @@ public class Drivebase extends SubsystemBase {
         rawVelocityX = lastRawVelocityX;
       }
 
-      if (Math.abs(rawVelocityX) < 0.1) {
-        rawVelocityX = 0;
-      }
+            if (Math.abs(rawVelocityX) < 0.2) {
+                rawVelocityX = 0;
+            }
 
       velocityWindowX[velocityIndexX] = rawVelocityX;
       velocityIndexX = (velocityIndexX + 1) % VELOCITY_WINDOW_SIZE;
@@ -732,9 +732,9 @@ public class Drivebase extends SubsystemBase {
         rawVelocityY = lastRawVelocityY;
       }
 
-      if (Math.abs(rawVelocityY) < 0.1) {
-        rawVelocityY = 0;
-      }
+            if (Math.abs(rawVelocityY) < 0.2) {
+                rawVelocityY = 0;
+            }
 
       velocityWindowY[velocityIndexY] = rawVelocityY;
       velocityIndexY = (velocityIndexY + 1) % VELOCITY_WINDOW_SIZE;

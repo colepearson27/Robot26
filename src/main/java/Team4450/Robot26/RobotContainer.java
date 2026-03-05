@@ -203,7 +203,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper));
     NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
     NamedCommands.registerCommand("end", new StopAuto(drivebase));
-    NamedCommands.registerCommand("Shoot", new Shoot(shooter, hopper));
+    NamedCommands.registerCommand("Shoot", new Shoot(drivebase, shooter, hopper));
     NamedCommands.registerCommand("StopShooting", new StopShooting(shooter, hopper));
 
     // Set the default drive command. This command will be scheduled automatically
@@ -398,11 +398,10 @@ public class RobotContainer {
         .onTrue(new InstantCommand(intake::stopIntake))
         .onTrue(new InstantCommand(hopper::stop));
 
-    /*
-     * new Trigger(() -> driverController.getYButton())
-     * .onTrue(new InstantCommand(hopper::start))
-     * .onFalse(new InstantCommand(hopper::stop));
-     */
+    new Trigger(() -> driverController.getYButton())
+    .onTrue(new InstantCommand(shooter::reverseInfeed))
+    .onFalse(new InstantCommand(shooter::stopInfeed));
+    
 
     new Trigger(() -> driverController.getXButton())
         .onTrue(new InstantCommand(drivebase::toggleHubTracking));

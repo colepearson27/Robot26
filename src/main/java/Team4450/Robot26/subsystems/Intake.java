@@ -71,7 +71,7 @@ public class Intake extends SubsystemBase {
         pivitCFG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         // Slot 0 PID
-        pivitCFG.Slot0.kP = 15;
+        pivitCFG.Slot0.kP = 5;
         pivitCFG.Slot0.kI = 0;
         pivitCFG.Slot0.kD = 0;
 
@@ -81,7 +81,6 @@ public class Intake extends SubsystemBase {
         pivitCFG.Slot0.kA = 0;
 
         this.pivitMotor.getConfigurator().apply(pivitCFG);
-
 
         SmartDashboard.putBoolean("Intake can Pivit", canPivit);
         SmartDashboard.putBoolean("Intake can Spin", canSpin);
@@ -109,17 +108,18 @@ public class Intake extends SubsystemBase {
 
             SmartDashboard.putNumber("Intake RPM", getIntakeRPM());
 
-            if (this.runIntake) {
-                setIntakeRPM(SmartDashboard.getNumber("Intake Target RPM", Constants.INTAKE_DEFAULT_TARGET_RPM));
-            }
-
             SmartDashboard.putNumber("Intake Current Draw", getIntakeCurrent());
         }
+
+        if (this.runIntake) {
+            setIntakeRPM(SmartDashboard.getNumber("Intake Target RPM", Constants.INTAKE_DEFAULT_TARGET_RPM));
+        }
+
     }
 
     public void togglePivit() {
         if (this.pivitCurrentPosition >= 0.8) {
-            SmartDashboard.putNumber("Pivit Position", 0.05);
+            SmartDashboard.putNumber("Pivit Position", 0);
         } else {
             SmartDashboard.putNumber("Pivit Position", 0.95);
         }
@@ -141,10 +141,8 @@ public class Intake extends SubsystemBase {
     }
 
     public void testIntake() {
-        if (canSpin) {
-            this.intakeMotorLeft.set(0.05);
-            this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
-        }
+        this.intakeMotorLeft.set(0.05);
+        this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
     // TODO: FIX for the start Intake command for autos
@@ -155,11 +153,9 @@ public class Intake extends SubsystemBase {
     }
 
     public void stopIntake() {
-        if (canSpin) {
-            this.runIntake = false;
-            this.intakeMotorLeft.set(0);
-            this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
-        }
+        this.runIntake = false;
+        this.intakeMotorLeft.set(0);
+        this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
     public double getIntakeRPM() {
@@ -185,30 +181,6 @@ public class Intake extends SubsystemBase {
     public double getIntakeRightMotorCurrent() {
         if (canSpin) {
             return intakeMotorRight.getSupplyCurrent(true).getValueAsDouble();
-        } else {
-            return -1;
-        }
-    }
-
-    public double getIntakeVoltage() {
-        if (canSpin) {
-            return intakeMotorLeft.getSupplyVoltage(true).getValueAsDouble() + intakeMotorRight.getSupplyVoltage(true).getValueAsDouble();
-        } else {
-            return -1;
-        }
-    }
-
-    public double getIntakeLeftMotorVoltage() {
-        if (canSpin) {
-            return intakeMotorLeft.getSupplyVoltage(true).getValueAsDouble();
-        } else {
-            return -1;
-        }
-    }
-
-    public double getIntakeRightMotorVoltage() {
-        if (canSpin) {
-            return intakeMotorRight.getSupplyVoltage(true).getValueAsDouble();
         } else {
             return -1;
         }
@@ -243,14 +215,6 @@ public class Intake extends SubsystemBase {
         }
     }
 
-    public double getPivitMotorVoltage() {
-        if (canPivit) {
-            return pivitMotor.getSupplyVoltage(true).getValueAsDouble();
-        } else {
-            return -1;
-        }
-    }
-
     public boolean hasDevices() {
         return pivitMotor.isConnected() && intakeMotorLeft.isConnected() && intakeMotorRight.isConnected();
     }
@@ -268,15 +232,6 @@ public class Intake extends SubsystemBase {
         double error = targetRPM - currentRPM;
         double adjustment = Constants.INTAKE_kP * error; // Adjustment to approach target
         double newRPM = targetRPM + adjustment; // Adjust current RPM towards target
-        this.intakeMotorLeft.set(newRPM / Constants.INTAKE_MAX_THEORETICAL_RPM);
-        this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
-    }
-
-    public void setIntakeRPMWithScaling(double targetRPM) {
-        double currentRPM = getIntakeRPM();
-        double error = targetRPM - currentRPM;
-        double adjustment = Constants.INTAKE_kP * error; // Adjustment to approach target
-        double newRPM = (targetRPM + adjustment) * robotContainer.getVolatgePercent() * Constants.INTAKE_VOLTAGE_MULTIPLIER; // Adjust current RPM towards target
         this.intakeMotorLeft.set(newRPM / Constants.INTAKE_MAX_THEORETICAL_RPM);
         this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
     }
