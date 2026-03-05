@@ -7,31 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Trench to middle 1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Middle 1 to under trench"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Under trench to shot 1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Under tench 2"
+            "pathName": "Slow 1m Forward"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot(temporary)"
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Slow 1m Back"
           }
         }
       ]

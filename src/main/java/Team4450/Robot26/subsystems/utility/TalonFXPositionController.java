@@ -25,9 +25,11 @@ import static edu.wpi.first.units.Units.*;
  * controller. Provides voltage, torque and Motion Magic (voltage) control methods.
  * Torque control requires Phoemix Pro license.
  * Set any parameters before calling desiredPosition(). Automatically
- * stops motor when robot disabled. Default parameters work with Falcon 500 and
- * should be close for Kraken. See CTRE and WPILib doc for information about the
- * parameters and how to tune this controller.
+ * stops motor when robot disabled. Default parameters work with Kraken x60. This
+ * should be tuned for your application. See CTRE and WPILib  * doc for information 
+ * about the parameters and how to tune this controller:
+ * <a href="https://docs.wpilib.org/en/stable/docs/software/advanced-controls/introduction/tuning-flywheel.html">WPILib</a>, 
+ * <a href="https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/device-specific/talonfx/closed-loop-requests.html">CTRE</a>
  */
 public class TalonFXPositionController extends SubsystemBase {
 
@@ -56,7 +58,7 @@ public class TalonFXPositionController extends SubsystemBase {
     /* Voltage-based Position requires a Position feed forward to account for the back-emf of the motor */
     private double  slot0_kS = 0.25;    // To account for friction, add 0.25 V of static feedforward
     private double  slot0_kG = 0.0;     // Output to overcome gravity, 0 V static feedforward
-    private double  slot0_kV = 0.122;   // A velocity target of 1 rps results in 0.12 V output
+    private double  slot0_kV = 0.12;    // A velocity target of 1 rps results in 0.12 V output
     private double  slot0_kA = 0.01;    // An acceleration of 1 rps/s requires 0.01 V output
     private double  slot0_kP = 2.5;     // A position error of 1 rotation results in 2.5 V output
     private double  slot0_kI = 0.0;     // No output for integrated error

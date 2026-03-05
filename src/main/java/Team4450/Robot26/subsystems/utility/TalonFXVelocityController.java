@@ -26,9 +26,12 @@ import static edu.wpi.first.units.Units.*;
  * controller. Provides voltage, torque and Motion Magic (voltage) control methods.
  * Torque control requires Phoenix Pro license.
  * Set any parameters before calling setDesiredRPS or setDesiredRPM. Automatically
- * stops motor when robot disabled. Default parameters work with Falcon 500 and
- * should be close for Kraken. See CTRE and WPILib doc for information about the
- * parameters and how to tune this controller.
+ * stops motor when robot disabled. Default parameters work with Kraken x60. This
+ * should be tuned for your application. In particular, kV may need adjustment to
+ * get this controller to exactly match the target velocity. See CTRE and WPILib 
+ * doc for information about the parameters and how to tune this controller:
+ * <a href="https://docs.wpilib.org/en/stable/docs/software/advanced-controls/introduction/tuning-flywheel.html">WPILib</a>, 
+ * <a href="https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/device-specific/talonfx/closed-loop-requests.html">CTRE</a>
  */
 public class TalonFXVelocityController extends SubsystemBase {
 
@@ -55,7 +58,7 @@ public class TalonFXVelocityController extends SubsystemBase {
 
     /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
     private double  slot0_kS = 0.1;   // To account for friction, add 0.1 V of static feedforward
-    private double  slot0_kV = 0.11;  // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
+    private double  slot0_kV = 0.12;  // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
     private double  slot0_kA = 0.01;  // An acceleration of 1 rps/s requires 0.01 V output    
     private double  slot0_kP = 0.30;  // An error of 1 rotation per second results in 0.30 V output
     private double  slot0_kI = 0;     // No output for integrated error
@@ -66,8 +69,6 @@ public class TalonFXVelocityController extends SubsystemBase {
     private double  slot1_kP = 5;     // An error of 1 rotation per second results in 5 A output
     private double  slot1_kI = 0;     // No output for integrated error
     private double  slot1_kD = 0;     // No output for error derivative
-        
-    //DoubleConsumer setkP = kP -> setSlot0_kP(kP);
     
     public TalonFXVelocityController(TalonFX talon, String name) {
         this.talon = talon;
