@@ -12,15 +12,15 @@ public class StopIntake extends Command {
   }
 
   public void initialize() {
-    intake.stopIntake();
   }
 
   public void execute() {
+    intake.stopIntake();
     end(false);
   }
 
   public boolean isFinished() {
-    return true;
+    return intake.getIntakeRPM() < 4000;
 
   }
 

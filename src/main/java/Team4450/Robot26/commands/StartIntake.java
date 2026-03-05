@@ -17,17 +17,20 @@ public class StartIntake extends Command {
     this.intake = intake;
   }
 
+  @Override
   public void initialize() {
     state = State.STOPPING;
 
   }
 
+  @Override
   public void execute() {
     state = State.STOPPED;
     intake.setIntakeRPM(4500);
     end(false);
   }
 
+  @Override
   public boolean isFinished() {
     return state == State.END;
 
@@ -35,7 +38,6 @@ public class StartIntake extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putString("Intake Stopped?", "Yup");
 
   }
 }

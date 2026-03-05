@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "straight 1 meter and right"
+            "pathName": "CS-Shoot"
           }
         },
         {
@@ -17,7 +17,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 5.0
                 }
               },
               {
@@ -33,6 +33,12 @@
           "type": "named",
           "data": {
             "name": "stopShooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "end"
           }
         }
       ]

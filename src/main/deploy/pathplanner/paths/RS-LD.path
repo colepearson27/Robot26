@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.55,
-        "y": 0.77
+        "x": 3.691,
+        "y": 0.8839999999999986
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9100000000000004,
-        "y": 6.203906249999999
+        "x": 2.051,
+        "y": 6.317906249999998
       },
       "isLocked": false,
-      "linkedName": "rightStart"
+      "linkedName": "RS"
     },
     {
       "anchor": {
@@ -48,7 +48,7 @@
   "folder": "S-D Finished",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 70.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

@@ -9,7 +9,6 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import Team4450.Robot26.commands.DriveCommand;
 import Team4450.Robot26.commands.Shoot;
 import Team4450.Robot26.commands.StartIntake;
-import Team4450.Robot26.commands.StartShoot;
 import Team4450.Robot26.commands.StopIntake;
 import Team4450.Robot26.commands.StopShoot;
 import Team4450.Robot26.commands.StopAuto;
@@ -196,7 +195,6 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("startIntake", new StartIntake(intake));
     NamedCommands.registerCommand("stopIntake", new StopIntake(intake));
-    NamedCommands.registerCommand("startShooter", new StartShoot(shooter, hopper));
     NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper));
     NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
     NamedCommands.registerCommand("end", new StopAuto(drivebase));

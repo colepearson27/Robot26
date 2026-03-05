@@ -3,8 +3,9 @@
   "robotLength": 0.762,
   "holonomicMode": true,
   "pathFolders": [
-    "D-C practically finished",
     "C-Shoot",
+    "D-C practically finished",
+    "S-Shoot",
     "S-C Finished",
     "S-D Finished"
   ],

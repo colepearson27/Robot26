@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.58,
-        "y": 2.09
+        "x": 3.5999999999999996,
+        "y": 4.03
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.94,
-        "y": 0.3100000000000007
+        "x": 3.01,
+        "y": 4.0317578125
       },
       "isLocked": false,
-      "linkedName": "RCR"
+      "linkedName": "CS"
     },
     {
       "anchor": {
-        "x": 2.33,
-        "y": 1.7200000000000002
+        "x": 2.26,
+        "y": 4.03
       },
       "prevControl": {
-        "x": 4.53,
-        "y": 0.020000000000000018
+        "x": 2.95,
+        "y": 4.0417578125
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 45.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "C-Shoot",
+  "folder": "S-Shoot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

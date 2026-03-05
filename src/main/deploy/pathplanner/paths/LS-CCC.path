@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.569999999997834,
-        "y": 7.180000000003246
+        "x": 3.6892924597267696,
+        "y": 7.174887556169694
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.196715989398447,
-        "y": 7.259674647832105
+        "x": 4.3160084491273825,
+        "y": 7.254562203998553
       },
       "isLocked": false,
       "linkedName": "LS"
@@ -89,7 +89,7 @@
   "folder": "S-C Finished",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -70.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

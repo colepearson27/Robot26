@@ -24,6 +24,7 @@ public class StopShoot extends Command {
     shooter.stopFlywheel();
     shooter.stopInfeed();
     hopper.stop();
+    end(false);
   }
 
   @Override
