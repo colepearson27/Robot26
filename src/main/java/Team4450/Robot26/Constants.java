@@ -102,10 +102,11 @@ public final class Constants {
     // The intake gear ratio it 1 to 1
     public static int INTAKE_GEAR_RATIO = 1 / 1;
     // I was told that the gear box on the Kraken is a 25:1
-    public static int INTAKE_PIVIT_GEAR_RATIO = (25 / 1) * (32 / 16);
+    // public static int INTAKE_PIVIT_GEAR_RATIO = (25 / 1) * (32 / 16);
+    public static double INTAKE_PIVIT_GEAR_RATIO = (39.375 / 1);
 
     public static int INTAKE_MAX_THEORETICAL_RPM = KRAKEN_X44_MAX_THEORETICAL_RPM / INTAKE_GEAR_RATIO;
-    public static int INTAKE_MAX_THEORETICAL_PIVIT_RPM = KRAKEN_X60_MAX_THEORETICAL_RPM / INTAKE_PIVIT_GEAR_RATIO;
+    public static double INTAKE_MAX_THEORETICAL_PIVIT_RPM = KRAKEN_X60_MAX_THEORETICAL_RPM / INTAKE_PIVIT_GEAR_RATIO;
 
     public static double INTAKE_PIVIT_MOTOR_POWER = 0.0;
     // The format of this value is in rotations of the pivit motor
@@ -188,7 +189,7 @@ public final class Constants {
     public static boolean HUB_TRACKING = false;
 
     // Interpolation table
-    public static double[] FLYWHEEL_SPEED_TABLE = {3550, 3650, 3850, 3850, 4300, 4400}; // Converted from percentages to RPM
+    public static double[] FLYWHEEL_SPEED_TABLE = {3550, 3650, 3850, 4050, 4300, 4400}; // Converted from percentages to RPM
     public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = {2, 2.5, 3, 3.5, 4, 4.5};
     public static double[] HOOD_ARC_TABLE = {0.9, 1.65, 1.8, 1.85, 1.85, 2.3};
 

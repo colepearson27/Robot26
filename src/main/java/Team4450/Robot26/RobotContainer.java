@@ -387,10 +387,8 @@ public class RobotContainer {
         .whileTrue(new Shoot(drivebase, shooter, hopper));
 
     new Trigger(() -> driverController.getRightTrigger())
-        .onTrue(new InstantCommand(shooter::startInfeed))
-        .onFalse(new InstantCommand(shooter::stopInfeed))
-        .onTrue(new InstantCommand(hopper::start))
-        .onFalse(new InstantCommand(hopper::stop));
+        .onTrue(new InstantCommand(shooter::driverToggledInfeed))
+        .onFalse(new InstantCommand(shooter::driverToggledInfeed));
 
     new Trigger(() -> driverController.getAButton())
         .onTrue(new InstantCommand(intake::startIntake))

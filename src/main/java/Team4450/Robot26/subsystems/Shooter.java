@@ -56,6 +56,8 @@ public class Shooter extends SubsystemBase {
     //Hood Rotation Offset
     private double hoodRotationOffset;
 
+    public boolean driverEnabledInfeed = false;
+
     DigitalInput beamBreak;
 
     // Constants for launch calculations
@@ -265,9 +267,17 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean flywheelAtSpeed() {
-        // Change to a constant at some point
-        //
-        if (Math.abs(this.currentRPM - this.targetRPM) < 150) {
+        // Change tolerence to a constant at some point
+        if (Math.abs(this.currentRPM - this.targetRPM) < 100) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean robotAtTarget() {
+        // Change tolerence to a constant at some point
+        if (Math.abs(SmartDashboard.getNumber("Heading Error", 0)) < 14) { // This will have a little delay on it, but should be fine
             return true;
         } else {
             return false;
@@ -633,5 +643,9 @@ public class Shooter extends SubsystemBase {
 
         this.infeedMotorLeft.getConfigurator().apply(infeedCFG);
         this.infeedMotorRight.getConfigurator().apply(infeedCFG);
+    }
+
+    public void driverToggledInfeed() {
+        this.driverEnabledInfeed = !this.driverEnabledInfeed;
     }
 }

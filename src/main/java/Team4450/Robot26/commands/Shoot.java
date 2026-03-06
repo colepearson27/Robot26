@@ -23,15 +23,15 @@ public class Shoot extends Command {
         shooter.startFlywheel();
     }
 
-  @Override
-  public void execute() {
-    if (this.shooter.flywheelAtSpeed()) {
-      shooter.startInfeed();
-      hopper.start();
-    } else {
-      shooter.stopInfeed();
+    @Override
+    public void execute() {
+        if (this.shooter.flywheelAtSpeed() && this.shooter.robotAtTarget() && this.shooter.driverEnabledInfeed) {
+            shooter.startInfeed();
+            hopper.start();
+        } else {
+            shooter.stopInfeed();
+        }
     }
-  }
 
   @Override
   public boolean isFinished() {

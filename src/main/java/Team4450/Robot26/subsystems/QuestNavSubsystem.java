@@ -44,10 +44,10 @@ public class QuestNavSubsystem extends SubsystemBase {
     }
 
     public void resetToZeroPose() {
-        Pose3d questPose3d = zeroPose.transformBy(ROBOT_TO_QUEST);
+        // Pose3d questPose3d = zeroPose.transformBy(ROBOT_TO_QUEST);
         // Because the pose is set on the quest nav we will need to store an offset that is updated by the limelight in the drivebase class because we do not want to send constant updates to the questnav system
-        questNav.setPose(questPose3d);
-        System.out.println("QuestNav internal pose reset to: " + questPose3d.toString());
+        // questNav.setPose(questPose3d);
+        // System.out.println("QuestNav internal pose reset to: " + questPose3d.toString());
     }
 
     public Pose3d getQuestRobotPose() {

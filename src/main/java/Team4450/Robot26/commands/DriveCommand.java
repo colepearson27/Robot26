@@ -91,55 +91,51 @@ public class DriveCommand extends Command {
 
     drivebase.updateVelocity(Constants.ROBOT_PERIOD_SEC);
 
-    if (Constants.HUB_TRACKING) {
-
-      // This finds where the correct hub position is
-      Pose2d hubPosition;
-      if (alliance == DriverStation.Alliance.Blue) {
-        hubPosition = new Pose2d(HUB_BLUE_WELDED_POSE.getX(), HUB_BLUE_WELDED_POSE.getY(), Rotation2d.kZero);
-      } else {
-        hubPosition = new Pose2d(HUB_RED_WELDED_POSE.getX(), HUB_RED_WELDED_POSE.getY(), Rotation2d.kZero);
-      }
-
-      double targetHeading;
-
-      // Decides where to track
-      // If both inputs are zero and the alliance is blue then
-      if (rotationXSupplier.getAsDouble() == 0 && rotationYSupplier.getAsDouble() == 0
-          && alliance == DriverStation.Alliance.Blue) {
-        delayCounter = 0;
-        // Checks if robot is currently in the Alliance Zone then aims at the hub
-        if (drivebase.getPose().getX() < NEUTRAL_BLUE_ZONE_BARRIER_X) {
-          targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(hubPosition));
+        if (Constants.HUB_TRACKING) {
+        
+        // This finds where the correct hub position is
+        Pose2d hubPosition;
+        if (alliance == DriverStation.Alliance.Blue) {
+            hubPosition = new Pose2d(HUB_BLUE_WELDED_POSE.getX(), HUB_BLUE_WELDED_POSE.getY(), Rotation2d.kZero);
         } else {
-          // Checks what side the robot is on, and aims at the nearest ferrying target
-          // point predefined in Constants
-          if (drivebase.getPose().getY() < FIELD_MIDDLE_Y) {
-            targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_BLUE_OUTPOST_CORNER));
-          } else {
-            targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_BLUE_BLANK_CORNER));
-          }
+            hubPosition = new Pose2d(HUB_RED_WELDED_POSE.getX(), HUB_RED_WELDED_POSE.getY(), Rotation2d.kZero);
         }
-        // This does the same thing but for the red alliance
-      } else if (rotationXSupplier.getAsDouble() == 0 && rotationYSupplier.getAsDouble() == 0
-          && alliance == DriverStation.Alliance.Red) {
-        if (drivebase.getPose().getX() > NEUTRAL_RED_ZONE_BARRIER_X) {
-          targetHeading = drivebase.getAngleToAim(hubPosition);
+        
+        double targetHeading;
+        
+        // Decides where to track
+        // If both inputs are zero and the alliance is blue then
+        if (rotationXSupplier.getAsDouble() == 0 && rotationYSupplier.getAsDouble() == 0 && alliance == DriverStation.Alliance.Blue) {
+            delayCounter = 0;
+            // Checks if robot is currently in the Alliance Zone then aims at the hub
+            if (drivebase.getPose().getX() < NEUTRAL_BLUE_ZONE_BARRIER_X) {
+                targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(hubPosition));
+            } else {
+                // Checks what side the robot is on, and aims at the nearest ferrying target point predefined in Constants
+                if (drivebase.getPose().getY() < FIELD_MIDDLE_Y) {
+                    targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_BLUE_OUTPOST_CORNER));
+                } else {
+                    targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_BLUE_BLANK_CORNER));
+                }
+            }
+            // This does the same thing but for the red alliance
+        } else if (rotationXSupplier.getAsDouble() == 0 && rotationYSupplier.getAsDouble() == 0 && alliance == DriverStation.Alliance.Red) {
+            if (drivebase.getPose().getX() > NEUTRAL_RED_ZONE_BARRIER_X) {
+                targetHeading = drivebase.getAngleToAim(hubPosition);
+            } else {
+                if (drivebase.getPose().getY() < FIELD_MIDDLE_Y) {
+                    targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_RED_BLANK_CORNER));
+                } else {
+                    targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_RED_OUTPOST_CORNER));
+                }
+            }
+            // If there IS input, set the target heading to where the joystick si facing in relation to the driver
         } else {
-          if (drivebase.getPose().getY() < FIELD_MIDDLE_Y) {
-            targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_RED_BLANK_CORNER));
-          } else {
-            targetHeading = drivebase.getAngleToAim(drivebase.getPoseToAim(FERRY_RED_OUTPOST_CORNER));
-          }
+            targetHeading = -Math.toDegrees(Math.atan2(rotationYSupplier.getAsDouble(), rotationXSupplier.getAsDouble())) - 90;
         }
-        // If there IS input, set the target heading to where the joystick si facing in
-        // relation to the driver
-      } else {
-        targetHeading = -Math.toDegrees(Math.atan2(rotationYSupplier.getAsDouble(), rotationXSupplier.getAsDouble()))
-            - 90;
-      }
-
-      SmartDashboard.putNumber("Target Heading", targetHeading);
+        
+        
+        SmartDashboard.putNumber("Target Heading", targetHeading);
 
       double error = -targetHeading + Math.toDegrees(drivebase.getPose().getRotation().getDegrees());
 
