@@ -103,7 +103,7 @@ public final class Constants {
     public static int INTAKE_GEAR_RATIO = 1 / 1;
     // I was told that the gear box on the Kraken is a 25:1
     // public static int INTAKE_PIVIT_GEAR_RATIO = (25 / 1) * (32 / 16);
-    public static double INTAKE_PIVIT_GEAR_RATIO = (39.375 / 1);
+    public static double INTAKE_PIVIT_GEAR_RATIO = (62.4 / 1);
 
     public static int INTAKE_MAX_THEORETICAL_RPM = KRAKEN_X44_MAX_THEORETICAL_RPM / INTAKE_GEAR_RATIO;
     public static double INTAKE_MAX_THEORETICAL_PIVIT_RPM = KRAKEN_X60_MAX_THEORETICAL_RPM / INTAKE_PIVIT_GEAR_RATIO;
@@ -233,7 +233,7 @@ public final class Constants {
     // Hopper motor constants
     public static final int HOPPER_MOTOR_CAN_ID = 12; // Example CAN ID for the Kraken X60 motor
 
-    public static final int INTAKE_DEFAULT_TARGET_RPM = 2500;
+    public static final int INTAKE_DEFAULT_TARGET_RPM = 4000;
     // PID constants for Intake
     public static final double INTAKE_kP = 0.8;
 

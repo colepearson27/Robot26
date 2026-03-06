@@ -71,9 +71,9 @@ public class Intake extends SubsystemBase {
         pivitCFG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         // Slot 0 PID
-        pivitCFG.Slot0.kP = 5;
+        pivitCFG.Slot0.kP = 1;
         pivitCFG.Slot0.kI = 0;
-        pivitCFG.Slot0.kD = 0;
+        pivitCFG.Slot0.kD = 0.1;
 
         // Slot 0 Feedforward (Talon internal)
         pivitCFG.Slot0.kS = 0.5; 
@@ -105,6 +105,7 @@ public class Intake extends SubsystemBase {
             this.pivitCurrentPositionMotorPosition = this.getPivitPosition();
             this.pivitCurrentPosition = this.motorPositionToPivitPosition(this.pivitCurrentPositionMotorPosition);
             SmartDashboard.putNumber("Pivit current position", this.pivitCurrentPosition);
+            SmartDashboard.putNumber("Pivit Motor Position", this.pivitCurrentPositionMotorPosition);
 
             SmartDashboard.putNumber("Intake RPM", getIntakeRPM());
 
