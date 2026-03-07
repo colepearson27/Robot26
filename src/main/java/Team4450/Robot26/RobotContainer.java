@@ -406,7 +406,8 @@ public class RobotContainer {
         .onFalse(new InstantCommand(shooter::stopInfeed));
 
     new Trigger(() -> driverController.getXButton())
-        .onTrue(new InstantCommand(drivebase::toggleHubTracking));
+        .onTrue(new InstantCommand(drivebase::enableHubTracking))
+        .onFalse(new InstantCommand(drivebase::disableHubTracking));
 
     // new Trigger(() -> driverController.getYButton())
     // .onTrue(new InstantCommand(drivebase::driveToOrigin));
