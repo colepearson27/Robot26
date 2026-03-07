@@ -97,7 +97,7 @@ public class QuestNavSubsystem extends SubsystemBase {
             // If the x or y difference from the robots current pose to the limelight estimate pose update the current quest estimate for the position
             SmartDashboard.putBoolean("Quest Connected", true);
             // 5000 miliseconds is 5 seconds
-            if (System.currentTimeMillis() - this.lastResetTime > 1000) {
+            if (System.currentTimeMillis() - this.lastResetTime > 400) {
                 if (RobotContainer.visionSubsystem.frontLimelightSee || RobotContainer.visionSubsystem.rightLimelightSee) { // One of the limelight must be seeing tags
                     if (Math.abs(drivebase.getPose().getX() - drivebase.limelightPoseEstimate.getX()) > Constants.LIMELIGHT_QUEST_ERROR_AMOUNT_METERS || Math.abs(drivebase.getPose().getX() - drivebase.limelightPoseEstimate.getY()) > Constants.LIMELIGHT_QUEST_ERROR_AMOUNT_METERS) {
                         Pose3d limelightEstimatePose = new Pose3d(drivebase.limelightPoseEstimate);

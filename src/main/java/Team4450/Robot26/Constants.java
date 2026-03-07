@@ -273,10 +273,10 @@ public final class Constants {
         // Misc
         public static final String BEAM_BREAK                       = "Beam Break";
         public static final String DISABLE_AUTO_FLYWHEEL_UPDATE     = "disableAutomaticFlywheelUpdate";
+        public static final String DISABLE_AUTO_DISTANCE_UPDATE     = "disableAutomaticDistanceUpdate";
         public static final String ROBOT_LAUNCH_X                   = "RobotLaunchX";
         public static final String ROBOT_LAUNCH_Y                   = "RobotLaunchY";
         public static final String GOAL_POSE                        = "Goal Pose";
-        public static final String DIFFS                            = "Diffs";
         public static final String ROBOT_DISTANCE                   = "Robot Distance";
     }
 
