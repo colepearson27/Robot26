@@ -371,7 +371,7 @@ public class Drivebase extends SubsystemBase {
         || SmartDashboard.getBoolean("overrideQuestForRobotPose", this.overrideQuestForRobotPose)) {
       SmartDashboard.putBoolean("Trying to send current robotPose", true);
       return new Pose2d(robotPose.getX(), robotPose.getY(),
-          new Rotation2d(Math.toRadians(robotPose.getRotation().getRadians())));
+          new Rotation2d(Math.toRadians(getYaw180())));
     } else {
       SmartDashboard.putBoolean("Trying to send current robotPose", false);
       return new Pose2d(0, 0, new Rotation2d(0));
