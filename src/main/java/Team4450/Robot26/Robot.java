@@ -167,8 +167,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
-        Util.consoleLog();
-
         // This is here because Pathplanner Autos don't stop the robot when it is disabled.
         RobotContainer.drivebase.stop();
 
@@ -178,8 +176,6 @@ public class Robot extends TimedRobot {
         RobotContainer.visionSubsystem.zeroLimelightIMU(rO);
 
         RobotContainer.shuffleBoard.resetLEDs();
-
-        Util.consoleLog(functionMarker);
     }
 
     /**
@@ -202,19 +198,15 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        Util.consoleLog(functionMarker);
-
         SmartDashboard.putBoolean("Disabled", false);
         SmartDashboard.putBoolean("Auto Mode", true);
 
         robotContainer.getMatchInformation();
 
         // RobotContainer function determines which auto command is selected to run.
-
         // Command autonomousCommand = robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
-
         // try {
         //     if (autonomousCommand != null) CommandScheduler.getInstance().schedule(autonomousCommand);
         // } catch (Exception e) {
@@ -222,35 +214,17 @@ public class Robot extends TimedRobot {
         //     this.endCompetition();
         // }
         //
-        RobotContainer.intake.pivitDown();
-        driveStart = System.currentTimeMillis();
-        RobotContainer.drivebase.driveRobotOriented(-0.2, 0, 0);
-
-        shootStart = System.currentTimeMillis();
-        shootTwo = System.currentTimeMillis();
-        command = new Shoot(RobotContainer.drivebase, RobotContainer.shooter, RobotContainer.hopper);
-        RobotContainer.shooter.disableAutomaticDistance();
-
-        Util.consoleLog(functionMarker);
     }
 
     /**
      * This function is called periodically during autonomous. Technically there
-     * should be nothing here.
+     * should be nothing here as long as you are using pathplanner. Just
+     * because there is nothing here does not mean stuff is not running because
+     * all of the subsystem periodics are still running. Actually the subsystem
+     * periodics are also running when the robot is disabled.
      */
     @Override
     public void autonomousPeriodic() {
-        if (System.currentTimeMillis() - driveStart > 3000) {
-            RobotContainer.drivebase.drive(0, 0, 0);
-        }
-
-        if (System.currentTimeMillis() - shootStart > 10000) {
-            command.end(true);
-            RobotContainer.shooter.enableAutomaticDistance();
-        }
-        if (System.currentTimeMillis() - shootTwo > 1000) {
-            CommandScheduler.getInstance().schedule(command);
-        }
     }
 
     /**
@@ -258,8 +232,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopInit() {
-        Util.consoleLog(functionMarker);
-
         robotContainer.getMatchInformation();
 
         SmartDashboard.putBoolean("Disabled", false);
@@ -280,8 +252,6 @@ public class Robot extends TimedRobot {
 
         // Driving handled by DriveCommand which is default command for the Drivebase.
         // Other commands scheduled by joystick buttons.
-
-        Util.consoleLog(functionMarker);
     }
 
     /**
@@ -304,7 +274,6 @@ public class Robot extends TimedRobot {
         Util.consoleLog();
 
         // Cancels all running commands at the start of test mode.
-
         CommandScheduler.getInstance().cancelAll();
 
         // Next two lines launch teleop mode, but since we are in test

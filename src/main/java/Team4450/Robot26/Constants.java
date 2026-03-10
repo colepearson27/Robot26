@@ -33,8 +33,6 @@ public final class Constants {
 	public static DriverStation.Alliance	 alliance;
 	public static int                        location, matchNumber;
 	public static String					 eventName, gameMessage;
-	    
-    public static String                     functionMarker = "-".repeat(30);
 
     public static final double  ROBOT_PERIOD_SEC = .02;
     public static final int     ROBOT_PERIOD_MS = 20;

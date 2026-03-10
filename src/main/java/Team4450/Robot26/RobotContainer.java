@@ -242,12 +242,6 @@ public class RobotContainer {
 
     drivebase.setDefaultCommand(driveCommand);
 
-    // Create a new pid drive command when going to another target, it is then
-    // killed by force or once target is reached
-    // pidDriveCommand = new PIDDriveCommand(driveBase, throttlePID, strafePID,
-    // headingPID)
-
-    // IDK if I have to init SmartDashboard data
     SmartDashboard.putNumber("Test Motor Power", 0);
 
     monitorPowerThread = MonitorPower.getInstance();
@@ -273,8 +267,6 @@ public class RobotContainer {
 
     // Warmup PathPlanner to avoid Java pauses.
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
-
-    Util.consoleLog(functionMarker);
   }
 
   /**
