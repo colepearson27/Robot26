@@ -28,8 +28,8 @@ public class Shoot extends Command {
         if (this.shooter.flywheelAtSpeed()) {
             shooter.startInfeed();
             hopper.start();
-        } else {
-            shooter.stopInfeed();
+        // } else {
+        //     shooter.stopInfeed();
         }
     }
 

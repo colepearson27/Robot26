@@ -199,7 +199,7 @@ public final class Constants {
     // ---------------- Feedforward (Talon internal) ----------------
     // Units: Volts, Volts/(rps), Volts/(rps/s)
     public static final double FLYWHEEL_kS = 0.1;
-    public static final double FLYWHEEL_kV = 0.11;
+    public static final double FLYWHEEL_kV = 0.12;
     public static final double FLYWHEEL_kA = 0.05;
     // ---------------- PID (Velocity) ----------------
     public static final double FLYWHEEL_kP = 0.2;
@@ -225,7 +225,7 @@ public final class Constants {
     // PID constants for Intake
     public static final double INTAKE_kP = 0.8;
 
-    public static final int INFEED_DEFAULT_TARGET_RPM = 4000;
+    public static final int INFEED_DEFAULT_TARGET_RPM = 5500;
     // PID constants for Shooter Infeed
     public static final double INFEED_kP = 0.8;
 
