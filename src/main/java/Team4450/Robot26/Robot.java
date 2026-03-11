@@ -242,6 +242,7 @@ public class Robot extends TimedRobot {
 
         if (RobotContainer.drivebase.limelightPoseEstimate.getX() != 0 && RobotContainer.drivebase.limelightPoseEstimate.getY() != 0) {
             RobotContainer.drivebase.robotPose = new Pose2d(RobotContainer.drivebase.limelightPoseEstimate.getX(), RobotContainer.drivebase.limelightPoseEstimate.getY(), RobotContainer.drivebase.limelightPoseEstimate.getRotation());
+            RobotContainer.drivebase.pigeonWrapper.startingYaw = RobotContainer.drivebase.limelightPoseEstimate.getRotation().getDegrees();
             RobotContainer.drivebase.resetOdometry(RobotContainer.drivebase.robotPose);
             RobotContainer.questNavSubsystem.resetQuestOdometry(new Pose3d(RobotContainer.drivebase.robotPose));
         } else {

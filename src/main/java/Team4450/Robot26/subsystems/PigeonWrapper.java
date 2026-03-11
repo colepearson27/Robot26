@@ -11,17 +11,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public class PigeonWrapper extends SubsystemBase {
     public Pigeon2      pigeon;
-    private double      startingYaw;
+    public double      startingYaw;
 
-    public PigeonWrapper(Pigeon2 pigeon)
-    {
+    public PigeonWrapper(Pigeon2 pigeon) {
         Util.consoleLog();
 
         this.pigeon = pigeon;
     }
 
-    public Pigeon2 getPigeon()
-    {
+    public Pigeon2 getPigeon() {
         return pigeon;
     }
 
@@ -29,8 +27,7 @@ public class PigeonWrapper extends SubsystemBase {
      * Returns total yaw of robot. Continues beyond 360.
      * @return Yaw in degrees ccw(left)- cw(right)+.
      */
-    public double getYaw()
-    {
+    public double getYaw() {
         return -pigeon.getYaw().getValueAsDouble() + startingYaw;
     }
 
@@ -40,8 +37,7 @@ public class PigeonWrapper extends SubsystemBase {
 	 * 1 degree is right of zero (clockwise) and 359 is left (counter clockwise).
 	 * @return Robot heading in degrees.
 	 */
-	public double getHeading()
-	{
+	public double getHeading() {
 		double heading;
 		
 		heading = getYaw();
@@ -58,13 +54,11 @@ public class PigeonWrapper extends SubsystemBase {
      * to +-180 degrees no matter how many degrees we have rotated.
 	 * @return Yaw angle in degrees 0 to +-180, ccw(left)- cw(right)+.
      */
-	public double getYaw180() 
-    {
+	public double getYaw180() {
         return Math.IEEEremainder(getYaw(), 360);
     }
 
-    public void reset()
-    {
+    public void reset() {
         Util.consoleLog();
         
         pigeon.reset();
@@ -75,8 +69,7 @@ public class PigeonWrapper extends SubsystemBase {
      * with back bumper parallel to the wall. 
      * @param degrees - is clockwise (cw or right).
      */
-    public void setStartingGyroYaw(double degrees)
-    {
+    public void setStartingGyroYaw(double degrees) {
         Util.consoleLog("%.1f", degrees);
 
         startingYaw = degrees;
