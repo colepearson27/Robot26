@@ -2,10 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-//package edu.wpi.first.wpilibj;
 package Team4450.Robot26.wpilib;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import edu.wpi.first.hal.NotifierJNI;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Tracer;
@@ -61,6 +63,16 @@ public class Watchdog implements Closeable, Comparable<Watchdog> {
     m_tracer = new Tracer();
   }
 
+  /**
+   * Watchdog constructor.
+   *
+   * @param timeout The watchdog's timeout with microsecond resolution.
+   * @param callback This function is called when the timeout expires.
+   */
+  public Watchdog(Time timeout, Runnable callback) {
+    this(timeout.in(Seconds), callback);
+  }
+
   @Override
   public void close() {
     disable();
@@ -68,10 +80,8 @@ public class Watchdog implements Closeable, Comparable<Watchdog> {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof Watchdog) {
-      return Double.compare(m_expirationTimeSeconds, ((Watchdog) obj).m_expirationTimeSeconds) == 0;
-    }
-    return false;
+    return obj instanceof Watchdog watchdog
+        && Double.compare(m_expirationTimeSeconds, watchdog.m_expirationTimeSeconds) == 0;
   }
 
   @Override
@@ -166,14 +176,14 @@ public class Watchdog implements Closeable, Comparable<Watchdog> {
   }
 
   /**
+   * 4450
    * Prints list of epochs added so far and their times.
+   * Direct outputf to String Consumer function.
    *
-   * @see Tracer#printEpochs()
-   * 
-   * @param output The stream that the output is sent to
+   * @see Tracer#printEpochs(Consumer<String> output)
    */
   public void printEpochs(Consumer<String> output) {
-    m_tracer.printEpochs(output);;
+    m_tracer.printEpochs(output);
   }
   
   /**
@@ -225,10 +235,9 @@ public class Watchdog implements Closeable, Comparable<Watchdog> {
     m_suppressTimeoutMessage = suppress;
   }
 
-
-  @SuppressWarnings("all") // added by Cole because I don't understand this file and its the last warning left in the code
+  @SuppressWarnings("resource")
   private static void updateAlarm() {
-    if (m_watchdogs.size() == 0) {
+    if (m_watchdogs.isEmpty()) {
       NotifierJNI.cancelNotifierAlarm(m_notifier);
     } else {
       NotifierJNI.updateNotifierAlarm(
@@ -252,7 +261,7 @@ public class Watchdog implements Closeable, Comparable<Watchdog> {
 
       m_queueMutex.lock();
       try {
-        if (m_watchdogs.size() == 0) {
+        if (m_watchdogs.isEmpty()) {
           continue;
         }
 

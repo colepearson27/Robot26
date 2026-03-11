@@ -4,473 +4,767 @@ import static Team4450.Robot26.Constants.DriveConstants.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import Team4450.Lib.Util;
 import static Team4450.Robot26.Constants.*;
+
+import Team4450.Robot26.Constants;
+import Team4450.Robot26.RobotContainer;
 import Team4450.Robot26.Constants.DriveConstants;
+import Team4450.Robot26.commands.DriveCommand;
 import Team4450.Robot26.subsystems.SDS.CommandSwerveDrivetrain;
 import Team4450.Robot26.subsystems.SDS.Telemetry;
 import Team4450.Robot26.subsystems.SDS.TunerConstants;
-import Team4450.Robot26.utility.AdvantageScope;
+// import Team4450.Robot26.utility.AdvantageScope;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import Team4450.Robot26.utility.RobotOrientation;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.math.geometry.Transform2d;
-import Team4450.Robot26.RobotContainer;
 
 /**
- * This class wraps the SDS drive base subsystem allowing us to add/modify drive base
- * functions without modifyinig the SDS code generated from Tuner. Also allows for
+ * This class wraps the SDS drive base subsystem allowing us to add/modify drive
+ * base
+ * functions without modifyinig the SDS code generated from Tuner. Also allows
+ * for
  * convenience wrappers for more complex functions in SDS code.
  */
 public class Drivebase extends SubsystemBase {
-    private CommandSwerveDrivetrain     sdsDriveBase = TunerConstants.createDrivetrain();
+  private CommandSwerveDrivetrain sdsDrivebase = TunerConstants.createDrivetrain();
 
-    public PigeonWrapper pigeonWrapper = new PigeonWrapper(sdsDriveBase.getPigeon2());
+  public PigeonWrapper pigeonWrapper = new PigeonWrapper(sdsDrivebase.getPigeon2());
 
-    // This should init to whatever the limelights see during the init period, otherwise set a smartdashboard and a console log into if it does not
-    public Pose2d robotPose = new Pose2d(0, 0, Rotation2d.kZero);
-    public Pose2d limelightPoseEstimate = new Pose2d(0, 0, Rotation2d.kZero);
-    
-    private final Telemetry     		logger = new Telemetry(kMaxSpeed);
-    // Field2d object creates the field display on the simulation and gives us an API
-    // to control what is displayed (the simulated robot).
+  // This should init to whatever the limelights see during the init period,
+  // otherwise set a smartdashboard and a console log into if it does not
+  public Pose2d robotPose = new Pose2d(0, 0, Rotation2d.kZero);
+  public Pose2d limelightPoseEstimate = new Pose2d(0, 0, Rotation2d.kZero);
 
-    private final Field2d               field2d = new Field2d();
-    
-    private boolean                     fieldRelativeDriving = true, slowMode = false;
-    private boolean                     neutralModeBrake = true;
-    private double                      maxSpeed = kMaxSpeed * kDriveReductionPct; 
-    private double                      maxRotRate = kMaxAngularRate * kRotationReductionPct;
+  private Pose2d lastPose;
+  private static final int VELOCITY_WINDOW_SIZE = 5;
 
-    private final SwerveRequest.SwerveDriveBrake driveBrake = new SwerveRequest.SwerveDriveBrake();
+  private final double[] velocityWindowX = new double[VELOCITY_WINDOW_SIZE];
+  private final double[] velocityWindowY = new double[VELOCITY_WINDOW_SIZE];
 
-    private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric()
-            .withDeadband(kMaxSpeed * DRIVE_DEADBAND)
-            .withRotationalDeadband(kMaxAngularRate * ROTATION_DEADBAND) // Add deadbands
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+  private int velocityIndexX = 0;
+  private int velocityIndexY = 0;
 
-    private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric()
-            .withDeadband(kMaxSpeed * DRIVE_DEADBAND)
-            .withRotationalDeadband(kMaxAngularRate * ROTATION_DEADBAND) // Add deadbands
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+  private int velocityCountX = 0;
+  private int velocityCountY = 0;
 
-    public Drivebase() {
-        Util.consoleLog();
+  private double lastRawVelocityX = 0;
+  private double lastRawVelocityY = 0;
 
-        // Add pigeon gyro as a Sendable. Updates the dashboard heading indicator automatically.
+  public double fieldRelativeVelocityX = 0;
+  public double fieldRelativeVelocityY = 0;
 
-		SmartDashboard.putData("Pigeon Gyro", pigeonWrapper); 
-        SmartDashboard.putData("Field2d", field2d);
+  private final Telemetry logger = new Telemetry(kMaxSpeed);
 
-		// Check Gyro.
-		if (pigeonWrapper.getPigeon().isConnected())
-			Util.consoleLog("Pigeon connected version=%s", pigeonWrapper.getPigeon().getVersion());
-		else
-		{
-			Exception e = new Exception("Pigeon is NOT connected!");
-			Util.logException(e);
-		}
+  // Field2d object creates the field display on the simulation and gives us an
+  // API
+  // to control what is displayed (the simulated robot).
+  private final Field2d field2d = new Field2d();
 
-        // Set drive motors to brake when power is zero.
-        sdsDriveBase.configNeutralMode(NeutralModeValue.Brake);
+  private boolean overrideQuestForRobotPose = false;
+  private boolean fieldRelativeDriving = true, slowMode = false;
+  private boolean neutralModeBrake = true;
+  private double maxSpeed = kMaxSpeed * kDriveReductionPct;
+  private double maxRotRate = kMaxAngularRate * kRotationReductionPct;
+  private boolean driverControlled = true;
+  private boolean slowFortrench = false;
 
-		// Idle while the robot is disabled. This ensures the configured
-        // neutral mode is applied to the drive motors while disabled.
-        
-		final var idle = new SwerveRequest.Idle();
+  private final SwerveRequest.SwerveDriveBrake driveBrake = new SwerveRequest.SwerveDriveBrake();
 
-        RobotModeTriggers.disabled().whileTrue(
-            sdsDriveBase.applyRequest(() -> idle).ignoringDisable(true)
-        );
+  private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric()
+      .withDeadband(kMaxSpeed * DRIVE_DEADBAND)
+      .withRotationalDeadband(kMaxAngularRate * ROTATION_DEADBAND) // Add deadbands
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
-        // Set tracking of robot field position at starting point. Blue perspective.
-        // note that this doesn't really do much because PathPlanner redoes this anyway.
-        // More for a starting pose in sim testing.
+  private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric()
+      .withDeadband(kMaxSpeed * DRIVE_DEADBAND)
+      .withRotationalDeadband(kMaxAngularRate * ROTATION_DEADBAND) // Add deadbands
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
-        // At some point move this to teleop init if it can be done quickly because
-        // we will be waiting for the Limelight to get an accurate position during init periodic
-        resetOdometry(DriveConstants.DEFAULT_STARTING_POSE);
+  public Drivebase() {
+    Util.consoleLog();
 
-        // Under sim, we starting pose the robot (above) before you can change the alliance 
-        // in the sim UI. We can't really do it anywhere else or it would interfere with 
-        // transition from auto to teleop. So we pose robot at lower left (blue) corner and
-        // force the blue driving perspective.
+    this.overrideQuestForRobotPose = false;
+    SmartDashboard.putBoolean("overrideQuestForRobotPose", this.overrideQuestForRobotPose);
 
-        if (RobotBase.isSimulation()) driveField.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
-		         
-        // Register for SDS telemetry.
-        sdsDriveBase.registerTelemetry(logger::telemeterize);
+    // Add pigeon gyro as a Sendable. Updates the dashboard heading indicator
+    // automatically.
+    SmartDashboard.putData("Pigeon Gyro", pigeonWrapper);
+    SmartDashboard.putData("Field2d", field2d);
 
-        updateDS();
+    // Check Gyro.
+    if (pigeonWrapper.getPigeon().isConnected())
+      Util.consoleLog("Pigeon connected version=%s", pigeonWrapper.getPigeon().getVersion());
+    else {
+      Exception e = new Exception("Pigeon is NOT connected!");
+      Util.logException(e);
     }
 
-    @Override
-    public void periodic() {
-        sdsDriveBase.periodic();
+    // Set drive motors to brake when power is zero.
+    sdsDrivebase.configNeutralMode(NeutralModeValue.Brake);
 
-        // update 3d simulation: look in AdvantageScope.java for more
-        AdvantageScope.getInstance().setRobotPose(getODPose());
-        AdvantageScope.getInstance().update();
-        AdvantageScope.getInstance().setSwerveModules(sdsDriveBase);
+    // Idle while the robot is disabled. This ensures the configured
+    // neutral mode is applied to the drive motors while disabled.
+    final var idle = new SwerveRequest.Idle();
 
-        // See this function for more information.
-        updateModulePoses(sdsDriveBase);
+    RobotModeTriggers.disabled().whileTrue(
+        sdsDrivebase.applyRequest(() -> idle).ignoringDisable(true));
 
+    // Set tracking of robot field position at starting point. Blue perspective.
+    // note that this doesn't really do much because PathPlanner redoes this anyway.
+    // More for a starting pose in sim testing.
+
+    // At some point move this to teleop init if it can be done quickly because
+    // we will be waiting for the Limelight to get an accurate position during init
+    // periodic
+    resetOdometry(DriveConstants.DEFAULT_STARTING_POSE);
+
+    // Under sim, we starting pose the robot (above) before you can change the
+    // alliance
+    // in the sim UI. We can't really do it anywhere else or it would interfere with
+    // transition from auto to teleop. So we pose robot at lower left (blue) corner
+    // and
+    // force the blue driving perspective.
+
+    if (RobotBase.isSimulation())
+      driveField.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
+
+    // Register for SDS telemetry.
+    // sdsDrivebase.registerTelemetry(logger::telemeterize);
+
+    updateDS();
+  }
+
+  @Override
+  public void periodic() {
+    updateVelocity(Constants.ROBOT_PERIOD_SEC);
+
+    sdsDrivebase.periodic();
+
+    // update 3d simulation: look in AdvantageScope.java for more
+    // AdvantageScope.getInstance().setRobotPose(getPose());
+    // AdvantageScope.getInstance().update();
+    // AdvantageScope.getInstance().setSwerveModules(sdsDrivebase);
+
+    // See this function for more information.
+    updateModulePoses(sdsDrivebase);
+
+        SmartDashboard.putString("Limelight Pose Estimate", this.limelightPoseEstimate.toString());
         // Basic telemetry
         SmartDashboard.putNumber("Gyro angle", getYaw());
         SmartDashboard.putString("Robot od pose", getODPose().toString());
         if (robotPose != null) {
             SmartDashboard.putString("Robot pose", robotPose.toString());
         }
-    }
+        SmartDashboard.putNumber("DriveBase Current", getDrivetrainCurrent());
 
-    public void drive(double throttle, double strafe, double rotation) {
-        if (fieldRelativeDriving) {
-            sdsDriveBase.setControl(
-                driveField.withVelocityX(throttle * maxSpeed) 
-                        .withVelocityY(strafe * maxSpeed) 
-                        .withRotationalRate(rotation * maxRotRate));
-        } else {
-            sdsDriveBase.setControl(
-                driveRobot.withVelocityX(throttle * maxSpeed) 
-                        .withVelocityY(strafe * maxSpeed) 
-                        .withRotationalRate(rotation * maxRotRate));
+        SmartDashboard.putBoolean("Will Enter Trench", willEnterTrench());
+
+        if (willEnterTrench() && !slowFortrench){
+            slowMode = true;
+            slowFortrench = true;
+        } else if (!willEnterTrench() && slowFortrench){
+            slowMode = false;
         }
 
-        SmartDashboard.putNumber("Drive Velocity X", driveField.VelocityX);
-        SmartDashboard.putNumber("Drive Velocity Y", driveField.VelocityY);
-        SmartDashboard.putNumber("Drive Rot Rate", driveField.RotationalRate);
+  }
+
+  public double getDrivetrainCurrent() {
+    return sdsDrivebase.getModule(0).getDriveMotor().getSupplyCurrent().getValueAsDouble()
+        + sdsDrivebase.getModule(0).getSteerMotor().getSupplyCurrent().getValueAsDouble()
+        + sdsDrivebase.getModule(1).getDriveMotor().getSupplyCurrent().getValueAsDouble()
+        + sdsDrivebase.getModule(1).getSteerMotor().getSupplyCurrent().getValueAsDouble()
+        + sdsDrivebase.getModule(2).getDriveMotor().getSupplyCurrent().getValueAsDouble()
+        + sdsDrivebase.getModule(2).getSteerMotor().getSupplyCurrent().getValueAsDouble()
+        + sdsDrivebase.getModule(3).getDriveMotor().getSupplyCurrent().getValueAsDouble()
+        + sdsDrivebase.getModule(3).getSteerMotor().getSupplyCurrent().getValueAsDouble();
+  }
+
+  public void drive(double throttle, double strafe, double rotation) {
+    if (fieldRelativeDriving) {
+      sdsDrivebase.setControl(
+          driveField.withVelocityX(throttle * maxSpeed)
+              .withVelocityY(strafe * maxSpeed)
+              .withRotationalRate(rotation * maxRotRate));
+    } else {
+      sdsDrivebase.setControl(
+          driveRobot.withVelocityX(throttle * maxSpeed)
+              .withVelocityY(strafe * maxSpeed)
+              .withRotationalRate(rotation * maxRotRate));
     }
 
-    /**
-     * Set drive wheels to X configuration to lock robot from moving.
-     */
-    public void setX()
-    {
-        Util.consoleLog();
+    SmartDashboard.putNumber("Drive Velocity X", driveField.VelocityX);
+    SmartDashboard.putNumber("Drive Velocity Y", driveField.VelocityY);
+    SmartDashboard.putNumber("Drive Rot Rate", driveField.RotationalRate);
+  }
 
-        sdsDriveBase.applyRequest(() -> driveBrake);
+  public void driveRobotOriented(double throttle, double strafe, double rotation) {
+      sdsDrivebase.setControl(
+              driveRobot.withVelocityX(throttle * maxSpeed)
+              .withVelocityY(strafe * maxSpeed)
+              .withRotationalRate(rotation * maxRotRate));
+
+  }
+
+  public void driveToNearestOpening() {
+    double targetY = robotPose.getY();
+    if (robotPose.getY() >= 1.7 && robotPose.getY() <= 4) {
+      targetY = 1.6;
+    } else if (robotPose.getY() > 4 && robotPose.getY() <= 6.3) {
+      targetY = 6.4;
     }
-        
-	public void toggleFieldRelativeDriving()
-	{
-		fieldRelativeDriving = !fieldRelativeDriving;
+    // driveToPose(new Pose2d(robotPose.getX(), targetY,
+    // Rotation2d.fromDegrees(0.0)), 0.0);
+  }
 
-        Util.consoleLog("%b", fieldRelativeDriving);
+  public void driveToPose(Pose2d targetPose, double targetEndVelocity) {
+    createPathfindingCommand(targetPose, targetEndVelocity).execute();
+  }
 
-        updateDS();
-	}
+  public void disableAutoDriving() {
 
-    public void toggleSlowMode() 
-    {
-        slowMode = !slowMode;
+  }
 
-        Util.consoleLog("%b", slowMode);
+  public Command createPathfindingCommand(Pose2d targetPose, double targetEndVelocity) {
+    // Create the constraints to use while pathfinding
+    PathConstraints constraints = new PathConstraints(
+        Constants.DriveConstants.kMaxSpeed, Constants.DriveConstants.kMaxAcceleration,
+        Units.degreesToRadians(Constants.DriveConstants.kMaxAngularRate),
+        Units.degreesToRadians(Constants.DriveConstants.kMaxAngularAcceleration));
 
-        if (slowMode)
-        {
-            // In slow mode, apply slow mode percentages.
-            maxSpeed = kMaxSpeed * kSlowModeLinearPct;
-            maxRotRate = kMaxAngularRate * kSlowModeRotationPct;
+    // If AutoBuilder is configured, we can use it to build pathfinding commands
+    return AutoBuilder.pathfindToPose(
+        targetPose,
+        constraints,
+        targetEndVelocity // Goal end velocity in meters/sec
+    );
+  }
+
+  public void stop() {
+    drive(0, 0, 0);
+  }
+
+  /**
+   * Set drive wheels to X configuration to lock robot from moving.
+   */
+  public void setX() {
+    Util.consoleLog();
+
+    sdsDrivebase.applyRequest(() -> driveBrake);
+  }
+
+  public void toggleFieldRelativeDriving() {
+    fieldRelativeDriving = !fieldRelativeDriving;
+
+    Util.consoleLog("%b", fieldRelativeDriving);
+
+    updateDS();
+  }
+
+  public void toggleSlowMode() {
+    slowMode = !slowMode;
+
+    Util.consoleLog("%b", slowMode);
+
+    if (slowMode) {
+      // In slow mode, apply slow mode percentages.
+      maxSpeed = kMaxSpeed * kSlowModeLinearPct;
+      maxRotRate = kMaxAngularRate * kSlowModeRotationPct;
+    } else {
+      // In normal mode, apply reduction percentages.
+      maxSpeed = kMaxSpeed * kDriveReductionPct;
+      maxRotRate = kMaxAngularRate * kRotationReductionPct;
+    }
+  }
+
+  public void toggleNeutralMode() {
+    neutralModeBrake = !neutralModeBrake;
+
+    Util.consoleLog("%b", neutralModeBrake);
+
+    if (neutralModeBrake)
+      sdsDrivebase.configNeutralMode(NeutralModeValue.Brake);
+    else
+      sdsDrivebase.configNeutralMode(NeutralModeValue.Coast);
+
+    updateDS();
+  }
+
+  public void resetFieldOrientation() {
+    Util.consoleLog();
+
+    sdsDrivebase.seedFieldCentric();
+  }
+
+  /**
+   * Sets the gyroscope yaw angle to zero. This can be used to set the direction
+   * the robot is currently facing to the 'forwards' direction.
+   */
+  public void zeroGyro() {
+    Util.consoleLog();
+
+    pigeonWrapper.reset();
+  }
+
+  /**
+   * Resets the odometry to the specified pose.
+   *
+   * @param pose The pose to which to set the odometry.
+   */
+  public void resetOdometry(Pose2d pose) {
+    Util.consoleLog(pose.toString());
+
+    sdsDrivebase.resetPose(pose);
+
+    setStartingGyroYaw(-pose.getRotation().getDegrees());
+  }
+
+  /**
+   * Set a starting yaw for the case where robot is not starting
+   * with back bumper parallel to the wall.
+   * 
+   * @param degrees - is clockwise (cw or right).
+   */
+  public void setStartingGyroYaw(double degrees) {
+    pigeonWrapper.setStartingGyroYaw(degrees);
+  }
+
+  /**
+   * Returns current sds drivebase odometry pose of the robot.
+   * 
+   * @return Robot odometry pose.
+   */
+  public Pose2d getODPose() {
+    return sdsDrivebase.getState().Pose;
+  }
+
+  /**
+   * Returns current pose estimate for the robot.
+   * In this function the radians to radians conversion is because the input is
+   * incorrect somewhere
+   * 
+   * @return Robot pose.
+   */
+  public Pose2d getPose() {
+    if (RobotContainer.questNavSubsystem.hasQuest()
+        || SmartDashboard.getBoolean("overrideQuestForRobotPose", this.overrideQuestForRobotPose)) {
+      SmartDashboard.putBoolean("Trying to send current robotPose", true);
+      return new Pose2d(robotPose.getX(), robotPose.getY(),
+          new Rotation2d(Math.toRadians(robotPose.getRotation().getRadians())));
+    } else {
+      SmartDashboard.putBoolean("Trying to send current robotPose", false);
+      return new Pose2d(0, 0, new Rotation2d(0));
+    }
+  }
+
+  @Deprecated
+  public Pose3d getPose3d() {
+    // I think it should be fine to always assume zero z
+    return new Pose3d(getPose());
+  }
+
+  public double getYaw() {
+    return pigeonWrapper.getYaw();
+  }
+
+  public double getYaw180() {
+    return pigeonWrapper.getYaw180();
+  }
+
+  public RobotOrientation getRobotOrientation() { // As far as I can tell these are the correct values
+    return new RobotOrientation(pigeonWrapper.pigeon.getYaw().getValueAsDouble(),
+        pigeonWrapper.pigeon.getAngularVelocityXWorld().getValueAsDouble(),
+        pigeonWrapper.pigeon.getPitch().getValueAsDouble(),
+        pigeonWrapper.pigeon.getAngularVelocityYDevice().getValueAsDouble(),
+        pigeonWrapper.pigeon.getRoll().getValueAsDouble(),
+        pigeonWrapper.pigeon.getAngularVelocityZWorld().getValueAsDouble());
+  }
+
+  private void updateDS() {
+    SmartDashboard.putBoolean("Brakes", neutralModeBrake);
+    SmartDashboard.putBoolean("Field Oriented", fieldRelativeDriving);
+  }
+
+  public void addQuestMeasurement(Pose2d pose, double timestampSeconds) {
+    robotPose = pose;
+  }
+
+  // This is for when the Questnav is not found.
+  public void forceAddLimelightMeasurement(Pose2d pose) {
+    robotPose = pose;
+  }
+
+  //
+  public void addLimelightMeasurement(Pose2d pose, double timestampSeconds) {
+    // TODO: All the stuff below this
+    // Use the visionBuffer
+    // Truncate vision buffer
+    // Append current vision measurement
+    // Replay vision poses
+    // Remove any vision poses the break the laws of physics
+
+    // Basic vision update that just sets the pose, this is good enough for testing
+    // if it is working
+    this.limelightPoseEstimate = pose;
+    SmartDashboard.putString("Limelight Pose", this.limelightPoseEstimate.toString());
+  }
+
+  /**
+   * This function converts an ideal target position into an angle for the robot
+   * to face accounting for velocity
+   * <p>
+   * {@link #getPoseToAim} is secondary to this function, and only returns the
+   * position accounted for velocity and not the angle to face
+   * 
+   * @param targetPose A Pose2d where you want to aim
+   * @return An angle (0-360) for the robot to aim, accounting for velocity
+   */
+  public double getAngleToAim(Pose2d targetPose) {
+    Pose2d currentPose = getPose();
+
+    double deltaX = targetPose.getX() - currentPose.getX();
+    double deltaY = targetPose.getY() - currentPose.getY();
+
+    double angleToAim = Math.toDegrees(Math.atan2(deltaY, deltaX));
+
+    return angleToAim;
+  }
+
+  /**
+   * This function converts an ideal target position into a virtual position
+   * offset with robot velocity
+   * <p>
+   * This function is secondary to {@link #getAngleToAim}, and should likely not
+   * be used
+   * 
+   * @param targetPose A Pose2d where you want to aim
+   * @return A "fake" position to aim accounting for velocity
+   **/
+  public Pose2d getPoseToAim(Pose2d targetPose) {
+    Pose2d currentPose = getPose();
+    Pose2d offsetTargetPose;
+
+    double deltaX = targetPose.getX() - currentPose.getX();
+    double deltaY = targetPose.getY() - currentPose.getY();
+
+    double distance = Math.hypot(deltaX, deltaY);
+
+    double airTime;
+
+    int lowerPointIndex = 0;
+    double lowerPoint = FLYWHEEL_SPEED_DISTANCE_TABLE[lowerPointIndex];
+
+    int higherPointIndex = FLYWHEEL_SPEED_DISTANCE_TABLE.length - 1;
+    double higherPoint = FLYWHEEL_SPEED_DISTANCE_TABLE[higherPointIndex];
+
+    double currentDistance;
+    for (int i = FLYWHEEL_SPEED_DISTANCE_TABLE.length - 2; i > 0; i--) {
+      currentDistance = FLYWHEEL_SPEED_DISTANCE_TABLE[i];
+      if (currentDistance > distance) {
+        if (currentDistance < higherPoint) {
+          higherPoint = currentDistance;
+          higherPointIndex = i;
         }
-        else
-        {
-            // In normal mode, apply reduction percentages.
-            maxSpeed = kMaxSpeed * kDriveReductionPct;
-            maxRotRate = kMaxAngularRate * kRotationReductionPct;
+      } else if (currentDistance < distance) {
+        if (currentDistance >= lowerPoint) {
+          lowerPoint = currentDistance;
+          lowerPointIndex = i;
         }
+      } else {
+        airTime = FUEL_AIR_TIME_TABLE_SEC[i];
+
+        // double xVelocityOffset = fieldRelativeVelocityX * airTime;
+        // double yVelocityOffset = fieldRelativeVelocityY * airTime;
+
+        // offsetTargetPose = new Pose2d(targetPose.getX() - xVelocityOffset, targetPose.getY() - yVelocityOffset,
+            // targetPose.getRotation());
+
+        return targetPose;
+      }
     }
 
-    public void toggleNeutralMode()
-    {
-        neutralModeBrake = !neutralModeBrake;
+    double lowerTime = FUEL_AIR_TIME_TABLE_SEC[lowerPointIndex];
+    double higherTime = FUEL_AIR_TIME_TABLE_SEC[higherPointIndex];
 
-        Util.consoleLog("%b", neutralModeBrake);
-
-        if (neutralModeBrake)
-            sdsDriveBase.configNeutralMode(NeutralModeValue.Brake);
-        else
-            sdsDriveBase.configNeutralMode(NeutralModeValue.Coast);
-
-        updateDS();
+    if (higherPoint == lowerPoint) {
+      airTime = lowerTime;
+    } else {
+      airTime = lowerTime + ((higherTime - lowerTime) * (distance - lowerPoint) / (higherPoint - lowerPoint));
     }
 
-    public void resetFieldOrientation()
-    {
-        Util.consoleLog();
-        
-        sdsDriveBase.seedFieldCentric();
+    // double xVelocityOffset = fieldRelativeVelocityX * airTime;
+    // double yVelocityOffset = fieldRelativeVelocityY * airTime;
+
+    // offsetTargetPose = new Pose2d(targetPose.getX() - xVelocityOffset, targetPose.getY() - yVelocityOffset,
+    //     targetPose.getRotation());
+
+    // return offsetTargetPose;
+    return targetPose;
+  }
+
+  // Get the distance in meters between the current robot position and the target
+  // position
+  public double getDistFromRobot(Pose2d targetPose) {
+    Pose2d currentPose = getPose();
+
+    double deltaX = targetPose.getX() - currentPose.getX();
+    double deltaY = targetPose.getY() - currentPose.getY();
+
+    double distance = Math.hypot(deltaX, deltaY);
+
+    return distance;
+  }
+
+    public boolean willCrashTrench() {
+       double velocityX = fieldRelativeVelocityX;
+       double velocityY = fieldRelativeVelocityY;
+       double bufferTime = 0.50;
+
+    double predictionX = robotPose.getX() + (velocityX * bufferTime);
+    double predictionY = robotPose.getY() + (velocityY * bufferTime);
+
+    // left right
+    double xTolerance = 0.5;
+    double yTolerance = 0.2;
+
+    // only ever false if goal is to go under the trench
+    // units: meter
+    // blue side
+    if (4 - xTolerance < predictionX && predictionX < 5.2 + xTolerance) { // between the blue x values for trench
+      if (0 + yTolerance < predictionY && predictionY < 1.2 - yTolerance) { // between the y values for trench near 0
+        return false;
+      }
+      if (6.8 + yTolerance < predictionY && predictionY < 8.07 - yTolerance) { // between the y values for trench far
+                                                                               // from 0
+        return false;
+      } else
+        return true;
+
+      // red side
+    } else if (11.3 - xTolerance < predictionX && predictionX < 12.5 + xTolerance) { // between the red x values for
+                                                                                     // trench
+      if (0 + yTolerance < predictionY && predictionY < 1.2 - yTolerance) { // between the y values for trench near 0
+        return false;
+      }
+      if (6.8 + yTolerance < predictionY && predictionY < 8.07 - yTolerance) { // between the y values for trench far
+                                                                               // from 0
+        return false;
+      } else
+        return true;
+
+    } else
+      return false;
+  }
+
+    public boolean willEnterTrench() {
+       double velocityX = fieldRelativeVelocityX;
+       double velocityY = fieldRelativeVelocityY;
+       double bufferTime = 0.50;
+
+    double predictionX = robotPose.getX() + (velocityX * bufferTime);
+    double predictionY = robotPose.getY() + (velocityY * bufferTime);
+
+    // left right
+    double xTolerance = 0.5;
+    double yTolerance = 0.2;
+
+    // only ever true if prediction is under the trench
+    // units: meter
+    // blue side
+    if (4 - xTolerance < predictionX && predictionX < 5.2 + xTolerance) { // between the blue x values for trench
+      if (0 + yTolerance < predictionY && predictionY < 1.2 - yTolerance) { // between the y values for trench near 0
+        return true;
+      }
+      if (6.8 + yTolerance < predictionY && predictionY < 8.07 - yTolerance) { // between the y values for trench far
+                                                                               // from 0
+        return true;
+      } else
+        return false;
+
+      // red side
+    } else if (11.3 - xTolerance < predictionX && predictionX < 12.5 + xTolerance) { // between the red x values for
+                                                                                     // trench
+      if (0 + yTolerance < predictionY && predictionY < 1.2 - yTolerance) { // between the y values for trench near 0
+        return true;
+      }
+      if (6.8 + yTolerance < predictionY && predictionY < 8.07 - yTolerance) { // between the y values for trench far
+                                                                               // from 0
+        return true;
+      } else
+        return false;
+
+    } else
+      return false;
+  }
+
+  /**
+   * Update the robot & swerve module displays on the "Field2d" field display in
+   * sim.
+   * 
+   * @param sdsDriveBase Reference to SDS drivebase class under our DriveBase
+   *                     class.
+   * 
+   *                     SDS code has it's own class for logging and doing the
+   *                     field display ("Pose") under sim
+   *                     and other data logged to the dashboard and to log files
+   *                     (Telemetry).
+   * 
+   *                     We also have our own code for doing the field display and
+   *                     it draws the swerve modules
+   *                     and thier angles on the simulated robot. This can be
+   *                     handy so we are displaying both fields
+   *                     for the time being. This function drives that display
+   *                     called Field2d under SmartDashboard.
+   *                     If this field display is not needed it can be commented
+   *                     out and just use the SDS Telemetry.
+   */
+  @SuppressWarnings("rawtypes")
+  private void updateModulePoses(CommandSwerveDrivetrain sdsDriveBase) {
+    Pose2d modulePoses[] = new Pose2d[4], robotPose = getPose();
+
+    Translation2d moduleLocations[] = sdsDriveBase.getModuleLocations(), moduleLocation;
+
+    SwerveModule modules[] = sdsDriveBase.getModules();
+
+    for (int i = 0; i < modules.length; i++) {
+      moduleLocation = moduleLocations[i]
+          .rotateBy(robotPose.getRotation())
+          .plus(robotPose.getTranslation());
+
+      modulePoses[i] = new Pose2d(moduleLocation,
+          modules[i].getCurrentState().angle.plus(Rotation2d.fromDegrees(-getYaw180())));
     }
 
-    /**
-     * Sets the gyroscope yaw angle to zero. This can be used to set the direction
-     * the robot is currently facing to the 'forwards' direction.
-     */
-    public void zeroGyro()
-    {
-        Util.consoleLog();
+    field2d.getObject("Robot").setPose(robotPose);
+    field2d.getObject("Swerve Modules").setPoses(modulePoses);
+  }
 
-        pigeonWrapper.reset();
-    }
-    
-    /**
-     * Resets the odometry to the specified pose.
-     *
-     * @param pose The pose to which to set the odometry.
-     */
-    public void resetOdometry(Pose2d pose) {
-        Util.consoleLog(pose.toString());
+  public void toggleHubTracking() {
+    Constants.HUB_TRACKING = !Constants.HUB_TRACKING;
+  }
 
-        sdsDriveBase.resetPose(pose);
+  public void enableHubTracking() {
+    Constants.HUB_TRACKING = true;
+  }
 
-        setStartingGyroYaw(-pose.getRotation().getDegrees());
-    }
-    
-    /**
-     * Set a starting yaw for the case where robot is not starting
-     * with back bumper parallel to the wall. 
-     * @param degrees - is clockwise (cw or right).
-     */
-    public void setStartingGyroYaw(double degrees)
-    {
-        pigeonWrapper.setStartingGyroYaw(degrees);
-    }
+  public void disableHubTracking() {
+    Constants.HUB_TRACKING = false;
+  }
 
-    /**
-     * Returns current sds drivebase odometry pose of the robot.
-     * @return Robot odometry pose.
-     */
-    public Pose2d getODPose()
-    {
-        return sdsDriveBase.getState().Pose;
-    }
+  public void stopHumanDriving() {
+    driverControlled = false;
+  }
 
-    /**
-     * Returns current pose estimate for the robot.
-     * @return Robot pose.
-     */
-    public Pose2d getPose() {
-        return robotPose;
+  public void startHumanDriving() {
+    driverControlled = true;
+  }
+
+  public boolean getDriverControled() {
+    return driverControlled;
+  }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    return sdsDrivebase.getChassisSpeeds();
+  }
+
+  public void enabledSlowMode() {
+    this.slowMode = true;
+  }
+
+  public void disableSlowMode() {
+    this.slowMode = false;
+  }
+
+  public void updateVelocity(double timeSinceLastUpdateSec) {
+    if (lastPose == null) {
+      lastPose = getPose();
+      return;
     }
 
-    @Deprecated
-    public Pose3d getPose3d() {
-        // I think it should be fine to always assume zero z
-        return new Pose3d(getPose());
-    }
+    Pose2d currentPose = getPose();
 
-    public double getYaw()
-    {
-        return pigeonWrapper.getYaw();
-    }
+    double deltaX = currentPose.getTranslation().getX() - lastPose.getTranslation().getX();
+    double deltaY = currentPose.getTranslation().getY() - lastPose.getTranslation().getY();
 
-    public double getYaw180()
-    {
-        return pigeonWrapper.getYaw180();
-    }
+    double rawVelocityX = deltaX / timeSinceLastUpdateSec;
+    double rawVelocityY = deltaY / timeSinceLastUpdateSec;
 
-    public RobotOrientation getRobotOrientation() { // As far as I can tell these are the correct values
-        return new RobotOrientation(pigeonWrapper.pigeon.getYaw().getValueAsDouble(), pigeonWrapper.pigeon.getAngularVelocityXWorld().getValueAsDouble(), pigeonWrapper.pigeon.getPitch().getValueAsDouble(), pigeonWrapper.pigeon.getAngularVelocityYDevice().getValueAsDouble(), pigeonWrapper.pigeon.getRoll().getValueAsDouble(), pigeonWrapper.pigeon.getAngularVelocityZWorld().getValueAsDouble());
-    }
+    if (Math.abs(rawVelocityX) <= 3 && Math.abs(rawVelocityX - lastRawVelocityX) < 0.4) {
 
-    private void updateDS()
-    {
-        SmartDashboard.putBoolean("Brakes", neutralModeBrake);
-        SmartDashboard.putBoolean("Field Oriented", fieldRelativeDriving);
-    }
+      if (Math.abs(rawVelocityX - lastRawVelocityX) > 0.4) {
+        rawVelocityX = lastRawVelocityX;
+      }
 
-    public void addQuestMeasurement(Pose2d pose, double timestampSeconds) {
-        robotPose = pose;
-    }
-
-
-    // AddVisionUpdate
-    public void addVisionMeasurement(Pose2d pose, double timestampSeconds) {
-        // TODO: All the stuff below this
-        // Use the visionBuffer
-        // Truncate vision buffer
-        // Append current vision measurement
-        // Replay vision poses
-        // Remove any vision poses the break the laws of physics
-
-        // Basic vision update that just sets the pose, this is good enough for testing if it is working
-        this.limelightPoseEstimate = pose;
-    }
-
-    public double getAngleToAim(Pose2d targetPose) {
-        Pose2d currentPose = getODPose();
-    
-        double deltaX = targetPose.getX() - currentPose.getX();
-        double deltaY = targetPose.getY() - currentPose.getY();
-
-        double distance = Math.hypot(deltaX, deltaY);
-
-        double airTime;
-
-        int lowerPointIndex = 0;    
-        double lowerPoint = FLYWHEEL_SPEED_DISTANCE_TABLE[lowerPointIndex];
-
-        int higherPointIndex = FLYWHEEL_SPEED_DISTANCE_TABLE.length - 1;
-        double higherPoint = FLYWHEEL_SPEED_DISTANCE_TABLE[higherPointIndex];
-
-        double currentDistance;
-        for (int i = FLYWHEEL_SPEED_DISTANCE_TABLE.length - 2; i > 0; i--){
-            currentDistance = FLYWHEEL_SPEED_DISTANCE_TABLE[i];
-            if (currentDistance > distance) {
-                if (currentDistance < higherPoint) {
-                    higherPoint = currentDistance;
-                    higherPointIndex = i;
-                }
-            } else if (currentDistance < distance) {
-                if (currentDistance >= lowerPoint) {
-                    lowerPoint = currentDistance;
-                    lowerPointIndex = i;
-                }
-            } else {
-                airTime = FUEL_AIR_TIME_TABLE_SEC[i];
-
-                double xVelocityOffset = driveField.VelocityX * airTime;
-                double yVelocityOffset = driveField.VelocityY * airTime;
-        
-                deltaX += xVelocityOffset;
-                deltaY += yVelocityOffset;
-
-                double angleToAim = Math.toDegrees(Math.atan2(deltaY, deltaX));
-
-                return angleToAim;
+            if (Math.abs(rawVelocityX) < 0.2) {
+                rawVelocityX = 0;
             }
-        }
 
-        double lowerTime = FUEL_AIR_TIME_TABLE_SEC[lowerPointIndex];
-        double higherTime = FUEL_AIR_TIME_TABLE_SEC[higherPointIndex];
+      velocityWindowX[velocityIndexX] = rawVelocityX;
+      velocityIndexX = (velocityIndexX + 1) % VELOCITY_WINDOW_SIZE;
 
-        if (higherPoint == lowerPoint) {
-            airTime = lowerTime;
-        } else {
-            airTime = lowerTime + ((higherTime - lowerTime) * (distance - lowerPoint) / (higherPoint - lowerPoint));
-        }
+      if (velocityCountX < VELOCITY_WINDOW_SIZE) {
+        velocityCountX++;
+      }
 
-        double xVelocityOffset = driveField.VelocityX * airTime;
-        double yVelocityOffset = driveField.VelocityY * airTime;
-        
-        deltaX += xVelocityOffset;
-        deltaY += yVelocityOffset;
+      double sumX = 0;
+      for (int i = 0; i < velocityCountX; i++) {
+        sumX += velocityWindowX[i];
+      }
 
-        double angleToAim = Math.toDegrees(Math.atan2(deltaY, deltaX));
-
-        return angleToAim;
+      fieldRelativeVelocityX = sumX / velocityCountX;
     }
 
-    public Pose2d getPoseToAim(Pose2d targetPose) {
-        Pose2d currentPose = getODPose();
-    
-        double deltaX = targetPose.getX() - currentPose.getX();
-        double deltaY = targetPose.getY() - currentPose.getY();
+    if (Math.abs(rawVelocityY) <= 3 && Math.abs(rawVelocityY - lastRawVelocityY) < 0.4) {
 
-        double distance = Math.hypot(deltaX, deltaY);
+      if (Math.abs(rawVelocityY - lastRawVelocityY) > 0.4) {
+        rawVelocityY = lastRawVelocityY;
+      }
 
-        double airTime;
-
-        int lowerPointIndex = 0;    
-        double lowerPoint = FLYWHEEL_SPEED_DISTANCE_TABLE[lowerPointIndex];
-
-        int higherPointIndex = FLYWHEEL_SPEED_DISTANCE_TABLE.length - 1;
-        double higherPoint = FLYWHEEL_SPEED_DISTANCE_TABLE[higherPointIndex];
-
-        double currentDistance;
-        for (int i = FLYWHEEL_SPEED_DISTANCE_TABLE.length - 2; i > 0; i--){
-            currentDistance = FLYWHEEL_SPEED_DISTANCE_TABLE[i];
-            if (currentDistance > distance) {
-                if (currentDistance < higherPoint) {
-                    higherPoint = currentDistance;
-                    higherPointIndex = i;
-                }
-            } else if (currentDistance < distance) {
-                if (currentDistance >= lowerPoint) {
-                    lowerPoint = currentDistance;
-                    lowerPointIndex = i;
-                }
-            } else {
-                airTime = FUEL_AIR_TIME_TABLE_SEC[i];
-
-                double xVelocityOffset = driveField.VelocityX * airTime;
-                double yVelocityOffset = driveField.VelocityY * airTime;
-
-                return new Pose2d(targetPose.getX() + xVelocityOffset, targetPose.getY() + yVelocityOffset, targetPose.getRotation());
+            if (Math.abs(rawVelocityY) < 0.2) {
+                rawVelocityY = 0;
             }
-        }
 
-        double lowerTime = FUEL_AIR_TIME_TABLE_SEC[lowerPointIndex];
-        double higherTime = FUEL_AIR_TIME_TABLE_SEC[higherPointIndex];
+      velocityWindowY[velocityIndexY] = rawVelocityY;
+      velocityIndexY = (velocityIndexY + 1) % VELOCITY_WINDOW_SIZE;
 
-        if (higherPoint == lowerPoint) {
-            airTime = lowerTime;
-        } else {
-            airTime = lowerTime + ((higherTime - lowerTime) * (distance - lowerPoint) / (higherPoint - lowerPoint));
-        }
+      if (velocityCountY < VELOCITY_WINDOW_SIZE) {
+        velocityCountY++;
+      }
 
-        double xVelocityOffset = driveField.VelocityX * airTime;
-        double yVelocityOffset = driveField.VelocityY * airTime;
+      double sumY = 0;
+      for (int i = 0; i < velocityCountY; i++) {
+        sumY += velocityWindowY[i];
+      }
 
-        return new Pose2d(targetPose.getX() + xVelocityOffset, targetPose.getY() + yVelocityOffset, targetPose.getRotation());
+      fieldRelativeVelocityY = sumY / velocityCountY;
     }
 
-    // Get the distance in meters between the current robot position and the target position
-    public double getDistFromRobot(Pose2d targetPose) {
-        Pose2d currentPose = getODPose(); // TODO: Change this to the vision pose estimate
-    
-        double deltaX = targetPose.getX() - currentPose.getX();
-        double deltaY = targetPose.getY() - currentPose.getY();
+    SmartDashboard.putNumber("VelocityX", fieldRelativeVelocityX);
+    SmartDashboard.putNumber("VelocityY", fieldRelativeVelocityY);
 
-        double distance = Math.hypot(deltaX, deltaY);
-
-        return distance;
-    }
-
-    /**
-     * Update the robot & swerve module displays on the "Field2d" field display in sim.
-     * @param sdsDriveBase Reference to SDS drivebase class under our DriveBase class.
-     * 
-     * SDS code has it's own class for logging and doing the field display ("Pose") under sim 
-     * and other data logged to the dashboard and to log files (Telemetry). 
-     * 
-     * We also have our own code for doing the field display and it draws the swerve modules 
-     * and thier angles on the simulated robot. This can be handy so we are displaying both fields
-     * for the time being. This function drives that display called Field2d under SmartDashboard. 
-     * If this field display is not needed it can be commented out and just use the SDS Telemetry.
-     */
-    @SuppressWarnings("rawtypes")
-    private void updateModulePoses(CommandSwerveDrivetrain sdsDriveBase)
-    {
-        Pose2d modulePoses[] = new Pose2d[4], robotPose = getODPose();
-
-        Translation2d moduleLocations[] = sdsDriveBase.getModuleLocations(), moduleLocation;
-
-        SwerveModule modules[] = sdsDriveBase.getModules();
-
-        for (int i = 0; i < modules.length; i++)
-        {
-            moduleLocation = moduleLocations[i]
-                .rotateBy(robotPose.getRotation())
-                .plus(robotPose.getTranslation());
-
-            modulePoses[i] = new Pose2d(moduleLocation, 
-                                modules[i].getCurrentState().angle.plus(Rotation2d.fromDegrees(-getYaw180())));
-        }
-
-        field2d.getObject("Robot").setPose(robotPose);
-        field2d.getObject("Swerve Modules").setPoses(modulePoses);
-    }
+    lastRawVelocityX = rawVelocityX;
+    lastRawVelocityY = rawVelocityY;
+    lastPose = currentPose;
+  }
 }

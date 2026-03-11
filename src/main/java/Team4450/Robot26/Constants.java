@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-	public static String		PROGRAM_NAME = "ORF26-01.21.26";
+	public static String		PROGRAM_NAME = "ORF26-02.12.26";
 
 	public static Robot			robot;
 
@@ -41,34 +41,103 @@ public final class Constants {
 
 	// Non-drive base motor controller port assignments
     
-    // Pneumatic valve controller port assignments.
-    
-    // Cameras 
-
-    // The names of the cameras in the PhotonVision software
-
-    // Limelight Constants:
-	public static final double DONT_SEE_TAG_WAIT_TIME = 1;
-	public static final double POSE_VALIDATION_TIME = 0.3;
-
+    // Misc port assignments.
     public static final int     REV_PDB = 20;
     public static final int     CTRE_CANDLE = 21;
     public static final int     PIGEON_ID = 1;
+
+    // Canivore device name or "rio" if no canivore.
+    public static String        CANIVORE_NAME = "canivore";
 	
 	// GamePad port assignments.
 	public static final int		DRIVER_PAD = 0, UTILITY_PAD = 1;
 
-    public static String LIMELIGHT_LEFT = "limelight-left";
+    public static int KRAKEN_X60_MAX_THEORETICAL_RPM = 6000;
+    public static int KRAKEN_X44_MAX_THEORETICAL_RPM = 7530;
 
-    // Add limelight left offset
+    // Shooter Constants
+    public static int FLYWHEEL_MOTOR_TOP_LEFT_CAN_ID = 13;
+    public static int FLYWHEEL_MOTOR_TOP_RIGHT_CAN_ID = 14;
+    public static int FLYWHEEL_MOTOR_BOTTOM_RIGHT_CAN_ID = 16;
+    public static int FLYWHEEL_MOTOR_BOTTOM_LEFT_CAN_ID = 15;
+
+    public static int HOOD_MOTOR_LEFT_CAN_ID = 17;
+    public static int HOOD_MOTOR_RIGHT_CAN_ID = 18;
+
+    public static int INFEED_MOTOR_LEFT_CAN_ID = 19;
+    public static int INFEED_MOTOR_RIGHT_CAN_ID = 22;
+
+    public static int SHOOTER_UPPER_BEAM_BREAK_PORT = 3;
+
+    public static int SHOOTER_FLYWHEEL_CURRENT_LIMIT = 35;
+    public static int SHOOTER_INFEED_CURRENT_LIMIT = 35;
+    public static int SHOOTER_HOOD_CURRENT_LIMIT = 5;
+    public static int INTAKE_CURRENT_LIMIT = 20;
+    public static int INTAKE_PIVIT_CURRENT_LIMIT = 5;
+    public static int HOPPER_CURRENT_LIMIT = 40;
+
+    public static double HOOD_TOLERENCE_MOTOR_ROTATIONS = 0.02;
+    public static double HOOD_TOLERENCE_DEGREES = 5;
+    public static double HOOD_GEAR_RATIO = 3.0/8.0;
+    public static double HOOD_DOWN_ANGLE_DEGREES = 15;
+    public static double HOOD_MOTOR_POWER = 0.1;
+    public static double SHOOTER_HOOD_TOLERENCE_MOTOR_RAIDIANS = 2;
+
+
+    // Hood PID / Feedforward / MotionMagic
+    public static final double HOOD_kP = 15;
+    public static final double HOOD_kI = 0;
+    public static final double HOOD_kD = 0;
+    public static final double HOOD_kS = 0.47;
+    public static final double HOOD_kV = 0.1;
+    public static final double HOOD_kA = 0.1;
+    public static final double HOOD_MOTION_ACCEL = 5.0;
+    public static final double HOOD_MOTION_JERK = 0.0;
+
+    // Intake Constants
+    public static int INTAKE_MOTOR_PIVIT_CAN_ID = 9;
+    public static int INTAKE_MOTOR_LEFT_CAN_ID = 10;
+    public static int INTAKE_MOTOR_RIGHT_CAN_ID = 11;
+
+    // The intake gear ratio it 1 to 1
+    public static int INTAKE_GEAR_RATIO = 1 / 1;
+    // I was told that the gear box on the Kraken is a 25:1
+    // public static int INTAKE_PIVIT_GEAR_RATIO = (25 / 1) * (32 / 16);
+    public static double INTAKE_PIVIT_GEAR_RATIO = (62.4 / 1);
+
+    public static int INTAKE_MAX_THEORETICAL_RPM = KRAKEN_X44_MAX_THEORETICAL_RPM / INTAKE_GEAR_RATIO;
+    public static double INTAKE_MAX_THEORETICAL_PIVIT_RPM = KRAKEN_X60_MAX_THEORETICAL_RPM / INTAKE_PIVIT_GEAR_RATIO;
+
+    public static double INTAKE_PIVIT_MOTOR_POWER = 0.0;
+    // The format of this value is in rotations of the pivit motor
+    public static int INTAKE_PIVIT_MOTOR_POSITION_UP = 0;
+    // This is an assumed value and not exact
+    public static double INTAKE_PIVIT_POSITION_DOWN_DEGREES = 105;
+    // The format of this value is in rotations of the pivit motor
+    public static double INTAKE_PIVIT_MOTOR_POSITION_DOWN = (INTAKE_PIVIT_POSITION_DOWN_DEGREES / 360) * INTAKE_PIVIT_GEAR_RATIO;
+    // The format of this value is in rotations of the pivit motor
+    public static double INTAKE_PIVIT_TOLERENCE_MOTOR_ROTATIONS = 0.5;
+    public static double INTAKE_PIVIL_TOLERENCE_DEGREES = 360 * (INTAKE_PIVIT_TOLERENCE_MOTOR_ROTATIONS / INTAKE_PIVIT_GEAR_RATIO);
+
+    public static String LIMELIGHT_FRONT = "limelight-front";
     public static String LIMELIGHT_RIGHT = "limelight-right";
-    // Add limelight right offset
 
-    public static Pose3d ROBOT_TO_QUEST = new Pose3d(0.304, 0, 0, new Rotation3d(Math.toRadians(0), Math.toRadians(32), Math.toRadians(0)));
-    public static Pose3d ROBOT_TO_LIMELIGHT_LEFT = new Pose3d(0, 0.282, 0, Rotation3d.kZero);
-    public static Pose3d ROBOT_TO_LIMELIGHT_RIGHT = new Pose3d(0, -0.282, 0, Rotation3d.kZero);
+    // The rotation values are in radians
 
+    public static Pose3d ROBOT_TO_QUEST = new Pose3d(0, 0, 0, new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0)));
+
+    public static Pose3d ROBOT_TO_LIMELIGHT_FRONT = new Pose3d(0.305, 0, 0, new Rotation3d(0, -0.3491, 0));
+    public static Pose3d ROBOT_TO_LIMELIGHT_RIGHT = new Pose3d(0.0762, 0.318, 0, new Rotation3d(0, -0.3491, -1.5708));
     public static int VISION_BUFFER_SIZE = 1;
+
+    public static double LIMELIGHT_QUEST_ERROR_AMOUNT_METERS = 0.2;
+
+    // Voltage Modifiers
+    public static double MAX_BATTERY_VOLTAGE = 13.5;
+    public static double INFEED_VOLTAGE_MULTIPLIER = 1.0;
+    public static double HOPPER_VOLTAGE_MULTIPLIER = 1.0;
+    public static double INTAKE_VOLTAGE_MULTIPLIER = 1.0;
+    public static double FLYWHEEL_VOLTAGE_MULTIPLIER = 1.0;
 
     // Assume all field measurements are in meters
     // Field Limits (The Origin of the field should be the bottom left corner therefore all pose should be in +, +)
@@ -77,8 +146,6 @@ public final class Constants {
 
     // HUB Positions (Center of the HUB)
     
-    // THESE ARE ALL IN INCHES AS THAT IS WHAT THE FIELD IS DEFINED IN
-
     public static double HUB_BLUE_X = 4.625;
     public static double HUB_BLUE_Y = 4.034;
     // Red
@@ -118,55 +185,101 @@ public final class Constants {
     public static double ROBOT_HEADING_KI = 0;
     public static double ROBOT_HEADING_KI_MAX = 0;
     public static double ROBOT_HEADING_KD = 0.001;
-    // public static double ROBOT_HEADING_KF = 0;
-    public static double ROBOT_HEADING_TOLERANCE_DEG = 0.5;
-    // public static double ROBOT_HEADING_MAX_OUTPUT = 1;
-    public static boolean ROBOT_HEADING_PID_TOGGLE = true;
-
-    public static double FLYWHEEL_MAX_THEORETICAL_RPM = 4000;
+    public static double ROBOT_HEADING_TOLERANCE_DEG = 0.0001;
+    public static boolean HUB_TRACKING = false;
 
     // Interpolation table
-    public static double[] FLYWHEEL_SPEED_TABLE = {0.57, 0.595, 0.69, 0.715, 0.73, 0.82, 0.86};
-    public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = {40, 56, 90, 95, 103, 127, 152};
-    public static double[] FUEL_AIR_TIME_TABLE_SEC = {0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6};
+    public static double[] FLYWHEEL_SPEED_TABLE = {3550, 3650, 3850, 4050, 4300, 4400}; // Converted from percentages to RPM
+    public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = {2, 2.5, 3, 3.5, 4, 4.5};
+    public static double[] HOOD_ARC_TABLE = {0.9, 1.65, 1.8, 1.85, 1.85, 2.3};
 
-    // ---------------- Turret motion profiling constants ---------------------------------
-    // Turret defaults (internal units are degrees/sec and degrees/sec^2).
-    // These are used as defaults; the runtime code exposes RPM-based tunables for convenience.
-    // Max angular velocity for turret (degrees per second). Tune to your hardware limits.
-    public static final double TURRET_MAX_VELOCITY_DEG_PER_SEC = 180.0;
-    // Max angular acceleration for turret (degrees per second squared). Tune to your hardware limits.
-    public static final double TURRET_MAX_ACCELERATION_DEG_PER_SEC2 = 360.0;
-    // Default turret velocity/accel expressed in RPM units for dashboard convenience.
-    // 1 rotation = 360 degrees, 1 RPM = 6 deg/sec
-    public static final double TURRET_DEFAULT_MAX_VELOCITY_RPM = TURRET_MAX_VELOCITY_DEG_PER_SEC / 6.0; // 30 RPM
-    public static final double TURRET_DEFAULT_MAX_ACCEL_RPMS = TURRET_MAX_ACCELERATION_DEG_PER_SEC2 / 6.0; // 60 RPM/s
-    // Enable/disable acceleration smoothing (true = enabled)
-    public static final boolean TURRET_ACCELERATION_ENABLED = true;
-    // When within this many degrees, snap to setpoint and zero velocity.
-    public static final double TURRET_ANGLE_TOLERANCE_DEG = 0.5;
+    public static double[] FUEL_AIR_TIME_TABLE_SEC = {1.1, 1.3, 1.4, 1.5, 1.8, 1.9, 2.1};
+
     // -------------------------------------------------------------------------------------
+    // Flywheel tuning defaults (used as Shuffleboard starting values)
+    
+    // Default target RPM
+    // public static final double FLYWHEEL_TARGET_RPM = 2650.0;
+    public static final double FLYWHEEL_TARGET_RPM = 2000;
 
-    // Flywheel tuning defaults
-    // Default target RPM for flywheel (used as a manual override/starting value)
-    public static final double FLYWHEEL_DEFAULT_TARGET_RPM = 1845.0;
-    // Default flywheel acceleration in RPM per second (used for ramping if implemented)
-    public static final double FLYWHEEL_DEFAULT_ACCEL_RPMS = 20000.0;
-    // Default open-loop start percent for flywheel when controlled by code only (0.0 - 1.0)
-    public static final double FLYWHEEL_DEFAULT_START_PERCENT = 0.5; // 50% output
+    // CAN ID for flywheel TalonFX
+    public static final int FLYWHEEL_MOTOR_CAN_ID = -1;
 
-    // What is the LCD
-	// LCD display line number constants showing class where the line is set.
-	public static final int		LCD_1 = 1;	    // Robot, Auto Commands.
-	public static final int		LCD_2 = 2;	    // Swerve Drive command.
-	public static final int		LCD_3 = 3;	    // ShuffleBoard subsystem.
-	public static final int		LCD_4 = 4;	    // ShuffleBoard subsystem.
-	public static final int		LCD_5 = 5;	    // Autonomous commands.
-	public static final int		LCD_6 = 6;	    // ShuffleBoard subsystem.
-	public static final int		LCD_7 = 7;	    // ShuffleBoard subsystem.
-	public static final int		LCD_8 = 8;	    // ShuffleBoard subsystem.
-	public static final int		LCD_9 = 9;	    // ShuffleBoard subsystem.
-	public static final int		LCD_10 = 10;	// ShuffleBoard subsystem.
+    // Closed-loop slot selection
+    public static final int FLYWHEEL_PID_SLOT = 0;
+
+    // ---------------- Feedforward (Talon internal) ----------------
+    // Units: Volts, Volts/(rps), Volts/(rps/s)
+    public static final double FLYWHEEL_kS = 0.1;
+    public static final double FLYWHEEL_kV = 0.11;
+    public static final double FLYWHEEL_kA = 0.05;
+    // ---------------- PID (Velocity) ----------------
+    public static final double FLYWHEEL_kP = 0.2;
+    public static final double FLYWHEEL_kI = 0;
+    public static final double FLYWHEEL_kD = 0;
+
+    // ---------------- Motion Magic Velocity ----------------
+    // These only affect ramp rate
+
+    public static final double FLYWHEEL_MOTION_ACCEL_RPMS = 3500.0; // RPM/s
+    public static final double FLYWHEEL_MOTION_JERK = 0.0;
+
+    // ---------------- Telemetry / limits ----------------
+    public static final double FLYWHEEL_MAX_THEORETICAL_RPM = 6000.0;
+
+    // Flip this to 1 or -1 if direction is wrong
+    public static final int FLYWHEEL_DIRECTION = -1;
+
+    // Hopper motor constants
+    public static final int HOPPER_MOTOR_CAN_ID = 12; // Example CAN ID for the Kraken X60 motor
+
+    public static final int INTAKE_DEFAULT_TARGET_RPM = 4000;
+    // PID constants for Intake
+    public static final double INTAKE_kP = 0.8;
+
+    public static final int INFEED_DEFAULT_TARGET_RPM = 4000;
+    // PID constants for Shooter Infeed
+    public static final double INFEED_kP = 0.8;
+
+    // SmartDashboard key constants for Shooter
+    public static final class ShooterKeys {
+        // Hood
+        public static final String HOOD_POSITION        = "Hood Position";
+        public static final String HOOD_ANGLE           = "Hood Angle";
+        public static final String HOOD_MOTOR_POSITION  = "Hood Motor Position";
+        public static final String HOOD_TARGET_POSITION  = "Hood Target Position";
+        public static final String HOOD_POWER           = "Hood Power";
+
+        // Flywheel telemetry
+        public static final String FLYWHEEL_TARGET_RPM      = "Flywheel/TargetRPM";
+        public static final String FLYWHEEL_MEASURED_RPM    = "Flywheel/MeasuredRPM";
+        public static final String FLYWHEEL_MEASURED_RPM_LEGACY = "Flywheel measured RPM";
+        public static final String FLYWHEEL_PERCENT_OUT     = "Flywheel/PercentOutApprox";
+        public static final String FLYWHEEL_CURRENT_DRAW    = "Flywheel Current Draw";
+
+        // Flywheel PID / FF tuning
+        public static final String FLYWHEEL_KP = "Flywheel/kP";
+        public static final String FLYWHEEL_KI = "Flywheel/kI";
+        public static final String FLYWHEEL_KD = "Flywheel/kD";
+        public static final String FLYWHEEL_KS = "Flywheel/kS";
+        public static final String FLYWHEEL_KV = "Flywheel/kV";
+        public static final String FLYWHEEL_KA = "Flywheel/kA";
+
+        // Infeed
+        public static final String INFEED_TARGET_RPM  = "Infeed Target RPM";
+        public static final String INFEED_RPM         = "Infeed RPM";
+        public static final String INFEED_CURRENT_DRAW = "Infeed Current Draw";
+
+        // Misc
+        public static final String BEAM_BREAK                       = "Beam Break";
+        public static final String DISABLE_AUTO_FLYWHEEL_UPDATE     = "disableAutomaticFlywheelUpdate";
+        public static final String DISABLE_AUTO_DISTANCE_UPDATE     = "disableAutomaticDistanceUpdate";
+        public static final String DISABLE_AUTO_DISTANCE_UPDATE_TWO     = "disableAutomaticDistanceUpdateTwo";
+        public static final String ROBOT_LAUNCH_X                   = "RobotLaunchX";
+        public static final String ROBOT_LAUNCH_Y                   = "RobotLaunchY";
+        public static final String GOAL_POSE                        = "Goal Pose";
+        public static final String ROBOT_DISTANCE                   = "Robot Distance";
+    }
 
     public static final class DriveConstants {
         // Driving Parameters - These are the maximum capable speeds of the robot.
@@ -176,8 +289,11 @@ public final class Constants {
         public static double kMaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // top speed
         public static double kMaxAngularRate = RotationsPerSecond.of(1.0).in(RadiansPerSecond); // 1 rotation per second max angular velocity
 
+        public static double kMaxAcceleration = -1;
+        public static double kMaxAngularAcceleration = -1;
+
         // Velocity dead bands applied in SDS code. Times max speed.
-        public static final double  DRIVE_DEADBAND = 0.01, ROTATION_DEADBAND = 0.01;
+        public static final double  DRIVE_DEADBAND = 0.01, ROTATION_DEADBAND = 0.001;
 
         // Factors used to reduce robot max speed to levels desired for lab/demo operation.
         // The split below matches the rotation speed to drive speed. Needs to be tuned for
