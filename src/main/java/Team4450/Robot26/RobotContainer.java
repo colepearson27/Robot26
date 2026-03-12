@@ -342,7 +342,7 @@ public class RobotContainer {
         .toggleOnTrue(new InstantCommand(intake::togglePivit));
 
     new Trigger(() -> driverController.getLeftTrigger())
-        .whileTrue(new ShootWithX(drivebase, shooter, hopper));
+        .whileTrue(new Shoot(drivebase, shooter, hopper));
 
     new Trigger(() -> driverController.getRightTrigger())
         .onTrue(new InstantCommand(shooter::startInfeed))

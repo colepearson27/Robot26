@@ -20,6 +20,7 @@ public class Shoot extends Command {
     public void initialize() {
         shooter.enabledHood();
         shooter.startFlywheel();
+        drivebase.setX();
     }
 
     @Override
