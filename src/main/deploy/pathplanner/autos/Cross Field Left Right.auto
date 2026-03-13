@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Straight but turn"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "runIntake"
+            "pathName": "Left to Right"
           }
         }
       ]

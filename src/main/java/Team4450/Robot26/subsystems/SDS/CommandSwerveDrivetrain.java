@@ -209,29 +209,27 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   private void configureAutoBuilder() {
     try {
       var config = RobotConfig.fromGUISettings();
-      
+
       // This should not be changed
       // Here is the link to documentation for pathplanner setup:
       AutoBuilder.configure(
-      () -> getState().Pose, // Supplier of current robot pose
-      this::resetPose, // Consumer for seeding pose against auto
-      () -> getState().Speeds, // Supplier of current robot speeds
-      // Consumer of ChassisSpeeds and feedforwards to drive the robot
-      (speeds, feedforwards) -> setControl(
-      m_pathApplyRobotSpeeds.withSpeeds(speeds)
-      .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-      .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-      ),
-      new PPHolonomicDriveController(
-      // PID constants for translation
-      new PIDConstants(10, 0, 0),
-      // PID constants for rotation
-      new PIDConstants(7, 0, 0)
-      ),
-      config,
-      // Assume the path needs to be flipped for Red vs Blue, this is normally the
-      () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
-      this // Subsystem for requirements
+          () -> getState().Pose, // Supplier of current robot pose
+          this::resetPose, // Consumer for seeding pose against auto
+          () -> getState().Speeds, // Supplier of current robot speeds
+          // Consumer of ChassisSpeeds and feedforwards to drive the robot
+          (speeds, feedforwards) -> setControl(
+              m_pathApplyRobotSpeeds.withSpeeds(speeds)
+                  .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                  .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
+          new PPHolonomicDriveController(
+              // PID constants for translation
+              new PIDConstants(10, 0, 0),
+              // PID constants for rotation
+              new PIDConstants(7, 0, 0)),
+          config,
+          // Assume the path needs to be flipped for Red vs Blue, this is normally the
+          () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+          this // Subsystem for requirements
       );
     } catch (Exception ex) {
       DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
@@ -239,7 +237,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   }
 
   public ChassisSpeeds getSpeeds() {
-      return getSpeeds();
+    return getSpeeds();
   }
 
   /**
