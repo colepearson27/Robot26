@@ -17,6 +17,7 @@ import Team4450.Robot26.commands.StopShoot;
 import Team4450.Robot26.commands.StopAuto;
 import Team4450.Robot26.commands.IntakeUp;
 import Team4450.Robot26.commands.IntakeDown;
+import Team4450.Robot26.commands.FaceHub;
 import Team4450.Robot26.subsystems.Candle;
 import Team4450.Robot26.subsystems.Intake;
 import Team4450.Robot26.subsystems.Drivebase;
@@ -361,8 +362,9 @@ public class RobotContainer {
         .onFalse(new InstantCommand(intake::stopIntake));
 
     new Trigger(() -> driverController.getXButton())
-        .onTrue(new InstantCommand(drivebase::toggleHubTracking));
-
+        .whileTrue(new FaceHub(drivebase, headingPID));
+            //() -> driverController.getLeftY(),
+            //driverController.getLeftXDS()));
   }
 
   /**
