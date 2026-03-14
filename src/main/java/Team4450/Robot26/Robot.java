@@ -242,9 +242,11 @@ public class Robot extends TimedRobot {
         // Set Limelight imu mode to 2
         RobotContainer.visionSubsystem.enableInternalIMU();
 
+        // Figure out how to reset the yaw at a good point in time
+        // RobotContainer.drivebase.pigeonWrapper.setCurrentYaw(0);
+
         if (RobotContainer.drivebase.limelightPoseEstimate.getX() != 0 && RobotContainer.drivebase.limelightPoseEstimate.getY() != 0) {
             RobotContainer.drivebase.robotPose = new Pose2d(RobotContainer.drivebase.limelightPoseEstimate.getX(), RobotContainer.drivebase.limelightPoseEstimate.getY(), RobotContainer.drivebase.limelightPoseEstimate.getRotation());
-            RobotContainer.drivebase.pigeonWrapper.setCurrentYaw(RobotContainer.drivebase.limelightPoseEstimate.getRotation().getDegrees());
             RobotContainer.drivebase.resetOdometry(RobotContainer.drivebase.robotPose);
             RobotContainer.questNavSubsystem.resetQuestOdometry(new Pose3d(RobotContainer.drivebase.robotPose));
         } else {
