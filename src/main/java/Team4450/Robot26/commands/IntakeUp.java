@@ -3,6 +3,7 @@ package Team4450.Robot26.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import Team4450.Robot26.subsystems.Intake;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import Team4450.Robot26.Constants;
 
 public class IntakeUp extends Command {
 
@@ -16,7 +17,7 @@ public class IntakeUp extends Command {
   }
 
   public void execute() {
-    SmartDashboard.putNumber("Pivit Position", 0);
+    SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0);
   }
 
   public boolean isFinished() {

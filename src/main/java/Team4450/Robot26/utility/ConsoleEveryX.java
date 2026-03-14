@@ -1,6 +1,7 @@
 package Team4450.Robot26.utility;
 
 import Team4450.Lib.Util;
+import Team4450.Robot26.RobotContainer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ConsoleEveryX {
@@ -14,10 +15,12 @@ public class ConsoleEveryX {
         this.targetX = x;
         this.enabled = false;
         this.id = String.format("ConsoleEveryX/%s", id);
+        if (!RobotContainer.inTestMode) { return; } // Early return if not in test mode
         SmartDashboard.putBoolean(id, enabled);
     }
 
     public void update(String text) {
+        if (!RobotContainer.inTestMode) { return; } // Early return if not in test mode
         this.enabled = SmartDashboard.getBoolean(this.id, this.enabled);
         if (this.enabled) {
             this.x++;

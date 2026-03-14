@@ -1,7 +1,6 @@
 package Team4450.Robot26.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.controller.PIDController;
@@ -11,7 +10,6 @@ import Team4450.Lib.Util;
 import Team4450.Robot26.Constants;
 import Team4450.Robot26.subsystems.Drivebase;
 import static Team4450.Robot26.Constants.*;
-import Team4450.Robot26.utility.ConsoleEveryX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveCommand extends Command {
@@ -21,8 +19,6 @@ public class DriveCommand extends Command {
     private final DoubleSupplier strafeSupplier;
     private final DoubleSupplier rotationXSupplier;
     private final DoubleSupplier rotationYSupplier;
-    private final XboxController controller;
-
     public final PIDController headingPID;
 
     public DriveCommand(Drivebase driveBase,
@@ -30,7 +26,7 @@ public class DriveCommand extends Command {
             DoubleSupplier strafeSupplier,
             DoubleSupplier rotationXSupplier,
             DoubleSupplier rotationYSupplier,
-            XboxController controller, PIDController headingPID) {
+            PIDController headingPID) {
         Util.consoleLog();
 
         this.drivebase = driveBase;
@@ -38,7 +34,6 @@ public class DriveCommand extends Command {
         this.strafeSupplier = strafeSupplier;
         this.rotationXSupplier = rotationXSupplier;
         this.rotationYSupplier = rotationYSupplier;
-        this.controller = controller;
         this.headingPID = headingPID;
         headingPID.setIntegratorRange(-ROBOT_HEADING_KI_MAX, ROBOT_HEADING_KI_MAX);
         headingPID.enableContinuousInput(-180, 180);
@@ -66,10 +61,9 @@ public class DriveCommand extends Command {
         // program completed. The if
         // statment below prevents this.
 
-        if (robot.isAutonomous())
-            return;
+        if (robot.isAutonomous()) return; // We do not want to run the drive command if we are in auto
 
-        // Find the position of the hub given our current alliance
+        // This finds where the correct hub position is
         Pose2d hubPosition;
         if (alliance == DriverStation.Alliance.Blue) {
             hubPosition = new Pose2d(HUB_BLUE_WELDED_POSE.getX(), HUB_BLUE_WELDED_POSE.getY(), Rotation2d.kZero);
@@ -111,22 +105,22 @@ public class DriveCommand extends Command {
 
 
         targetHeading = normalizeAngle(targetHeading);
-        SmartDashboard.putNumber("Target Heading", targetHeading);
+        SmartDashboard.putNumber(Constants.SmartDashboardKeys.TARGET_HEADING, targetHeading);
 
         if (Constants.HUB_TRACKING) {
 
             // Uses a PID and the previous assigned target heading to rotate there
             double rotation = headingPID.calculate(-drivebase.getYaw180(), targetHeading);
-            SmartDashboard.putNumber("Heading PID Output", rotation);
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.HEADING_PID_OUTPUT, rotation);
             double throttle = throttleSupplier.getAsDouble();
             double strafe = strafeSupplier.getAsDouble();
 
             throttle = Util.squareInput(throttle);
             strafe = Util.squareInput(strafe);
 
-            headingPID.setP(SmartDashboard.getNumber("Heading P", Constants.ROBOT_HEADING_KP));
-            headingPID.setI(SmartDashboard.getNumber("Heading I", Constants.ROBOT_HEADING_KI));
-            headingPID.setD(SmartDashboard.getNumber("Heading D", Constants.ROBOT_HEADING_KD));
+            headingPID.setP(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_P, Constants.ROBOT_HEADING_KP));
+            headingPID.setI(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_I, Constants.ROBOT_HEADING_KI));
+            headingPID.setD(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_D, Constants.ROBOT_HEADING_KD));
 
             drivebase.drive(throttle, strafe, rotation);
 
@@ -141,6 +135,8 @@ public class DriveCommand extends Command {
 
             throttle = Util.squareInput(throttle);
             strafe = Util.squareInput(strafe);
+            // rotation = Util.squareInput(rotation);
+            // rotation = Math.pow(rotation, 5);
 
             drivebase.drive(throttle, strafe, rotation);
         }

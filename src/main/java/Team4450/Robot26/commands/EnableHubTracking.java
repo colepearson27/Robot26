@@ -82,19 +82,19 @@ public class EnableHubTracking extends Command {
         targetHeading = 0;
       }
 
-      SmartDashboard.putNumber("Target Heading", targetHeading);
+      SmartDashboard.putNumber(Constants.SmartDashboardKeys.TARGET_HEADING, targetHeading);
 
       double error = -targetHeading + Math.toDegrees(drivebase.getPose().getRotation().getDegrees());
 
-      SmartDashboard.putNumber("Heading Error", error);
+      SmartDashboard.putNumber(Constants.SmartDashboardKeys.HEADING_ERROR, error);
 
       // Uses a PID and the previous assigned target heading to rotate there
       double rotation = -headingPID.calculate(-Math.toDegrees(drivebase.getPose().getRotation().getDegrees()),
           -targetHeading);
 
-      headingPID.setP(SmartDashboard.getNumber("Heading P", Constants.ROBOT_HEADING_KP));
-      headingPID.setI(SmartDashboard.getNumber("Heading I", Constants.ROBOT_HEADING_KI));
-      headingPID.setD(SmartDashboard.getNumber("Heading D", Constants.ROBOT_HEADING_KD));
+      headingPID.setP(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_P, Constants.ROBOT_HEADING_KP));
+      headingPID.setI(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_I, Constants.ROBOT_HEADING_KI));
+      headingPID.setD(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_D, Constants.ROBOT_HEADING_KD));
 
       drivebase.drive(0, 0, rotation);
 

@@ -96,7 +96,7 @@ public class Robot extends TimedRobot {
                     SendableVersion.INSTANCE.getCommit());
 
             // Send program version to the dashboard.
-            SmartDashboard.putString("Program", PROGRAM_NAME);
+            SmartDashboard.putString(Constants.SmartDashboardKeys.PROGRAM, PROGRAM_NAME);
 
             // Log RobotLib and WPILib versions we are using. Note Robolib WPILib version can be different
             // than robot WPILib version. Should be the same for best results.
@@ -198,8 +198,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        SmartDashboard.putBoolean("Disabled", false);
-        SmartDashboard.putBoolean("Auto Mode", true);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISABLED, false);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.AUTO_MODE, true);
 
         RobotContainer.drivebase.pigeonWrapper.setCurrentYaw(0);
 
@@ -236,8 +236,8 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         robotContainer.getMatchInformation();
 
-        SmartDashboard.putBoolean("Disabled", false);
-        SmartDashboard.putBoolean("Teleop Mode", true);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISABLED, false);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.TELEOP_MODE, true);
 
         // Set Limelight imu mode to 2
         RobotContainer.visionSubsystem.enableInternalIMU();
@@ -290,6 +290,7 @@ public class Robot extends TimedRobot {
         // What is LiveWindow
         // LiveWindow.enableAllTelemetry();
 
+        RobotContainer.inTestMode = true;
         teleopInit();
 
         CommandScheduler.getInstance().enable();
@@ -300,5 +301,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic() {
+    }
+
+    @Override
+    public void testExit() {
+        RobotContainer.inTestMode = false;
     }
 }

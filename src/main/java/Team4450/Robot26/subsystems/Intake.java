@@ -162,13 +162,6 @@ public class Intake extends SubsystemBase {
         this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
-    // TODO: FIX for the start Intake command for autos
-    public void startIntakeSlow() {
-        if (canSpin) {
-            // intakeMotors.setPower(0.1);
-        }
-    }
-
     public void stopIntake() {
         this.runIntake = false;
         this.reverseIntake = false;

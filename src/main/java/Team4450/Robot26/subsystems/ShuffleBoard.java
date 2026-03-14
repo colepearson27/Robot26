@@ -1,6 +1,7 @@
 package Team4450.Robot26.subsystems;
 
 import Team4450.Lib.Util;
+import Team4450.Robot26.Constants;
 import Team4450.Robot26.RobotContainer;
 import Team4450.Robot26.commands.Utility.NotifierCommand;
 
@@ -70,12 +71,11 @@ public class ShuffleBoard extends SubsystemBase {
     private void resetLEDIndicators() {
         Util.consoleLog();
         
-        SmartDashboard.putBoolean("Disabled", true);
-        SmartDashboard.putBoolean("Auto Mode", false);
-        SmartDashboard.putBoolean("Teleop Mode", false);
-        SmartDashboard.putBoolean("FMS", DriverStation.isFMSAttached());
-        SmartDashboard.putBoolean("Autonomous Active", false);
-        SmartDashboard.putBoolean("Tracking", false);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISABLED, true);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.AUTO_MODE, false);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.TELEOP_MODE, false);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.FMS, DriverStation.isFMSAttached());
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.AUTONOMOUS_ACTIVE, false);
     }
 
     /**
