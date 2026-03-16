@@ -13,7 +13,6 @@ import Team4450.Robot26.commands.EnableHubTracking;
 import Team4450.Robot26.commands.Shoot;
 import Team4450.Robot26.commands.ShootWithX;
 import Team4450.Robot26.commands.StartIntake;
-import Team4450.Robot26.commands.StopIntake;
 import Team4450.Robot26.commands.StopShoot;
 import Team4450.Robot26.commands.StopAuto;
 import Team4450.Robot26.commands.IntakeUp;
@@ -183,8 +182,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("intakeUp", new IntakeUp(intake));
     NamedCommands.registerCommand("enableHubTracking", new EnableHubTracking(drivebase, headingPID));
     NamedCommands.registerCommand("disableHubTracking", new DisableHubTracking(drivebase));
-    NamedCommands.registerCommand("startIntake", new StartIntake(intake));
-    NamedCommands.registerCommand("stopIntake", new StopIntake(intake));
+    NamedCommands.registerCommand("intake", new StartIntake(intake));
     NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper));
     NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
     NamedCommands.registerCommand("end", new StopAuto(drivebase));
@@ -354,8 +352,8 @@ public class RobotContainer {
         .onFalse(new InstantCommand(shooter::stopInfeed));
 
     // new Trigger(() -> driverController.getRightTrigger())
-    //     .onTrue(new InstantCommand(hopper::startSlow))
-    //     .onFalse(new InstantCommand(hopper::stop));
+    // .onTrue(new InstantCommand(hopper::startSlow))
+    // .onFalse(new InstantCommand(hopper::stop));
 
     new Trigger(() -> driverController.getAButton())
         .onTrue(new InstantCommand(intake::startIntake));

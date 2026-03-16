@@ -9,23 +9,23 @@
       "prevControl": null,
       "nextControl": {
         "x": 7.712898706896553,
-        "y": 1.586457351158406
+        "y": 1.5864573511584061
       },
       "isLocked": false,
       "linkedName": "RCenter"
     },
     {
       "anchor": {
-        "x": 7.742219827586206,
-        "y": 3.7906573275862065
+        "x": 7.732446120689655,
+        "y": 4.298890086206897
       },
       "prevControl": {
         "x": 7.742219827586206,
-        "y": 2.4712068965517244
+        "y": 2.8035129310344824
       },
       "nextControl": {
-        "x": 7.742219827586206,
-        "y": 4.790657327586203
+        "x": 7.725910312576073,
+        "y": 5.298868727584949
       },
       "isLocked": false,
       "linkedName": null
@@ -33,15 +33,15 @@
     {
       "anchor": {
         "x": 7.732446120689655,
-        "y": 0.7361448511584059
+        "y": 2.500528017241379
       },
       "prevControl": {
-        "x": 8.338415948275863,
-        "y": 0.6630711206896558
+        "x": 8.084299568965518,
+        "y": 2.862155172413793
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Ferry"
     }
   ],
   "rotationTargets": [
@@ -77,7 +77,7 @@
   },
   "goalEndState": {
     "velocity": 1.0,
-    "rotation": 0.0
+    "rotation": -170.0
   },
   "reversed": false,
   "folder": null,

@@ -14,10 +14,10 @@ public class IntakeDown extends Command {
   }
 
   public void initialize() {
+    SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.95);
   }
 
   public void execute() {
-    SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.95);
   }
 
   public boolean isFinished() {

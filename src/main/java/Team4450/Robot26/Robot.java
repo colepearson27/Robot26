@@ -130,6 +130,11 @@ public class Robot extends TimedRobot {
 
       SendableVersion.INSTANCE.updateDashBoard();
 
+      // Warm up the Pathfinder so that you can create paths to follow on the fly
+      // during teleop
+      
+      // PathfindingCommand.warmupCommand().schedule();
+
       // Instantiate our RobotContainer class. This will perform all necessary setup
       // of the various
       // subsystems, commands and other items that are needed to to be ready before we
