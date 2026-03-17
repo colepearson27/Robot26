@@ -101,8 +101,8 @@ public class Robot extends TimedRobot {
           SendableVersion.INSTANCE.getUser(), SendableVersion.INSTANCE.getTime(), SendableVersion.INSTANCE.getBranch(),
           SendableVersion.INSTANCE.getCommit());
 
-            // Send program version to the dashboard.
-            SmartDashboard.putString(Constants.SmartDashboardKeys.PROGRAM, PROGRAM_NAME);
+      // Send program version to the dashboard.
+      SmartDashboard.putString(Constants.SmartDashboardKeys.PROGRAM, PROGRAM_NAME);
 
       // Log RobotLib and WPILib versions we are using. Note Robolib WPILib version
       // can be different
@@ -132,7 +132,7 @@ public class Robot extends TimedRobot {
 
       // Warm up the Pathfinder so that you can create paths to follow on the fly
       // during teleop
-      
+
       // PathfindingCommand.warmupCommand().schedule();
 
       // Instantiate our RobotContainer class. This will perform all necessary setup
@@ -223,18 +223,23 @@ public class Robot extends TimedRobot {
 
   public Shoot command;
 
-    /**
-     * This function is called once at the start of autonomous mode and schedules
-     * the autonomous command selected by your {@link RobotContainer} class.
-     */
-    @Override
-    public void autonomousInit() {
-        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISABLED, false);
-        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.AUTO_MODE, true);
+  /**
+   * This function is called once at the start of autonomous mode and schedules
+   * the autonomous command selected by your {@link RobotContainer} class.
+   */
+  private boolean flipAuto = false;
 
-        RobotContainer.drivebase.pigeonWrapper.setCurrentYaw(0);
+  @Override
+  public void autonomousInit() {
+    this.flipAuto = false;
 
-        robotContainer.getMatchInformation();
+    SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISABLED, false);
+    SmartDashboard.putBoolean(Constants.SmartDashboardKeys.AUTO_MODE, true);
+    SmartDashboard.putBoolean(Constants.SmartDashboardKeys.FLIP_AUTO, this.flipAuto);
+
+    RobotContainer.drivebase.pigeonWrapper.setCurrentYaw(0);
+
+    robotContainer.getMatchInformation();
 
     // RobotContainer function determines which auto command is selected to run.
     Command autonomousCommand = robotContainer.getAutonomousCommand();
@@ -268,14 +273,14 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     robotContainer.getMatchInformation();
 
-        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISABLED, false);
-        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.TELEOP_MODE, true);
+    SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISABLED, false);
+    SmartDashboard.putBoolean(Constants.SmartDashboardKeys.TELEOP_MODE, true);
 
-        // Set Limelight imu mode to 2
-        RobotContainer.visionSubsystem.enableInternalIMU();
+    // Set Limelight imu mode to 2
+    RobotContainer.visionSubsystem.enableInternalIMU();
 
-        // Figure out how to reset the yaw at a good point in time
-        // RobotContainer.drivebase.pigeonWrapper.setCurrentYaw(0);
+    // Figure out how to reset the yaw at a good point in time
+    // RobotContainer.drivebase.pigeonWrapper.setCurrentYaw(0);
 
     if (RobotContainer.drivebase.limelightPoseEstimate.getX() != 0
         && RobotContainer.drivebase.limelightPoseEstimate.getY() != 0) {
@@ -326,21 +331,21 @@ public class Robot extends TimedRobot {
     // What is LiveWindow
     // LiveWindow.enableAllTelemetry();
 
-        RobotContainer.inTestMode = true;
-        teleopInit();
+    RobotContainer.inTestMode = true;
+    teleopInit();
 
     CommandScheduler.getInstance().enable();
   }
 
-    /**
-     * This function is called periodically during test mode.
-     */
-    @Override
-    public void testPeriodic() {
-    }
+  /**
+   * This function is called periodically during test mode.
+   */
+  @Override
+  public void testPeriodic() {
+  }
 
-    @Override
-    public void testExit() {
-        RobotContainer.inTestMode = false;
-    }
+  @Override
+  public void testExit() {
+    RobotContainer.inTestMode = false;
+  }
 }
