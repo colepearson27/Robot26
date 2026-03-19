@@ -338,8 +338,8 @@ public final class Constants {
     // The split below matches the rotation speed to drive speed. Needs to be tuned
     // for
     // full weight robot.
-    public static final double kDriveReductionPct = .50; // 50% of max linear speed.
-    public static final double kRotationReductionPct = .70; // 70% of max rotational speed.
+    public static final double kDriveReductionPct = .70; // Percentage of max linear speed. e.g. .50 == 50%
+    public static final double kRotationReductionPct = .70; // Percentage of max rotational speed. e.g. .70 == 70%
 
     // Factors used to slow robot speed for fine driving.
     public static final double kSlowModeLinearPct = .15; // 15% of max linear speed.

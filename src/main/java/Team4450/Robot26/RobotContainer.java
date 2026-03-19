@@ -346,7 +346,7 @@ public class RobotContainer {
         .onTrue(new InstantCommand(shooter::toggleDisableAutomaticDistanceTwo));
     
     new Trigger(() -> driverController.getRightBumperButton())
-        .toggleOnTrue(new InstantCommand(intake::togglePivit));
+        .onTrue(new InstantCommand(intake::togglePivit));
 
     new Trigger(() -> driverController.getLeftTrigger())
         .whileTrue(new Shoot(drivebase, shooter, hopper));

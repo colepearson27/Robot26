@@ -99,9 +99,6 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putBoolean("Intake can Pivit", canPivit);
         SmartDashboard.putBoolean("Intake can Spin", canSpin);
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0);
-
-        SmartDashboard.putNumber("Intake Target RPM", Constants.INTAKE_DEFAULT_TARGET_RPM);
-        SmartDashboard.putNumber("Intake Voltage Out", 0);
     }
 
     @Override
@@ -118,19 +115,18 @@ public class Intake extends SubsystemBase {
 
       this.pivitCurrentPositionMotorPosition = this.getPivitPosition();
       this.pivitCurrentPosition = this.motorPositionToPivitPosition(this.pivitCurrentPositionMotorPosition);
-      SmartDashboard.putNumber("Pivit current position", this.pivitCurrentPosition);
-      SmartDashboard.putNumber("Pivit Motor Position", this.pivitCurrentPositionMotorPosition);
-
-      SmartDashboard.putNumber("Intake RPM", getIntakeRPM());
-
-      SmartDashboard.putNumber("Intake Current Draw", getIntakeCurrent());
+        
+      if (RobotContainer.inTestMode) {
+          SmartDashboard.putNumber("Intake RPM", getIntakeRPM());
+          SmartDashboard.putNumber("Intake Current Draw", getIntakeCurrent());
+      }
     }
 
         if (this.runIntake) {
             if (this.reverseIntake) {
-                setIntakeRPM(-SmartDashboard.getNumber("Intake Target RPM", Constants.INTAKE_DEFAULT_TARGET_RPM));
+                setIntakeRPM(-Constants.INTAKE_DEFAULT_TARGET_RPM);
             } else {
-                setIntakeRPM(SmartDashboard.getNumber("Intake Target RPM", Constants.INTAKE_DEFAULT_TARGET_RPM));
+                setIntakeRPM(Constants.INTAKE_DEFAULT_TARGET_RPM);
             }
         }
     }
