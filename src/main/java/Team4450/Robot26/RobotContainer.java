@@ -186,7 +186,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("enableHubTracking", new EnableHubTracking(drivebase, headingPID));
     NamedCommands.registerCommand("disableHubTracking", new DisableHubTracking(drivebase));
     NamedCommands.registerCommand("intake", new StartIntake(intake));
-    NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper));
+    NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper, intake));
     NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
     NamedCommands.registerCommand("end", new StopAuto(drivebase));
 
@@ -355,7 +355,7 @@ public class RobotContainer {
         .onTrue(new InstantCommand(intake::togglePivit));
 
     new Trigger(() -> driverController.getLeftTrigger())
-        .whileTrue(new Shoot(drivebase, shooter, hopper));
+        .whileTrue(new Shoot(drivebase, shooter, hopper, intake));
 
     new Trigger(() -> driverController.getRightTrigger())
         .onTrue(new InstantCommand(shooter::startInfeed))

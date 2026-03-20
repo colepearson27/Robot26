@@ -141,6 +141,14 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.95);
     }
 
+    public void shootingPivitToggle() {
+        if (this.pivitCurrentPosition >= 0.85) {
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.35);
+        } else {
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.95);
+        }
+    }
+
   // Linear interpolate the pivit position between zero and one with the motor
   // rotations of up and down on the pivit
   public double pivitPositionToMotorPosition(double pivitPosition) {
