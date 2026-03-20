@@ -1,47 +1,55 @@
-<1>10:09:48:032: Robot26.Robot.robotInit(Robot.java:87): Simulated Robot
-<1>10:09:48:038: Robot26.Robot.robotInit(Robot.java:96): ORF26-02.12.26 compiled by robot at 2026-02-18 10:09:46 (branch=master, commit=136b921)
-<1>10:09:48:038: Robot26.Robot.robotInit(Robot.java:105): Robot WPILib=2026.2.1  Java=21.0.9
-<1>10:09:48:038: Robot26.Robot.robotInit(Robot.java:106): RobotLib=4.13.0 (01.30.2026) WPILib=2026.2.1
-<1>10:09:48:154: Robot26.RobotContainer.<init>(RobotContainer.java:117)
-<1>10:09:48:180: Robot26.RobotContainer.getMatchInformation(RobotContainer.java:397): Alliance=Blue, Location=0, FMS=false event= match=0 msg=
-<1>10:09:48:181: Lib.Util.readProperties(Util.java:80)
-<1>10:09:48:181: -- listing properties --
-<1>10:09:48:181: CompressorEnabledByDefault=true
-<1>10:09:48:182: RobotId=comp
-<1>10:09:48:183: Robot26.commands.Utility.NotifierCommand.<init>(NotifierCommand.java:43)
-<1>10:09:48:184: Robot26.commands.Utility.NotifierCommand.<init>(NotifierCommand.java:66): Notifier-SB created!
-<1>10:09:48:184: Robot26.subsystems.ShuffleBoard.<init>(ShuffleBoard.java:41): ShuffleBoard created!
-<1>10:09:48:411: Robot26.subsystems.PigeonWrapper.<init>(PigeonWrapper.java:18)
-<1>10:09:48:421: Robot26.subsystems.Drivebase.<init>(Drivebase.java:69)
-<1>10:09:48:423: java.lang.Exception: Pigeon is NOT connected!
-<1>10:09:48:424: 	at Team4450.Robot26.subsystems.Drivebase.<init>(Drivebase.java:79)
-<1>10:09:48:424: 	at Team4450.Robot26.RobotContainer.<init>(RobotContainer.java:150)
-<1>10:09:48:424: 	at Team4450.Robot26.Robot.robotInit(Robot.java:125)
-<1>10:09:48:424: 	at Team4450.Robot26.wpilib.TimedRobot.startCompetition(TimedRobot.java:129)
-<1>10:09:48:424: 	at edu.wpi.first.wpilibj.RobotBase.runRobot(RobotBase.java:436)
-<1>10:09:48:424: 	at edu.wpi.first.wpilibj.RobotBase.startRobot(RobotBase.java:527)
-<1>10:09:48:424: 	at Team4450.Robot26.Main.main(Main.java:26)
-<1>10:09:48:641: Robot26.subsystems.Drivebase.resetOdometry(Drivebase.java:222): Pose2d(Translation2d(X: 0.00, Y: 0.00), Rotation2d(Rads: 0.00, Deg: 0.00))
-<1>10:09:48:641: Robot26.subsystems.PigeonWrapper.setStartingGyroYaw(PigeonWrapper.java:80): -0.0
-<1>10:09:48:659: QuestNav internal pose reset to: Pose3d(Translation3d(X: 0.00, Y: 0.00, Z: 0.00), Rotation3d(Quaternion(1.0, 0.0, 0.0, 0.0)))
-<1>10:09:48:661: Robot26.commands.DriveCommand.<init>(DriveCommand.java:39)
-<1>10:09:48:661: Lib.MonitorPower.getInstance(MonitorPower.java:43)
-<1>10:09:48:661: Lib.MonitorPower.<init>(MonitorPower.java:54)
-<40>10:09:48:662: Lib.MonitorPower.run(MonitorPower.java:133)
-<1>10:09:48:662: Robot26.RobotContainer.setAutoChoices(RobotContainer.java:375)
-<1>10:09:48:698: Robot26.RobotContainer.configureButtonBindings(RobotContainer.java:244)
-<1>10:09:48:709: Robot26.RobotContainer.<init>(RobotContainer.java:235): ------------------------------
-<1>10:09:48:709: ********** Robot program startup complete **********
-<1>10:09:48:709: Robot26.Robot.disabledInit(Robot.java:172)
-<1>10:09:48:710: Robot26.Robot.disabledInit(Robot.java:188): ------------------------------
-<42>10:09:48:710: Robot26.subsystems.ShuffleBoard.resetLEDIndicators(ShuffleBoard.java:84)
-<1>10:09:48:718: Default simulationPeriodic() method... Override me!
-<1>10:09:50:671: Robot26.utility.ConsoleEveryX.update(ConsoleEveryX.java:25): Quest periodic
-<1>10:09:52:111: [PathPlanner] FollowPathCommand finished warmup
-<1>10:09:52:671: Robot26.utility.ConsoleEveryX.update(ConsoleEveryX.java:25): Quest periodic
-<1>10:09:54:671: Robot26.utility.ConsoleEveryX.update(ConsoleEveryX.java:25): Quest periodic
-<1>10:09:56:671: Robot26.utility.ConsoleEveryX.update(ConsoleEveryX.java:25): Quest periodic
-<1>10:09:58:671: Robot26.utility.ConsoleEveryX.update(ConsoleEveryX.java:25): Quest periodic
-<1>10:10:00:671: Robot26.utility.ConsoleEveryX.update(ConsoleEveryX.java:25): Quest periodic
-<1>10:10:02:671: Robot26.utility.ConsoleEveryX.update(ConsoleEveryX.java:25): Quest periodic
-<1>10:10:04:671: Robot26.utility.ConsoleEveryX.update(ConsoleEveryX.java:25): Quest periodic
+<19>10:56:18:603: Robot26.Robot.robotInit(Robot.java:91): Simulated Robot
+<19>10:56:18:641: Robot26.Robot.robotInit(Robot.java:101): ORF26-02.12.26 compiled by asy at 2026-03-19 22:56:13 (branch=master, commit=22db07d)
+<19>10:56:18:656: Robot26.Robot.robotInit(Robot.java:113): Robot WPILib=2026.2.1  Java=21.0.10
+<19>10:56:18:657: Robot26.Robot.robotInit(Robot.java:114): RobotLib=4.13.0 (01.30.2026) WPILib=2026.2.1
+<19>10:56:19:108: Robot26.RobotContainer.getMatchInformation(RobotContainer.java:428): Alliance=Blue, Location=0, FMS=false event= match=0 msg=
+<19>10:56:19:109: Lib.Util.readProperties(Util.java:80)
+<19>10:56:19:111: -- listing properties --
+<19>10:56:19:113: CompressorEnabledByDefault=true
+<19>10:56:19:117: RobotId=comp
+<19>10:56:19:127: Robot26.commands.Utility.NotifierCommand.<init>(NotifierCommand.java:43)
+<19>10:56:19:132: Robot26.commands.Utility.NotifierCommand.<init>(NotifierCommand.java:66): Notifier-SB created!
+<19>10:56:19:135: Robot26.subsystems.ShuffleBoard.<init>(ShuffleBoard.java:39): ShuffleBoard created!
+<19>10:56:20:186: Robot26.subsystems.PigeonWrapper.<init>(PigeonWrapper.java:17)
+<19>10:56:20:213: Robot26.subsystems.Drivebase.<init>(Drivebase.java:86)
+<19>10:56:20:258: Robot26.subsystems.Drivebase.<init>(Drivebase.java:98): Pigeon connected version=436273408 
+<19>10:56:20:561: Robot26.subsystems.Drivebase.resetOdometry(Drivebase.java:318): Pose2d(Translation2d(X: 0.00, Y: 0.00), Rotation2d(Rads: 0.00, Deg: 0.00))
+<19>10:56:20:566: Robot26.subsystems.PigeonWrapper.setStartingGyroYaw(PigeonWrapper.java:81): -0.0
+<19>10:56:21:009: Robot26.commands.EnableHubTracking.<init>(EnableHubTracking.java:22)
+<19>10:56:21:020: Robot26.commands.DriveCommand.<init>(DriveCommand.java:30)
+<19>10:56:21:026: Lib.MonitorPower.getInstance(MonitorPower.java:43)
+<19>10:56:21:030: Lib.MonitorPower.<init>(MonitorPower.java:54)
+<33>10:56:21:035: Lib.MonitorPower.run(MonitorPower.java:133)
+<19>10:56:21:371: ********** Robot program startup complete **********
+<35>10:56:21:374: Robot26.subsystems.ShuffleBoard.resetLEDIndicators(ShuffleBoard.java:72)
+<19>10:56:21:408: Default simulationPeriodic() method... Override me!
+<19>10:56:24:771: [PathPlanner] FollowPathCommand finished warmup
+<19>10:58:17:889: Robot26.RobotContainer.getMatchInformation(RobotContainer.java:428): Alliance=Red, Location=1, FMS=false event= match=0 msg=
+<19>10:58:17:905: Robot26.commands.Utility.NotifierCommand.initialize(NotifierCommand.java:106): Notifier-SB period=0.025
+<19>10:58:17:906: Robot26.commands.DriveCommand.initialize(DriveCommand.java:47)
+<36>11:00:24:550: Robot26.subsystems.ShuffleBoard.resetLEDIndicators(ShuffleBoard.java:72)
+<19>11:00:24:553: Robot26.commands.Utility.NotifierCommand.end(NotifierCommand.java:117): Notifier-SB interrupted=true
+<19>11:00:24:555: Robot26.commands.DriveCommand.end(DriveCommand.java:147): interrupted=true
+<19>11:00:27:713: Robot26.RobotContainer.getMatchInformation(RobotContainer.java:428): Alliance=Red, Location=1, FMS=false event= match=0 msg=
+<19>11:00:27:717: Robot26.commands.Utility.NotifierCommand.initialize(NotifierCommand.java:106): Notifier-SB period=0.025
+<19>11:00:27:718: Robot26.commands.DriveCommand.initialize(DriveCommand.java:47)
+<19>11:00:29:791: Robot26.commands.Utility.NotifierCommand.end(NotifierCommand.java:117): Notifier-SB interrupted=true
+<37>11:00:29:791: Robot26.subsystems.ShuffleBoard.resetLEDIndicators(ShuffleBoard.java:72)
+<19>11:00:29:794: Robot26.commands.DriveCommand.end(DriveCommand.java:147): interrupted=true
+<19>11:00:56:568: Robot26.RobotContainer.getMatchInformation(RobotContainer.java:428): Alliance=Red, Location=1, FMS=false event= match=0 msg=
+<19>11:00:56:570: Robot26.subsystems.VisionSubsystem.enableInternalIMU(VisionSubsystem.java:68): Init Limelight Internal IMU Front
+<19>11:00:56:571: Robot26.subsystems.VisionSubsystem.enableInternalIMU(VisionSubsystem.java:70): Init Limelight Internal IMU Right
+<19>11:00:56:572: Robot26.Robot.teleopInit(Robot.java:297): Fail
+<19>11:00:56:577: Robot26.commands.Utility.NotifierCommand.initialize(NotifierCommand.java:106): Notifier-SB period=0.025
+<19>11:00:56:580: Robot26.commands.DriveCommand.initialize(DriveCommand.java:47)
+<19>11:01:08:155: Robot26.subsystems.Drivebase.toggleSlowMode(Drivebase.java:270): true
+<19>11:01:08:344: Robot26.subsystems.Drivebase.toggleSlowMode(Drivebase.java:270): false
+<38>11:01:26:030: Robot26.subsystems.ShuffleBoard.resetLEDIndicators(ShuffleBoard.java:72)
+<19>11:01:26:030: Robot26.commands.Utility.NotifierCommand.end(NotifierCommand.java:117): Notifier-SB interrupted=true
+<19>11:01:26:034: Robot26.commands.DriveCommand.end(DriveCommand.java:147): interrupted=true
+<19>11:01:30:107: Robot26.RobotContainer.getMatchInformation(RobotContainer.java:428): Alliance=Red, Location=1, FMS=false event= match=0 msg=
+<19>11:01:30:112: Robot26.commands.Utility.NotifierCommand.initialize(NotifierCommand.java:106): Notifier-SB period=0.025
+<19>11:01:30:114: Robot26.commands.DriveCommand.initialize(DriveCommand.java:47)
+<19>11:01:31:871: Robot26.commands.Utility.NotifierCommand.end(NotifierCommand.java:117): Notifier-SB interrupted=true
+<39>11:01:31:871: Robot26.subsystems.ShuffleBoard.resetLEDIndicators(ShuffleBoard.java:72)
+<19>11:01:31:872: Robot26.commands.DriveCommand.end(DriveCommand.java:147): interrupted=true

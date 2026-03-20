@@ -21,7 +21,9 @@
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
       "/SmartDashboard/Module 3": "Mechanism2d",
-      "/SmartDashboard/PathPlanner": "Alerts"
+      "/SmartDashboard/PathPlanner": "Alerts",
+      "/SmartDashboard/Pigeon Gyro": "Gyro",
+      "/SmartDashboard/String Auto": "String Chooser"
     },
     "windows": {
       "/Pose": {
@@ -40,11 +42,6 @@
           "visible": true
         }
       },
-      "/SmartDashboard/Auto Program": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field2d": {
         "Robot": {
           "length": 0.7365999817848206,
@@ -52,7 +49,6 @@
           "width": 0.7365999817848206
         },
         "Swerve Modules": {
-          "image": "resources\\swerve_module.png",
           "length": 0.30480000376701355,
           "width": 0.30480000376701355
         },
@@ -75,6 +71,9 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
     "transitory": {
       "LiveWindow": {
         "Ungrouped": {
