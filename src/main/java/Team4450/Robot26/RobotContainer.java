@@ -285,65 +285,195 @@ public class RobotContainer {
         CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
     }
 
-    /**
-     * Use this method to define your button->command mappings.
-     * 
-     * These buttons are for robot driver station with 2 Xbox or F310 controllers.
-     */
-    private void configureButtonBindings() {
-        // ------- Driver controller buttons -------------
+    // Is this the competition or clone robot?
+    if (robotProperties == null || robotProperties.getProperty("RobotId").equals("comp"))
+      isComp = true;
+    else
+      isClone = true;
 
-        // For simple functions, instead of creating commands, we can call convenience
-        // functions on
-        // the target subsystem from an InstantCommand. It can be tricky deciding what
-        // functions
-        // should be an aspect of the subsystem and what functions should be in
-        // Commands...
+    // Invert driving joy sticks Y axis so + values mean forward.
+    // Invert driving joy sticks X axis so + values mean right.
+    driverController.invertY(true);
+    driverController.invertX(true);
 
-        // POV buttons do same as alternate driving mode but without any lateral
-        // Movement and increments of 45deg.
-        // new Trigger(()-> driverController.getPOV() != -1)
-        // .onTrue(new PointToYaw(()->PointToYaw.yawFromPOV(driverController.getPOV()),
-        // driveBase, false))
+    // Create subsystems prior to button mapping.
+    shuffleBoard = new ShuffleBoard();
 
-        // Vibrate between 30 and 25 sec left in match.
-        new Trigger(() -> Timer.getMatchTime() < 30 && Timer.getMatchTime() > 25).whileTrue(new StartEndCommand(
-                () -> {
-                    driverController.setRumble(RumbleType.kBothRumble, 0.5);
-                    utilityController.setRumble(RumbleType.kBothRumble, 0.5);
-                },
-                () -> {
-                    driverController.setRumble(RumbleType.kBothRumble, 0);
-                    utilityController.setRumble(RumbleType.kBothRumble, 0);
-                }));
+    // The pigeon is setup somewhere in the drivebase function.
+    // It is important to note that the pigeon documentation says that the device
+    // does not need to be still on boot,
+    // however the documentation also says that the drift is worse when started
+    // while moving.
+    drivebase = new Drivebase();
+    visionSubsystem = new VisionSubsystem(drivebase);
+    questNavSubsystem = new QuestNavSubsystem(drivebase);
 
-        // Reset field orientation (direction).
-        // new Trigger(() -> driverController.getPOV() == 180) // D-pad down Cole
-        // .onTrue(new InstantCommand(drivebase::resetFieldOrientation));
+    intake = new Intake();
+    shooter = new Shooter(drivebase);
 
-        // Toggle field-oriented driving mode.
-        // new Trigger(() -> driverController.getAButton()) // Rich
-        // .onTrue(new InstantCommand(driveBase::toggleFieldRelativeDriving));
+    headingPID = new PIDController(Constants.ROBOT_HEADING_KP, Constants.ROBOT_HEADING_KI, Constants.ROBOT_HEADING_KD);
+    SmartDashboard.putNumber(Constants.SmartDashboardKeys.HEADING_P, Constants.ROBOT_HEADING_KP);
+    SmartDashboard.putNumber(Constants.SmartDashboardKeys.HEADING_D, Constants.ROBOT_HEADING_KI);
+    SmartDashboard.putNumber(Constants.SmartDashboardKeys.HEADING_I, Constants.ROBOT_HEADING_KD);
+    SmartDashboard.putBoolean(Constants.SmartDashboardKeys.HEADING_PID_TOGGLE, Constants.HUB_TRACKING);
 
-        // new Trigger(() -> driverController.getAButton())
-        // .onTrue(new InstantCommand(questNavSubsystem::resetTestPose));
+    // Create any persistent commands.
 
-        // new Trigger(() -> driverController.getBButton())
-        // .onTrue(new InstantCommand(questNavSubsystem::resetToZeroPose));
+    // Set any subsystem Default commands.
 
-        // new Trigger(() -> driverController.getBButton())
-        // .onTrue(new InstantCommand(() -> drivebase.resetOdometry(new Pose2d(0, 0,
-        // Rotation2d.kZero))));
+    // Pathplanner NamedCommands
 
-        // // Toggle motor brake mode.
-        // new Trigger(() -> driverController.getBButton()) // Rich
-        // .onTrue(new InstantCommand(driveBase::toggleNeutralMode));
+    NamedCommands.registerCommand("intakeDown", new IntakeDown(intake));
+    NamedCommands.registerCommand("intakeUp", new IntakeUp(intake));
+    NamedCommands.registerCommand("enableHubTracking", new EnableHubTracking(drivebase, headingPID));
+    NamedCommands.registerCommand("disableHubTracking", new DisableHubTracking(drivebase));
+    NamedCommands.registerCommand("intake", new StartIntake(intake));
+    NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper, intake));
+    NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
+    NamedCommands.registerCommand("end", new StopAuto(drivebase));
 
-        // Toggle slow-mode
-        // Right D-Pad button sets X pattern to stop movement.
+    // Set the default drive command. This command will be scheduled automatically
+    // to run
+    // every teleop period and so use the gamepad joy sticks to drive the robot.
 
-        new Trigger(() -> driverController.getLeftBumperButton()) // Rich
-                .onChange(new InstantCommand(drivebase::toggleSlowMode));
+    // We pass the GetY() functions on the Joysticks as a DoubleSuppier. The point
+    // of this
+    // is removing the direct connection between the Drive and XboxController
+    // classes. We
+    // are in effect passing functions into the Drive command so it can read the
+    // values
+    // later when the Drive command is executing under the Scheduler. Drive command
+    // code does
+    // not have to know anything about the JoySticks (or any other source) but can
+    // still read
+    // them. We can pass the DoubleSupplier two ways. First is with () -> lambda
+    // expression
+    // which wraps the getLeftY() function in a DoubleSupplier instance. Second is
+    // using the
+    // controller class convenience method getRightYDS() which returns getRightY()
+    // as a
+    // DoubleSupplier. We show both ways here as an example.
+
+    // The joystick controls for driving:
+    // Left stick Y axis -> forward and backwards movement (throttle)
+    // Left stick X axis -> left and right movement (strafe)
+    // Right stick X axis -> rotation
+    // Note: X and Y axis on stick is opposite X and Y axis on the WheelSpeeds
+    // object
+    // and the odometry pose2d classes.
+    // Wheelspeeds +X axis is down the field away from alliance wall. +Y axis is
+    // left
+    // when standing at alliance wall looking down the field.
+    // This is handled here by swapping the inputs. Note that first axis parameter
+    // below
+    // is the X wheelspeeds input and the second is Y wheelspeeds input.
+
+    // Note that field oriented driving does the movements in relation to the field.
+    // So
+    // throttle is always down the field and back and strafe is always left right
+    // from
+    // the down the field axis, no matter which way the robot is pointing. Robot
+    // oriented
+    // driving movemments are in relation to the direction the robot is currently
+    // pointing.
+
+    // Note that the controller instance is passed to the drive command for use in
+    // displaying
+    // debugging information on Shuffleboard. It is not required for the driving
+    // function.
+    driveCommand = new DriveCommand(drivebase,
+        () -> driverController.getLeftY(),
+        driverController.getLeftXDS(),
+        driverController.getRightXDS(),
+        driverController.getRightYDS(), headingPID);
+
+    drivebase.setDefaultCommand(driveCommand);
+
+    monitorPowerThread = MonitorPower.getInstance();
+    monitorPowerThread.start();
+
+    // Start a thread that will wait 30 seconds then disable the missing
+    // joystick warning. This is long enough for when the warning is valid
+    // but will stop flooding the console log when we are legitimately
+    // running without both joysticks plugged in.
+    new Thread(() -> {
+      try {
+        Timer.delay(30);
+        DriverStation.silenceJoystickConnectionWarning(true);
+      } catch (Exception e) {
+      }
+    }).start();
+
+    // Configure autonomous routines and send to dashboard.
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    // Configure the button bindings.
+    configureButtonBindings();
+
+    // Warmup PathPlanner to avoid Java pauses.
+    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+  }
+
+  /**
+   * Use this method to define your button->command mappings.
+   * 
+   * These buttons are for robot driver station with 2 Xbox or F310 controllers.
+   */
+  private void configureButtonBindings() {
+    // ------- Driver controller buttons -------------
+
+    // For simple functions, instead of creating commands, we can call convenience
+    // functions on
+    // the target subsystem from an InstantCommand. It can be tricky deciding what
+    // functions
+    // should be an aspect of the subsystem and what functions should be in
+    // Commands...
+
+    // POV buttons do same as alternate driving mode but without any lateral
+    // Movement and increments of 45deg.
+    // new Trigger(()-> driverController.getPOV() != -1)
+    // .onTrue(new PointToYaw(()->PointToYaw.yawFromPOV(driverController.getPOV()),
+    // driveBase, false))
+
+    // Vibrate between 30 and 25 sec left in match.
+    new Trigger(() -> Timer.getMatchTime() < 30 && Timer.getMatchTime() > 25).whileTrue(new StartEndCommand(
+        () -> {
+          driverController.setRumble(RumbleType.kBothRumble, 0.5);
+          utilityController.setRumble(RumbleType.kBothRumble, 0.5);
+        },
+        () -> {
+          driverController.setRumble(RumbleType.kBothRumble, 0);
+          utilityController.setRumble(RumbleType.kBothRumble, 0);
+        }));
+
+    // Reset field orientation (direction).
+    // new Trigger(() -> driverController.getPOV() == 180) // D-pad down Cole
+    // .onTrue(new InstantCommand(drivebase::resetFieldOrientation));
+
+    // Toggle field-oriented driving mode.
+    // new Trigger(() -> driverController.getAButton()) // Rich
+    // .onTrue(new InstantCommand(driveBase::toggleFieldRelativeDriving));
+
+    // new Trigger(() -> driverController.getAButton())
+    // .onTrue(new InstantCommand(questNavSubsystem::resetTestPose));
+
+    // new Trigger(() -> driverController.getBButton())
+    // .onTrue(new InstantCommand(questNavSubsystem::resetToZeroPose));
+
+    // new Trigger(() -> driverController.getBButton())
+    // .onTrue(new InstantCommand(() -> drivebase.resetOdometry(new Pose2d(0, 0,
+    // Rotation2d.kZero))));
+
+    // // Toggle motor brake mode.
+    // new Trigger(() -> driverController.getBButton()) // Rich
+    // .onTrue(new InstantCommand(driveBase::toggleNeutralMode));
+
+    // Toggle slow-mode
+    // Right D-Pad button sets X pattern to stop movement.
+    
+    new Trigger(() -> driverController.getLeftBumperButton()) // Rich
+        .onChange(new InstantCommand(drivebase::toggleSlowMode));
 
     new Trigger(() -> driverController.getPOV() == 90) // Rich // Right D-pad
         .onTrue(new InstantCommand(drivebase::setX));
@@ -366,85 +496,84 @@ public class RobotContainer {
     new Trigger(() -> driverController.getRightBumperButton())
         .onTrue(new InstantCommand(intake::togglePivit));
 
-        new Trigger(() -> driverController.getLeftTrigger())
-                .whileTrue(new Shoot(drivebase, shooter, hopper));
+    new Trigger(() -> driverController.getLeftTrigger())
+        .whileTrue(new Shoot(drivebase, shooter, hopper, intake));
 
-        new Trigger(() -> driverController.getRightTrigger())
-                .onTrue(new InstantCommand(shooter::startInfeed))
-                .onFalse(new InstantCommand(shooter::stopInfeed));
+    new Trigger(() -> driverController.getRightTrigger())
+        .onTrue(new InstantCommand(shooter::startInfeed))
+        .onFalse(new InstantCommand(shooter::stopInfeed));
 
-        new Trigger(() -> driverController.getAButton())
-                .onTrue(new InstantCommand(intake::startIntake))
-                .onFalse(new InstantCommand(intake::stopIntake));
+    new Trigger(() -> driverController.getAButton())
+        .onTrue(new InstantCommand(intake::startIntake))
+        .onFalse(new InstantCommand(intake::stopIntake));
 
-        new Trigger(() -> driverController.getBButton())
-                .onTrue(new InstantCommand(visionSubsystem::resetYaw))
-                .onTrue(new InstantCommand(drivebase::resetFieldOrientation));
+    new Trigger(() -> driverController.getBButton())
+        .onTrue(new InstantCommand(visionSubsystem::resetYaw))
+        .onTrue(new InstantCommand(drivebase::resetFieldOrientation));
 
-        new Trigger(() -> driverController.getYButton())
-                .onTrue(new InstantCommand(shooter::reverseInfeed))
-                .onTrue(new InstantCommand(intake::reverseIntake))
-                .onFalse(new InstantCommand(shooter::stopInfeed))
-                .onFalse(new InstantCommand(intake::stopIntake));
+    new Trigger(() -> driverController.getYButton())
+        .onTrue(new InstantCommand(shooter::reverseInfeed))
+        .onTrue(new InstantCommand(intake::reverseIntake))
+        .onFalse(new InstantCommand(shooter::stopInfeed))
+        .onFalse(new InstantCommand(intake::stopIntake));
 
-        new Trigger(() -> driverController.getXButton())
-                .onTrue(new InstantCommand(drivebase::toggleHubTracking));
+    new Trigger(() -> driverController.getXButton())
+        .onTrue(new InstantCommand(drivebase::toggleHubTracking));
 
-    }
+  }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     * Determines which auto command from the selection made by the operator on the
-     * DS drop down list of commands.
-     * 
-     * @return The Command to run in autonomous.
-     */
-    // public Command getAutonomousCommand() {
-    // }
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   * Determines which auto command from the selection made by the operator on the
+   * DS drop down list of commands.
+   * 
+   * @return The Command to run in autonomous.
+   */
+  // public Command getAutonomousCommand() {
+  // }
 
-    // public static String getAutonomousCommandName() {
-    // return autonomousCommandName;
-    // }
+  // public static String getAutonomousCommandName() {
+  // return autonomousCommandName;
+  // }
 
-    // Configure SendableChooser (drop down list on dashboard) with auto program
-    // choices and
-    // send them to SmartDashboard/ShuffleBoard.
+  // Configure SendableChooser (drop down list on dashboard) with auto program
+  // choices and
+  // send them to SmartDashboard/ShuffleBoard.
 
-    private void setAutoChoices() {
-        // autoChooser = AutoBuilder.buildAutoChooser();
+  private void setAutoChoices() {
+    // autoChooser = AutoBuilder.buildAutoChooser();
 
-        // SmartDashboard.putData("Auto Program", autoChooser);
-    }
+    // SmartDashboard.putData("Auto Program", autoChooser);
+  }
 
-    public static String getAutonomousCommand() {
-        // return autoChooser.getSelected();
-        return stringAutoChooser.getSelected();
-    }
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+  }
 
-    /**
-     * Get and log information about the current match from the FMS or DS.
-     */
-    public void getMatchInformation() {
-        alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-        location = DriverStation.getLocation().orElse(0);
-        eventName = DriverStation.getEventName();
-        matchNumber = DriverStation.getMatchNumber();
-        gameMessage = DriverStation.getGameSpecificMessage();
+  /**
+   * Get and log information about the current match from the FMS or DS.
+   */
+  public void getMatchInformation() {
+    alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+    location = DriverStation.getLocation().orElse(0);
+    eventName = DriverStation.getEventName();
+    matchNumber = DriverStation.getMatchNumber();
+    gameMessage = DriverStation.getGameSpecificMessage();
 
-        Util.consoleLog("Alliance=%s, Location=%d, FMS=%b event=%s match=%d msg=%s",
-                alliance.name(), location, DriverStation.isFMSAttached(), eventName, matchNumber,
-                gameMessage);
-    }
+    Util.consoleLog("Alliance=%s, Location=%d, FMS=%b event=%s match=%d msg=%s",
+        alliance.name(), location, DriverStation.isFMSAttached(), eventName, matchNumber,
+        gameMessage);
+  }
 
-    public double getVolatgePercent() {
-        return RobotController.getBatteryVoltage() / Constants.MAX_BATTERY_VOLTAGE;
-    }
+  public double getVolatgePercent() {
+    return RobotController.getBatteryVoltage() / Constants.MAX_BATTERY_VOLTAGE;
+  }
 
-    public double getVolatgeMultiplier() {
-        return Constants.MAX_BATTERY_VOLTAGE / RobotController.getBatteryVoltage();
-    }
+  public double getVolatgeMultiplier() {
+    return Constants.MAX_BATTERY_VOLTAGE / RobotController.getBatteryVoltage();
+  }
 
-    // public void fixPathPlannerGyro() { rich
-    // driveBase.fixPathPlannerGyro();
-    // }
+  // public void fixPathPlannerGyro() { rich
+  // driveBase.fixPathPlannerGyro();
+  // }
 }
