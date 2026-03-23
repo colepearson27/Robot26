@@ -116,9 +116,9 @@ public class VisionSubsystem extends SubsystemBase {
 
             double numTags = front_mt2.rawFiducials.length;
             for (LimelightHelpers.RawFiducial tag : front_mt2.rawFiducials) {
-                if (Math.abs(tag.txnc) > 15) { // TODO: Convert 20 to a constants value
+                if (Math.abs(tag.txnc) > 30) { // TODO: Convert 20 to a constants value
                     numTags--;
-                } else if (Math.abs(tag.tync) > 15) {
+                } else if (Math.abs(tag.tync) > 30) {
                     numTags--;
                 }
             }
@@ -129,7 +129,9 @@ public class VisionSubsystem extends SubsystemBase {
             }
 
             // TODO: Convert these to constants
-            if (Math.abs(drivebase.getXVelocity()) > 0.1 || Math.abs(drivebase.getYVelocity()) > 0.1 || Math.abs(drivebase.getRotVelocity()) > 0.1) {
+            //
+            // before toby change on 3/22 (practice field), these limits were 0.1
+            if (Math.abs(drivebase.getXVelocity()) > 2 || Math.abs(drivebase.getYVelocity()) > 2 || Math.abs(drivebase.getRotVelocity()) > 2) {
                 useFrontLimelight = false;
             }
 
@@ -154,9 +156,9 @@ public class VisionSubsystem extends SubsystemBase {
 
             double numTags = right_mt2.rawFiducials.length;
             for (LimelightHelpers.RawFiducial tag : right_mt2.rawFiducials) {
-                if (Math.abs(tag.txnc) > 15) { // TODO: Convert 20 to a constants value
+                if (Math.abs(tag.txnc) > 30) { // TODO: Convert 20 to a constants value
                     numTags--;
-                } else if (Math.abs(tag.tync) > 15) {
+                } else if (Math.abs(tag.tync) > 30) {
                     numTags--;
                 }
             }

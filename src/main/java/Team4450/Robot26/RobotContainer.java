@@ -16,11 +16,12 @@ import Team4450.Robot26.commands.DriveCommand;
 import Team4450.Robot26.commands.EnableHubTracking;
 import Team4450.Robot26.commands.Shoot;
 import Team4450.Robot26.commands.ShootWithX;
-import Team4450.Robot26.commands.StartIntake;
+import Team4450.Robot26.commands.intakeCommand;
 import Team4450.Robot26.commands.StopShoot;
 import Team4450.Robot26.commands.StopAuto;
 import Team4450.Robot26.commands.IntakeUp;
 import Team4450.Robot26.commands.IntakeDown;
+import Team4450.Robot26.commands.spinShooter;
 import Team4450.Robot26.subsystems.Candle;
 import Team4450.Robot26.subsystems.Intake;
 import Team4450.Robot26.subsystems.Drivebase;
@@ -190,10 +191,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("intakeUp", new IntakeUp(intake));
     NamedCommands.registerCommand("enableHubTracking", new EnableHubTracking(drivebase, headingPID));
     NamedCommands.registerCommand("disableHubTracking", new DisableHubTracking(drivebase));
-    NamedCommands.registerCommand("intake", new StartIntake(intake));
+    NamedCommands.registerCommand("intake", new intakeCommand(intake, hopper));
     NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper, intake));
     NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
     NamedCommands.registerCommand("end", new StopAuto(drivebase));
+    NamedCommands.registerCommand("spinShooter", new spinShooter(shooter));
 
         // Set the default drive command. This command will be scheduled automatically
         // to run

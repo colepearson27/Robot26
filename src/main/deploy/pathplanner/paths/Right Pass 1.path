@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.390323974082073,
-        "y": 0.6166090712742993
+        "x": 5.3541654903496,
+        "y": 0.6597091204546099
       },
       "isLocked": false,
       "linkedName": "RS"
@@ -33,47 +33,31 @@
     {
       "anchor": {
         "x": 8.044719222462202,
-        "y": 1.9389092872570202
+        "y": 2.2621382289416854
       },
       "prevControl": {
         "x": 8.104562192458703,
-        "y": 1.6775538404656105
+        "y": 2.0007827821502757
       },
       "nextControl": {
         "x": 7.926851103715068,
-        "y": 2.453681111573586
+        "y": 2.776910053258251
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.221954643628509,
-        "y": 2.09562634989201
+        "x": 7.182775377969762,
+        "y": 2.2621382289416854
       },
       "prevControl": {
-        "x": 7.229125777345382,
-        "y": 2.345523478409354
-      },
-      "nextControl": {
-        "x": 7.164321205745552,
-        "y": 0.08723671414358591
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.941619870410367,
-        "y": 0.9171874999969463
-      },
-      "prevControl": {
-        "x": 3.9504859611231096,
-        "y": 0.3031749460043217
+        "x": 7.31158896349842,
+        "y": 2.476397558221068
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot 254"
+      "linkedName": "Pass Shoot 1"
     }
   ],
   "rotationTargets": [
@@ -82,47 +66,22 @@
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 2.16535433070866,
+      "waypointRelativePos": 1.7999999999999976,
       "rotationDegrees": -70.0
     },
     {
-      "waypointRelativePos": 2.8346456692913433,
-      "rotationDegrees": 59.99999999999999
-    },
-    {
-      "waypointRelativePos": 3.1,
-      "rotationDegrees": 59.99999999999999
-    },
-    {
-      "waypointRelativePos": 3.4519685039370076,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 3.95,
+      "waypointRelativePos": 2.5700787401574776,
       "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
     {
       "name": "Intake Speed",
-      "minWaypointRelativePos": 0.8183453237410075,
-      "maxWaypointRelativePos": 3.15,
+      "minWaypointRelativePos": 0.7985611510791374,
+      "maxWaypointRelativePos": 2.174460431654677,
       "constraints": {
-        "maxVelocity": 0.8,
+        "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
-        "maxAngularVelocity": 270.0,
-        "maxAngularAcceleration": 270.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
-      "name": "Safety Speed",
-      "minWaypointRelativePos": 3.05,
-      "maxWaypointRelativePos": 4.0,
-      "constraints": {
-        "maxVelocity": 4.0,
-        "maxAcceleration": 4.0,
         "maxAngularVelocity": 270.0,
         "maxAngularAcceleration": 270.0,
         "nominalVoltage": 12.0,
@@ -134,7 +93,7 @@
   "eventMarkers": [
     {
       "name": "intakeDown",
-      "waypointRelativePos": 0.31474820143884885,
+      "waypointRelativePos": 0.2913669064748202,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -145,8 +104,8 @@
     },
     {
       "name": "intake",
-      "waypointRelativePos": 0.44964028776978404,
-      "endWaypointRelativePos": 4.62230215827338,
+      "waypointRelativePos": 0.9496402877697838,
+      "endWaypointRelativePos": 2.6762589928057565,
       "command": {
         "type": "named",
         "data": {
@@ -156,8 +115,8 @@
     },
     {
       "name": "spinShooter",
-      "waypointRelativePos": 3.9,
-      "endWaypointRelativePos": 5.0,
+      "waypointRelativePos": 2.1744604316546696,
+      "endWaypointRelativePos": 3.0,
       "command": {
         "type": "named",
         "data": {
@@ -176,7 +135,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,

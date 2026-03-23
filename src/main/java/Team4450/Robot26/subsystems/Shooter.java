@@ -318,7 +318,7 @@ public class Shooter extends SubsystemBase {
 
     public boolean flywheelAtSpeed() {
         // Change tolerence to a constant at some point
-        if (Math.abs(this.currentRPM - this.targetRPM) < 300) {
+        if (Math.abs(this.currentRPM - this.targetRPM) < 50) {
             return true;
         } else {
             return false;
@@ -327,7 +327,7 @@ public class Shooter extends SubsystemBase {
 
     public boolean flywheelWithinSpeed() {
         // Change tolerence to a constant at some point
-        if (Math.abs(this.currentRPM - this.targetRPM) < 400) {
+        if (Math.abs(this.currentRPM - this.targetRPM) < 150) {
             return true;
         } else {
             return false;
@@ -501,6 +501,10 @@ public class Shooter extends SubsystemBase {
             this.infeedMotorLeft.set(0);
             this.infeedMotorRight.setControl(new Follower(this.infeedMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
         }
+    }
+
+    public void farFerry() {
+        updateHoodPosition(2.85);
     }
 
     public double getInfeedRPM() {

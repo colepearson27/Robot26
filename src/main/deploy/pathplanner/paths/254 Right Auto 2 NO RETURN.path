@@ -3,112 +3,120 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.407036497334683,
-        "y": 0.4428871372838352
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 5.390323974082073,
-        "y": 0.6166090712742993
-      },
-      "isLocked": false,
-      "linkedName": "RS"
-    },
-    {
-      "anchor": {
-        "x": 7.878207343412527,
-        "y": 0.7929157667386619
-      },
-      "prevControl": {
-        "x": 7.616206896767449,
-        "y": 0.46925484684302127
-      },
-      "nextControl": {
-        "x": 8.337403397577454,
-        "y": 1.360181277949044
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.044719222462202,
-        "y": 1.9389092872570202
-      },
-      "prevControl": {
-        "x": 8.104562192458703,
-        "y": 1.6775538404656105
-      },
-      "nextControl": {
-        "x": 7.926851103715068,
-        "y": 2.453681111573586
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.221954643628509,
-        "y": 2.09562634989201
-      },
-      "prevControl": {
-        "x": 7.229125777345382,
-        "y": 2.345523478409354
-      },
-      "nextControl": {
-        "x": 7.164321205745552,
-        "y": 0.08723671414358591
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 2.941619870410367,
         "y": 0.9171874999969463
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.9910289400872783,
+        "y": 0.6721186447059033
+      },
+      "isLocked": false,
+      "linkedName": "Shoot 254"
+    },
+    {
+      "anchor": {
+        "x": 7.868412526997838,
+        "y": 0.9171874999969463
+      },
       "prevControl": {
-        "x": 3.9504859611231096,
-        "y": 0.3031749460043217
+        "x": 7.368246122284344,
+        "y": 0.41645794679192927
+      },
+      "nextControl": {
+        "x": 8.494489328883201,
+        "y": 1.5439692156934663
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.68231101511879,
+        "y": 2.74208423326134
+      },
+      "prevControl": {
+        "x": 7.747838302626292,
+        "y": 2.5008246747109917
+      },
+      "nextControl": {
+        "x": 7.46682505399568,
+        "y": 3.5354643628509725
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.978012958963283,
+        "y": 2.74208423326134
+      },
+      "prevControl": {
+        "x": 6.1249352051835855,
+        "y": 3.917462203023759
+      },
+      "nextControl": {
+        "x": 5.920590576636336,
+        "y": 2.2827051746457663
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.399190064794816,
+        "y": 0.9171874999969463
+      },
+      "prevControl": {
+        "x": 6.624470842332613,
+        "y": 1.72342332613391
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shoot 254"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0220125786163523,
-      "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 2.16535433070866,
-      "rotationDegrees": -70.0
-    },
-    {
-      "waypointRelativePos": 2.8346456692913433,
-      "rotationDegrees": 59.99999999999999
-    },
-    {
-      "waypointRelativePos": 3.1,
-      "rotationDegrees": 59.99999999999999
-    },
-    {
-      "waypointRelativePos": 3.4519685039370076,
+      "waypointRelativePos": 0.10236220472440945,
       "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 3.95,
+      "waypointRelativePos": 0.44811320754716977,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.0220125786163523,
+      "rotationDegrees": -70.0
+    },
+    {
+      "waypointRelativePos": 2.094488188976378,
+      "rotationDegrees": -50.0
+    },
+    {
+      "waypointRelativePos": 2.598425196850393,
+      "rotationDegrees": 70.0
+    },
+    {
+      "waypointRelativePos": 3.795275590551182,
+      "rotationDegrees": 70.0
+    },
+    {
+      "waypointRelativePos": 4,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 4,
       "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
     {
       "name": "Intake Speed",
-      "minWaypointRelativePos": 0.8183453237410075,
-      "maxWaypointRelativePos": 3.15,
+      "minWaypointRelativePos": 1.028776978417267,
+      "maxWaypointRelativePos": 4.0,
       "constraints": {
-        "maxVelocity": 0.8,
+        "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 270.0,
         "maxAngularAcceleration": 270.0,
@@ -118,8 +126,8 @@
     },
     {
       "name": "Safety Speed",
-      "minWaypointRelativePos": 3.05,
-      "maxWaypointRelativePos": 4.0,
+      "minWaypointRelativePos": 3.38,
+      "maxWaypointRelativePos": 4.5,
       "constraints": {
         "maxVelocity": 4.0,
         "maxAcceleration": 4.0,
@@ -134,7 +142,7 @@
   "eventMarkers": [
     {
       "name": "intakeDown",
-      "waypointRelativePos": 0.31474820143884885,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -145,23 +153,12 @@
     },
     {
       "name": "intake",
-      "waypointRelativePos": 0.44964028776978404,
-      "endWaypointRelativePos": 4.62230215827338,
+      "waypointRelativePos": 0.557553956834533,
+      "endWaypointRelativePos": 4.541366906474815,
       "command": {
         "type": "named",
         "data": {
           "name": "intake"
-        }
-      }
-    },
-    {
-      "name": "spinShooter",
-      "waypointRelativePos": 3.9,
-      "endWaypointRelativePos": 5.0,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "spinShooter"
         }
       }
     }
@@ -182,7 +179,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": -90.0
+    "rotation": 59.99999999999999
   },
   "useDefaultConstraints": true
 }

@@ -8,19 +8,21 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class Shoot extends Command {
-  private Shooter shooter;
-  private Hopper hopper;
-  private Drivebase drivebase;
-  private Intake intake;
-  private Timer timer;
+    private Shooter shooter;
+    private Hopper hopper;
+    private Drivebase drivebase;
+    private Intake intake;
+    private Timer timer;
+    private Timer pivitDelay;
 
-  public Shoot(Drivebase drivebase, Shooter shooter, Hopper hopper, Intake intake) {
-    this.shooter = shooter;
-    this.hopper = hopper;
-    this.drivebase = drivebase;
-    this.intake = intake;
-    this.timer = new Timer();
-  }
+    public Shoot(Drivebase drivebase, Shooter shooter, Hopper hopper, Intake intake) {
+        this.shooter = shooter;
+        this.hopper = hopper;
+        this.drivebase = drivebase;
+        this.intake = intake;
+        this.timer = new Timer();
+        this.pivitDelay = new Timer();
+    }
 
     @Override
     public void initialize() {
@@ -29,7 +31,9 @@ public class Shoot extends Command {
         drivebase.setX();
         timer.start();
         timer.reset();
-        intake.shootingPivitToggle();
+        pivitDelay.start();
+        pivitDelay.reset();
+        intake.slowIntake();
     }
 
     @Override
@@ -44,18 +48,17 @@ public class Shoot extends Command {
             shooter.stopInfeed();
         }
 
-        if(timer.hasElapsed(0.5)){
-          intake.shootingPivitToggle();
-          timer.reset();
+        if (timer.hasElapsed(0.5) && pivitDelay.hasElapsed(2)) {
+            intake.shootingPivitToggle();
+            timer.reset();
         }
-        
     }
 
-  @Override
-  public boolean isFinished() {
-    // We will always force stop the command
-    return false;
-  }
+    @Override
+    public boolean isFinished() {
+        // We will always force stop the command
+        return false;
+    }
 
     @Override
     public void end(boolean interuppted) {
@@ -63,6 +66,6 @@ public class Shoot extends Command {
         shooter.stopFlywheel();
         shooter.stopInfeed();
         hopper.stop();
-        
+        intake.stopIntake();
     }
 }
