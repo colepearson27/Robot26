@@ -98,8 +98,10 @@ public class Robot extends TimedRobot {
       SendableVersion.INSTANCE.init(PROGRAM_NAME);
 
       // Note: under simulation, this information will not be correct.
-      Util.consoleLog("%s compiled by %s at %s (branch=%s, commit=%s)", SendableVersion.INSTANCE.getProgramVersion(),
-          SendableVersion.INSTANCE.getUser(), SendableVersion.INSTANCE.getTime(), SendableVersion.INSTANCE.getBranch(),
+      Util.consoleLog("%s compiled by %s at %s (branch=%s, commit=%s)",
+          SendableVersion.INSTANCE.getProgramVersion(),
+          SendableVersion.INSTANCE.getUser(), SendableVersion.INSTANCE.getTime(),
+          SendableVersion.INSTANCE.getBranch(),
           SendableVersion.INSTANCE.getCommit());
 
       // Send program version to the dashboard.
@@ -203,7 +205,8 @@ public class Robot extends TimedRobot {
     // Set Limelight IMU mode to 1
     // I don't really like calling this here, but something can only be disabled
     // after enabled has ran so everything should exist
-    RobotOrientation rO = RobotContainer.drivebase.getRobotOrientation(); // IDK if RobotOrientation works correctly,
+    RobotOrientation rO = RobotContainer.drivebase.getRobotOrientation(); // IDK if RobotOrientation works
+                                                                          // correctly,
                                                                           // look there to see
     RobotContainer.visionSubsystem.zeroLimelightIMU(rO);
 
@@ -228,22 +231,22 @@ public class Robot extends TimedRobot {
    * This function is called once at the start of autonomous mode and schedules
    * the autonomous command selected by your {@link RobotContainer} class.
    */
-  private boolean flipAuto = false;
+  private boolean flipAuto = SmartDashboard.putBoolean(Constants.SmartDashboardKeys.FLIP_AUTO, false);
 
   @Override
   public void autonomousInit() {
-    this.flipAuto = false;
+    this.flipAuto = SmartDashboard.getBoolean(Constants.SmartDashboardKeys.FLIP_AUTO, true);
 
     SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISABLED, false);
     SmartDashboard.putBoolean(Constants.SmartDashboardKeys.AUTO_MODE, true);
-    SmartDashboard.putBoolean(Constants.SmartDashboardKeys.FLIP_AUTO, this.flipAuto);
 
     RobotContainer.drivebase.pigeonWrapper.setCurrentYaw(0);
 
     robotContainer.getMatchInformation();
 
     // RobotContainer function determines which auto command is selected to run.
-    Command autonomousCommand = robotContainer.getAutonomousCommand();
+    // Command autonomousCommand = robotContainer.getAutonomousCommand();
+    Command autonomousCommand = new PathPlannerAuto(RobotContainer.getAutonomousCommand(), this.flipAuto);
 
     // schedule the autonomous command (example)
     try {

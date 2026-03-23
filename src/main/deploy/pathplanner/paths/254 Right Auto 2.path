@@ -64,16 +64,16 @@
     },
     {
       "anchor": {
-        "x": 6.164523337520773,
-        "y": 1.2491501962990765
+        "x": 6.301241900647948,
+        "y": 1.1259395248380144
       },
       "prevControl": {
-        "x": 6.562546961511321,
-        "y": 2.2800221685090496
+        "x": 6.741213231746262,
+        "y": 2.1396184957919506
       },
       "nextControl": {
-        "x": 5.836346982758621,
-        "y": 0.3991810344827593
+        "x": 6.014094696877236,
+        "y": 0.46436214136628673
       },
       "isLocked": false,
       "linkedName": null
@@ -84,8 +84,8 @@
         "y": 0.9171874999969463
       },
       "prevControl": {
-        "x": 3.271081744870248,
-        "y": 0.6146135003020481
+        "x": 3.3837009551462383,
+        "y": 0.49631024349257474
       },
       "nextControl": null,
       "isLocked": false,
@@ -118,7 +118,7 @@
       "rotationDegrees": 10.0
     },
     {
-      "waypointRelativePos": 4.457547169811328,
+      "waypointRelativePos": 4.614173228346456,
       "rotationDegrees": 10.0
     }
   ],
@@ -126,22 +126,39 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "intakeUp",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "intakeDown",
-      "waypointRelativePos": 0.5745062836624777,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "intake",
       "waypointRelativePos": 1.068222621184918,
-      "endWaypointRelativePos": 4.174147217235188,
-      "command": null
+      "endWaypointRelativePos": 3.93884892086331,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "intake"
+        }
+      }
+    },
+    {
+      "name": "shoot",
+      "waypointRelativePos": 4.991007194244608,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "deadline",
+        "data": {
+          "commands": [
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 3.0
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "shoot"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {

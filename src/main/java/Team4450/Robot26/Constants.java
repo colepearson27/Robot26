@@ -184,8 +184,9 @@ public final class Constants {
   public static boolean HUB_TRACKING = false;
 
   // Interpolation table
-  public static double[] FLYWHEEL_SPEED_TABLE = { 3550, 3550, 3650, 3850, 4050, 4300, 4400 }; // Converted from percentages to
-                                                                                        // RPM
+  public static double[] FLYWHEEL_SPEED_TABLE = { 3550, 3550, 3650, 3850, 4050, 4300, 4400 }; // Converted from
+                                                                                              // percentages to
+  // RPM
   public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = { 1.5, 2, 2.5, 3, 3.5, 4, 4.5 };
   public static double[] HOOD_ARC_TABLE = { 0.6, 0.9, 1.65, 1.8, 1.85, 1.85, 2.3 };
 
@@ -204,15 +205,15 @@ public final class Constants {
   // Closed-loop slot selection
   public static final int FLYWHEEL_PID_SLOT = 0;
 
-    // ---------------- Feedforward (Talon internal) ----------------
-    // Units: Volts, Volts/(rps), Volts/(rps/s)
-    public static final double FLYWHEEL_kS = 0.1;
-    public static final double FLYWHEEL_kV = 0.12;
-    public static final double FLYWHEEL_kA = 0.05;
-    // ---------------- PID (Velocity) ----------------
-    public static final double FLYWHEEL_kP = 0.2;
-    public static final double FLYWHEEL_kI = 0;
-    public static final double FLYWHEEL_kD = 0;
+  // ---------------- Feedforward (Talon internal) ----------------
+  // Units: Volts, Volts/(rps), Volts/(rps/s)
+  public static final double FLYWHEEL_kS = 0.1;
+  public static final double FLYWHEEL_kV = 0.12;
+  public static final double FLYWHEEL_kA = 0.05;
+  // ---------------- PID (Velocity) ----------------
+  public static final double FLYWHEEL_kP = 0.2;
+  public static final double FLYWHEEL_kI = 0;
+  public static final double FLYWHEEL_kD = 0;
 
   // ---------------- Motion Magic Velocity ----------------
   // These only affect ramp rate
@@ -229,14 +230,14 @@ public final class Constants {
   // Hopper motor constants
   public static final int HOPPER_MOTOR_CAN_ID = 12; // Example CAN ID for the Kraken X60 motor
 
-    public static final int INTAKE_DEFAULT_TARGET_RPM = 4500;
-    // PID constants for Intake
-    public static final double INTAKE_kP = 0.8;
+  public static final int INTAKE_DEFAULT_TARGET_RPM = 4500;
+  // PID constants for Intake
+  public static final double INTAKE_kP = 0.8;
 
-    public static final int INFEED_DEFAULT_TARGET_RPM = 3500;
-    public static final int LOWER_ROLLERS_DEFAULT_TARGET_RPM = 1000;
-    // PID constants for Shooter Infeed
-    public static final double INFEED_kP = 0.8;
+  public static final int INFEED_DEFAULT_TARGET_RPM = 3500;
+  public static final int LOWER_ROLLERS_DEFAULT_TARGET_RPM = 1000;
+  // PID constants for Shooter Infeed
+  public static final double INFEED_kP = 0.8;
 
   // SmartDashboard key constants for Shooter
   public static final class SmartDashboardKeys {
@@ -276,7 +277,7 @@ public final class Constants {
     public static final String ROBOT_LAUNCH_Y = "RobotLaunchY";
     public static final String GOAL_POSE = "Goal Pose";
     public static final String ROBOT_DISTANCE = "Robot Distance";
-    public static final String FLIP_AUTO = "Left/Right Flip Auto";
+    public static final String FLIP_AUTO = "Flip Auto";
 
     // Heading
     public static final String HEADING_P = "Heading P";
@@ -326,7 +327,8 @@ public final class Constants {
     // Top speed determined by TunerX. Rotation speed reccommended by CTRE.
     // 2026 robot max speed is 5.29 m/s.
     public static double kMaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // top speed
-    public static double kMaxAngularRate = RotationsPerSecond.of(1.0).in(RadiansPerSecond); // 1 rotation per second max
+    public static double kMaxAngularRate = RotationsPerSecond.of(1.0).in(RadiansPerSecond); // 1 rotation per second
+                                                                                            // max
                                                                                             // angular velocity
 
     public static double kMaxAcceleration = -1;
