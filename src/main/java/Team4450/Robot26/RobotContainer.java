@@ -174,11 +174,10 @@ public class RobotContainer {
         intake = new Intake();
         shooter = new Shooter(drivebase);
 
-        headingPID = new PIDController(Constants.ROBOT_HEADING_KP, Constants.ROBOT_HEADING_KI,
-                Constants.ROBOT_HEADING_KD);
+        headingPID = new PIDController(Constants.ROBOT_HEADING_KP, Constants.ROBOT_HEADING_KI, Constants.ROBOT_HEADING_KD);
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.HEADING_P, Constants.ROBOT_HEADING_KP);
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.HEADING_D, Constants.ROBOT_HEADING_KI);
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.HEADING_I, Constants.ROBOT_HEADING_KD);
+        SmartDashboard.putNumber(Constants.SmartDashboardKeys.HEADING_I, Constants.ROBOT_HEADING_KI);
+        SmartDashboard.putNumber(Constants.SmartDashboardKeys.HEADING_D, Constants.ROBOT_HEADING_KD);
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.HEADING_PID_TOGGLE, Constants.HUB_TRACKING);
 
         // Create any persistent commands.
