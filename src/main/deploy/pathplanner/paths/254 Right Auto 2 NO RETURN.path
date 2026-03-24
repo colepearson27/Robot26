@@ -36,28 +36,28 @@
         "y": 2.74208423326134
       },
       "prevControl": {
-        "x": 7.869624766244191,
-        "y": 2.5765138293863377
+        "x": 7.747838302626292,
+        "y": 2.5008246747109917
       },
       "nextControl": {
-        "x": 7.450260722471107,
-        "y": 2.947198168795459
+        "x": 7.46682505399568,
+        "y": 3.5354643628509725
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.075961123110151,
+        "x": 5.978012958963283,
         "y": 2.74208423326134
       },
       "prevControl": {
-        "x": 6.04951460946177,
-        "y": 2.990681461556118
+        "x": 6.1249352051835855,
+        "y": 3.917462203023759
       },
       "nextControl": {
-        "x": 6.124935205183585,
-        "y": 2.28172786177106
+        "x": 5.920590576636336,
+        "y": 2.2827051746457663
       },
       "isLocked": false,
       "linkedName": null
@@ -70,22 +70,6 @@
       "prevControl": {
         "x": 6.624470842332613,
         "y": 1.72342332613391
-      },
-      "nextControl": {
-        "x": 6.21000153644499,
-        "y": 0.24011877217720612
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.039568034557236,
-        "y": 0.9856034482758629
-      },
-      "prevControl": {
-        "x": 3.2284810759514273,
-        "y": 0.8218601650817224
       },
       "nextControl": null,
       "isLocked": false,
@@ -111,26 +95,26 @@
     },
     {
       "waypointRelativePos": 2.598425196850393,
-      "rotationDegrees": 80.0
+      "rotationDegrees": 70.0
     },
     {
       "waypointRelativePos": 3.795275590551182,
       "rotationDegrees": 70.0
     },
     {
-      "waypointRelativePos": 4.2,
+      "waypointRelativePos": 4,
       "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 4.850393700787403,
+      "waypointRelativePos": 4,
       "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
     {
       "name": "Intake Speed",
-      "minWaypointRelativePos": 1.357913669064748,
-      "maxWaypointRelativePos": 2.7338129496402894,
+      "minWaypointRelativePos": 1.028776978417267,
+      "maxWaypointRelativePos": 4.0,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
@@ -143,7 +127,7 @@
     {
       "name": "Safety Speed",
       "minWaypointRelativePos": 3.38,
-      "maxWaypointRelativePos": 5.0,
+      "maxWaypointRelativePos": 4.5,
       "constraints": {
         "maxVelocity": 4.0,
         "maxAcceleration": 4.0,
@@ -175,17 +159,6 @@
         "type": "named",
         "data": {
           "name": "intake"
-        }
-      }
-    },
-    {
-      "name": "spinShooter",
-      "waypointRelativePos": 4.514388489208632,
-      "endWaypointRelativePos": 5.0,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "spinShooter"
         }
       }
     }

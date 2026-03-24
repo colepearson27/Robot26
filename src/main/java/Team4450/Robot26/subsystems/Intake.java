@@ -131,19 +131,25 @@ public class Intake extends SubsystemBase {
 
     public void togglePivit() {
         if (this.pivitCurrentPosition >= 0.8) {
-            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0);
+            pivitUp();
         } else {
-            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.95);
+            pivitDown();
         }
     }
 
     public void pivitDown() {
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.95);
+        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 1.01);
     }
+
+    public void pivitUp() {
+        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0);
+    }
+
+
 
     public void shootingPivitToggle() {
         if (this.pivitCurrentPosition >= 0.85) {
-            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.35);
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.55);
         } else {
             SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.95);
         }
@@ -177,6 +183,11 @@ public class Intake extends SubsystemBase {
 
   public void testIntake() {
     this.intakeMotorLeft.set(0.05);
+    this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
+  }
+
+  public void slowIntake() {
+    this.intakeMotorLeft.set(0.30);
     this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
   }
 

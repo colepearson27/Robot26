@@ -72,10 +72,10 @@ public final class Constants {
 
     public static int SHOOTER_UPPER_BEAM_BREAK_PORT = 3;
 
-    public static int SHOOTER_FLYWHEEL_CURRENT_LIMIT = 35;
+    public static int SHOOTER_FLYWHEEL_CURRENT_LIMIT = 65;
     public static int SHOOTER_INFEED_CURRENT_LIMIT = 40;
     public static int SHOOTER_HOOD_CURRENT_LIMIT = 8;
-    public static int INTAKE_CURRENT_LIMIT = 20;
+    public static int INTAKE_CURRENT_LIMIT = 30;
     public static int INTAKE_PIVIT_CURRENT_LIMIT = 5;
     public static int LOWER_ROLLERS_CURRENT_LIMIT = 25;
 
@@ -110,30 +110,30 @@ public final class Constants {
     public static double INTAKE_PIVIT_MOTOR_POWER = 0.0;
     // The format of this value is in rotations of the pivit motor
     public static int INTAKE_PIVIT_MOTOR_POSITION_UP = 0;
+    public static double INTAKE_PIVIT_TARGET_POSITION_DOWN = 1.0;
     // This is an assumed value and not exact
     public static double INTAKE_PIVIT_POSITION_DOWN_DEGREES = 105;
     // The format of this value is in rotations of the pivit motor
     public static double INTAKE_PIVIT_MOTOR_POSITION_DOWN = (INTAKE_PIVIT_POSITION_DOWN_DEGREES / 360)
-        * INTAKE_PIVIT_GEAR_RATIO;
+            * INTAKE_PIVIT_GEAR_RATIO;
     // The format of this value is in rotations of the pivit motor
     public static double INTAKE_PIVIT_TOLERENCE_MOTOR_ROTATIONS = 0.5;
     public static double INTAKE_PIVIL_TOLERENCE_DEGREES = 360
-        * (INTAKE_PIVIT_TOLERENCE_MOTOR_ROTATIONS / INTAKE_PIVIT_GEAR_RATIO);
+            * (INTAKE_PIVIT_TOLERENCE_MOTOR_ROTATIONS / INTAKE_PIVIT_GEAR_RATIO);
 
     public static String LIMELIGHT_FRONT = "limelight-front";
     public static String LIMELIGHT_RIGHT = "limelight-right";
 
-    public static int LIMELIGHT_TXNC_LIMIT = 15;
-    public static int LIMELIGHT_TYNC_LIMIT = 15;
+    public static int LIMELIGHT_TXNC_LIMIT = 30;
+    public static int LIMELIGHT_TYNC_LIMIT = 30;
 
     public static int LIMELIGHT_TAG_LIMIT = 2;
 
-    public static double LIMELIGHT_X_VELOCITY_LIMIT = 0.1;
-    public static double LIMELIGHT_Y_VELOCITY_LIMIT = 0.1;
+    public static double LIMELIGHT_X_VELOCITY_LIMIT = 2;
+    public static double LIMELIGHT_Y_VELOCITY_LIMIT = 2;
     public static double LIMELIGHT_ROT_VELOCITY_LIMIT = 0.3;
 
     // The rotation values are in radians
-
     public static Pose3d ROBOT_TO_QUEST = new Pose3d(0.305, 0, 0,
             new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0)));
 
@@ -165,11 +165,14 @@ public final class Constants {
     public static double HUB_RED_Y = 4.034;
 
     // Blue
-    public static Pose2d HUB_BLUE_WELDED_POSE = new Pose2d(HUB_BLUE_X, HUB_BLUE_Y, Rotation2d.kZero);
+    // Comment out the not welded field
+    // public static Pose2d HUB_BLUE_ANDYMARK_POSE = new Pose2d(4.611, 4.021,
+    // Rotation2d.kZero);
+    public static Pose2d HUB_BLUE_WELDED_POSE = new Pose2d(4.625, 4.034, Rotation2d.kZero);
     // Red
-    // public static Pose2d HUB_RED_WELDED_POSE = new Pose2d(HUB_RED_X, HUB_RED_Y, Rotation2d.kZero);
-    // Shift to the right
-    public static Pose2d HUB_RED_WELDED_POSE = new Pose2d(HUB_RED_X, HUB_RED_Y + 0.4, Rotation2d.kZero);
+    // public static Pose2d HUB_RED_ANDYMARK_POSE = new Pose2d(11.901, 4.021,
+    // Rotation2d.kZero);
+    public static Pose2d HUB_RED_WELDED_POSE = new Pose2d(11.915, 4.034, Rotation2d.kZero);
 
     public static double NEUTRAL_BLUE_ZONE_BARRIER_X = 4.572;
     public static double NEUTRAL_RED_ZONE_BARRIER_X = 11.938;
@@ -181,14 +184,6 @@ public final class Constants {
     public static Pose2d FERRY_RED_BLANK_CORNER = new Pose2d(15.243, 0.635, Rotation2d.kZero);
 
     public static double FIELD_MIDDLE_Y = 4.021;
-    // Interpolation table
-    public static double[] FLYWHEEL_SPEED_TABLE = { 3550, 3550, 3650, 3850, 4050, 4300, 4400 }; // Converted from
-                                                                                                // percentages to
-                                                                                                // RPM
-    public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = { 1.5, 2, 2.5, 3, 3.5, 4, 4.5 };
-    public static double[] HOOD_ARC_TABLE = { 0.6, 0.9, 1.65, 1.8, 1.85, 1.85, 2.3 };
-
-    public static double[] FUEL_AIR_TIME_TABLE_SEC = { 1.1, 1.3, 1.4, 1.5, 1.8, 1.9, 2.1 };
 
     public static double ROBOT_HEADING_KP = 0.02;
     public static double ROBOT_HEADING_KI = 0;
@@ -197,6 +192,14 @@ public final class Constants {
     public static double ROBOT_HEADING_TOLERANCE_DEG = 0.0001;
     public static boolean HUB_TRACKING = false;
 
+    // Interpolation table
+    public static double[] FLYWHEEL_SPEED_TABLE = { 3550, 3550, 3650, 3850, 4050, 4300, 4400 }; // Converted from
+                                                                                                // percentages to
+    // RPM
+    public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = { 1.5, 2, 2.5, 3, 3.5, 4, 4.5 };
+    public static double[] HOOD_ARC_TABLE = { 0.6, 0.9, 1.65, 1.8, 1.85, 1.85, 2.3 };
+
+    public static double[] FUEL_AIR_TIME_TABLE_SEC = { 1.1, 1.3, 1.4, 1.5, 1.8, 1.9, 2.1 };
 
     // -------------------------------------------------------------------------------------
     // Flywheel tuning defaults (used as Shuffleboard starting values)
@@ -214,17 +217,17 @@ public final class Constants {
     // ---------------- Feedforward (Talon internal) ----------------
     // Units: Volts, Volts/(rps), Volts/(rps/s)
     public static final double FLYWHEEL_kS = 0.1;
-    public static final double FLYWHEEL_kV = 0.12;
+    public static final double FLYWHEEL_kV = 0.13;
     public static final double FLYWHEEL_kA = 0.05;
     // ---------------- PID (Velocity) ----------------
-    public static final double FLYWHEEL_kP = 0.2;
-    public static final double FLYWHEEL_kI = 0;
+    public static final double FLYWHEEL_kP = 0.3;
+    public static final double FLYWHEEL_kI = 0.1;
     public static final double FLYWHEEL_kD = 0;
 
     // ---------------- Motion Magic Velocity ----------------
     // These only affect ramp rate
 
-    public static final double FLYWHEEL_MOTION_ACCEL_RPMS = 3500.0; // RPM/s
+    public static final double FLYWHEEL_MOTION_ACCEL_RPMS = 9000.0; // RPM/s
     public static final double FLYWHEEL_MOTION_JERK = 0.0;
 
     // ---------------- Telemetry / limits ----------------
@@ -236,7 +239,7 @@ public final class Constants {
     // Hopper motor constants
     public static final int HOPPER_MOTOR_CAN_ID = 12; // Example CAN ID for the Kraken X60 motor
 
-    public static final int INTAKE_DEFAULT_TARGET_RPM = 4500;
+    public static final int INTAKE_DEFAULT_TARGET_RPM = 6500;
     // PID constants for Intake
     public static final double INTAKE_kP = 0.8;
 
@@ -283,7 +286,7 @@ public final class Constants {
         public static final String ROBOT_LAUNCH_Y = "RobotLaunchY";
         public static final String GOAL_POSE = "Goal Pose";
         public static final String ROBOT_DISTANCE = "Robot Distance";
-        public static final String FLIP_AUTO = "Left/Right Flip Auto";
+        public static final String FLIP_AUTO = "Flip Auto";
 
         // Heading
         public static final String HEADING_P = "Heading P";
@@ -329,11 +332,13 @@ public final class Constants {
 
     public static final class DriveConstants {
         // Driving Parameters - These are the maximum capable speeds of the robot.
-        
+
         // Top speed determined by TunerX. Rotation speed reccommended by CTRE.
         // 2026 robot max speed is 5.29 m/s.
         public static double kMaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // top speed
         public static double kMaxAngularRate = RotationsPerSecond.of(1.0).in(RadiansPerSecond); // 1 rotation per second
+                                                                                                // max
+                                                                                                // angular velocity
 
         public static double kMaxAcceleration = -1;
         public static double kMaxAngularAcceleration = -1;
@@ -347,7 +352,7 @@ public final class Constants {
         // for
         // full weight robot.
         public static final double kDriveReductionPct = 1; // Percentage of max linear speed. e.g. .50 == 50%
-        public static final double kRotationReductionPct = .70; // Percentage of max rotational speed. e.g. .70 == 70%
+        public static final double kRotationReductionPct = .50; // Percentage of max rotational speed. e.g. .70 == 70%
 
         // Factors used to slow robot speed for fine driving.
         public static final double kSlowModeLinearPct = .15; // 15% of max linear speed.
