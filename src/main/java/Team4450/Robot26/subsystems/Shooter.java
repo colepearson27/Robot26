@@ -245,11 +245,11 @@ public class Shooter extends SubsystemBase {
     public void updateLaunchValues(boolean interpolate) {
         double distToGoal = 0;
         if (SmartDashboard.getBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_ONE, this.manualDistanceOne)) {
-            distToGoal = 2.5;
-        } else if (SmartDashboard.getBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_TWO, this.manualDistanceTwo)) {
-            distToGoal = 4.5;
-        } else if (SmartDashboard.getBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_THREE, this.manualDistanceThree)) {
             distToGoal = 1.5;
+        } else if (SmartDashboard.getBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_TWO, this.manualDistanceTwo)) {
+            distToGoal = 2.5;
+        } else if (SmartDashboard.getBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_THREE, this.manualDistanceThree)) {
+            distToGoal = 5.5;
         } else {
             // Calculate distance to goal & diffs
             Pose2d goalPose = (getGoalPose());

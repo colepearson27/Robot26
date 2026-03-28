@@ -112,6 +112,7 @@ public class Drivebase extends SubsystemBase {
         sdsDrivebase.applyRequest(() -> idle).ignoringDisable(true));
 
         // Updates the dashboard heading indicator automatically.
+        // Can I remove this?
         SmartDashboard.putData(Constants.SmartDashboardKeys.FIELD2D, field2d);
 
     // At some point move this to teleop init if it can be done quickly because
@@ -498,7 +499,7 @@ public class Drivebase extends SubsystemBase {
           modules[i].getCurrentState().angle.plus(Rotation2d.fromDegrees(-getYaw180())));
     }
 
-    field2d.getObject("Robot").setPose(robotPose);
+    field2d.getObject("Robot").setPose(new Pose2d(robotPose.getX(), robotPose.getY(), new Rotation2d(Math.toRadians(robotPose.getRotation().getRadians()))));
     field2d.getObject("Swerve Modules").setPoses(modulePoses);
   }
 

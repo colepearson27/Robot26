@@ -361,12 +361,12 @@ public class RobotContainer {
     new Trigger(() -> driverController.getPOV() == 90) // Rich // Right D-pad
         .onTrue(new InstantCommand(drivebase::setX));
 
-    new Trigger(() -> driverController.getPOV() == 180) // Down D-pad
+    new Trigger(() -> driverController.getPOV() == 180) // Left D-pad
         .onTrue(new InstantCommand(shooter::toggleManaualDistanceThree))
         .onTrue(new InstantCommand(shooter::disableManualDistanceOne))
         .onTrue(new InstantCommand(shooter::disableManualDistanceTwo));
 
-    new Trigger(() -> driverController.getPOV() == 270) // Left D-pad
+    new Trigger(() -> driverController.getPOV() == 270) // Down D-pad
         .onTrue(new InstantCommand(shooter::toggleManualDistanceTwo))
         .onTrue(new InstantCommand(shooter::disableManualDistanceOne))
         .onTrue(new InstantCommand(shooter::disableManualDistanceThree));
