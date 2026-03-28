@@ -276,7 +276,9 @@ public class Intake extends SubsystemBase {
         // double newRPM = targetRPM + adjustment; // Adjust current RPM towards target
 
         VelocityVoltage velReq = new VelocityVoltage(Constants.INTAKE_DEFAULT_TARGET_RPM / 60).withEnableFOC(true);
-        this.intakeMotorLeft.setControl(velReq);
+        // this.intakeMotorLeft.setControl(velReq);
+        // this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
         this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
+        this.intakeMotorLeft.setControl(velReq);
     }
 }
