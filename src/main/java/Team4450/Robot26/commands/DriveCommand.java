@@ -80,33 +80,41 @@ public class DriveCommand extends Command {
         // Decides where to track
         // If both inputs are zero and the alliance is blue then
         Pose2d drivebasePose = drivebase.getODPose();
-        if (Math.abs(rotationXSupplier.getAsDouble()) <= 0.2 && Math.abs(rotationYSupplier.getAsDouble()) <= 0.2 && alliance == DriverStation.Alliance.Blue) {
-            // Checks if robot is currently in the Alliance Zone then aims at the hub
-            if (drivebasePose.getX() < NEUTRAL_BLUE_ZONE_BARRIER_X) {
-                targetHeading = drivebase.getAngleToAim(drivebasePose, hubPosition);
-            } else {
-                // Checks what side the robot is on, and aims at the nearest ferrying target point predefined in Constants
-                if (drivebasePose.getY() < FIELD_MIDDLE_Y) {
-                    targetHeading = drivebase.getAngleToAim(drivebasePose, FERRY_BLUE_OUTPOST_CORNER);
+        if (!drivebase.wallTrackingLeft && !drivebase.wallTrackingRight) {
+            if (Math.abs(rotationXSupplier.getAsDouble()) <= 0.2 && Math.abs(rotationYSupplier.getAsDouble()) <= 0.2 && alliance == DriverStation.Alliance.Blue) {
+                // Checks if robot is currently in the Alliance Zone then aims at the hub
+                if (drivebasePose.getX() < NEUTRAL_BLUE_ZONE_BARRIER_X) {
+                    targetHeading = drivebase.getAngleToAim(drivebasePose, hubPosition);
                 } else {
-                    targetHeading = drivebase.getAngleToAim(drivebasePose, FERRY_BLUE_BLANK_CORNER);
+                    // Checks what side the robot is on, and aims at the nearest ferrying target point predefined in Constants
+                    if (drivebasePose.getY() < FIELD_MIDDLE_Y) {
+                        targetHeading = drivebase.getAngleToAim(drivebasePose, FERRY_BLUE_OUTPOST_CORNER);
+                    } else {
+                        targetHeading = drivebase.getAngleToAim(drivebasePose, FERRY_BLUE_BLANK_CORNER);
+                    }
                 }
-            }
-            // This does the same thing but for the red alliance
-        } else if (Math.abs(rotationXSupplier.getAsDouble()) <= 0.2 && Math.abs(rotationYSupplier.getAsDouble()) <= 0.2 && alliance == DriverStation.Alliance.Red) {
-            if (drivebasePose.getX() > NEUTRAL_RED_ZONE_BARRIER_X) {
-                targetHeading = drivebase.getAngleToAim(drivebasePose, hubPosition);
-            } else {
-                if (drivebasePose.getY() < FIELD_MIDDLE_Y) {
-                    targetHeading = drivebase.getAngleToAim(drivebasePose, FERRY_RED_BLANK_CORNER);
+                // This does the same thing but for the red alliance
+            } else if (Math.abs(rotationXSupplier.getAsDouble()) <= 0.2 && Math.abs(rotationYSupplier.getAsDouble()) <= 0.2 && alliance == DriverStation.Alliance.Red) {
+                if (drivebasePose.getX() > NEUTRAL_RED_ZONE_BARRIER_X) {
+                    targetHeading = drivebase.getAngleToAim(drivebasePose, hubPosition);
                 } else {
-                    targetHeading = drivebase.getAngleToAim(drivebasePose, FERRY_RED_OUTPOST_CORNER);
+                    if (drivebasePose.getY() < FIELD_MIDDLE_Y) {
+                        targetHeading = drivebase.getAngleToAim(drivebasePose, FERRY_RED_BLANK_CORNER);
+                    } else {
+                        targetHeading = drivebase.getAngleToAim(drivebasePose, FERRY_RED_OUTPOST_CORNER);
+                    }
                 }
+                // If there IS input, set the target heading to where the joystick is facing in relation to the driver
+            } else {
+                // targetHeading = -Math.toDegrees(Math.atan2(rotationYSupplier.getAsDouble(), rotationXSupplier.getAsDouble())) - 90;
+                targetHeading = drivebase.getAngleToAim(drivebasePose, hubPosition);
             }
-            // If there IS input, set the target heading to where the joystick is facing in relation to the driver
         } else {
-            // targetHeading = -Math.toDegrees(Math.atan2(rotationYSupplier.getAsDouble(), rotationXSupplier.getAsDouble())) - 90;
-            targetHeading = drivebase.getAngleToAim(drivebasePose, hubPosition);
+            if (drivebase.wallTrackingLeft) {
+                targetHeading = -25;
+            } else {
+                targetHeading = 25;
+            }
         }
 
         targetHeading = normalizeAngle(targetHeading);

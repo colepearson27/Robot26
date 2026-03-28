@@ -72,6 +72,9 @@ public class Drivebase extends SubsystemBase {
   private double lastStrafe = 0;
   private double lastRotation = 0;
 
+  public boolean wallTrackingLeft = false;
+  public boolean wallTrackingRight = false;
+
   private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric()
       .withDeadband(kMaxSpeed * DRIVE_DEADBAND)
       .withRotationalDeadband(kMaxAngularRate * ROTATION_DEADBAND) // Add deadbands
@@ -146,6 +149,11 @@ public class Drivebase extends SubsystemBase {
 
     SmartDashboard.putString(Constants.SmartDashboardKeys.ROBOT_POSE, getPose().toString());
     SmartDashboard.putBoolean(Constants.SmartDashboardKeys.HUB_TRACKING, Constants.HUB_TRACKING);
+    if (SmartDashboard.getNumber(Constants.SmartDashboardKeys.ROBOT_DISTANCE, 0) > 1.25 && SmartDashboard.getNumber(Constants.SmartDashboardKeys.ROBOT_DISTANCE, 0) < 1.75) {
+        SmartDashboard.putBoolean("Distance Box", true);
+    } else {
+        SmartDashboard.putBoolean("Distance Box", false);
+    }
 
     if (RobotContainer.inTestMode) {
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.Gyro_HEADING, pigeonWrapper.startingYaw);
@@ -532,5 +540,18 @@ public class Drivebase extends SubsystemBase {
 
   public ChassisSpeeds getSpeeds() {
     return sdsDrivebase.getSpeeds();
+  }
+
+  public void setWallTrackingLeft() {
+      this.wallTrackingLeft = true;
+  }
+
+  public void setWallTrackingRight() {
+      this.wallTrackingRight = true;
+  }
+
+  public void clearWallTacking() {
+      this.wallTrackingLeft = false;
+      this.wallTrackingRight = false;
   }
 }
