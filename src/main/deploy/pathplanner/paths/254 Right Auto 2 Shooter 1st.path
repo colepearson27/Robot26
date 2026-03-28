@@ -68,17 +68,33 @@
         "y": 0.9171874999969463
       },
       "prevControl": {
-        "x": 6.624470842332613,
-        "y": 1.72342332613391
+        "x": 6.599467939080923,
+        "y": 1.7299952319644918
+      },
+      "nextControl": {
+        "x": 6.277348484848485,
+        "y": 0.4227056277056284
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.941619870410367,
+        "y": 0.9171874999969463
+      },
+      "prevControl": {
+        "x": 3.7153679653679657,
+        "y": 0.2754653679653688
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Shoot 254"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.10236220472440945,
+      "waypointRelativePos": 0.10252365930599369,
       "rotationDegrees": 0.0
     },
     {
@@ -103,11 +119,15 @@
     },
     {
       "waypointRelativePos": 4,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     },
     {
       "waypointRelativePos": 4,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 4.858044164037855,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
