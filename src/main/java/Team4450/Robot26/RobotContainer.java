@@ -85,6 +85,7 @@ public class RobotContainer {
 
     private static SendableChooser<String> stringAutoChooser;
     // private static SendableChooser<Command> autoChooser;
+    private static SendableChooser<Command> commandAutoChooser;
 
     // Subsystem Default Commands.
 
@@ -271,12 +272,19 @@ public class RobotContainer {
         // Configure autonomous routines and send to dashboard.
         // autoChooser = AutoBuilder.buildAutoChooser();
         stringAutoChooser = new SendableChooser<String>();
+        commandAutoChooser = new SendableChooser<Command>();
 
+        // init non flipped autos
         for (int i = 0; i < AutoBuilder.getAllAutoNames().size(); i++) {
-            stringAutoChooser.addOption(AutoBuilder.getAllAutoNames().get(i), AutoBuilder.getAllAutoNames().get(i));
+            commandAutoChooser.addOption(AutoBuilder.getAllAutoNames().get(i), new PathPlannerAuto(AutoBuilder.getAllAutoNames().get(i)));
+        }
+        //initialize flipped autos
+        for (int i = 0; i < AutoBuilder.getAllAutoNames().size(); i++) {
+            commandAutoChooser.addOption(AutoBuilder.getAllAutoNames().get(i).concat(" flipped"), new PathPlannerAuto(AutoBuilder.getAllAutoNames().get(i), true));
         }
 
         SmartDashboard.putData("String Auto", stringAutoChooser);
+        SmartDashboard.putData("Auto Command w/flipped", commandAutoChooser);
 
         // Configure the button bindings.
         configureButtonBindings();
@@ -427,9 +435,10 @@ public class RobotContainer {
         // SmartDashboard.putData("Auto Program", autoChooser);
     }
 
-    public static String getAutonomousCommand() {
+    public Command getAutonomousCommand() {
         // return autoChooser.getSelected();
-        return stringAutoChooser.getSelected();
+        // return stringAutoChooser.getSelected();
+        return commandAutoChooser.getSelected();
     }
 
     /**
