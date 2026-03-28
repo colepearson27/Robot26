@@ -245,8 +245,8 @@ public class Robot extends TimedRobot {
     robotContainer.getMatchInformation();
 
     // RobotContainer function determines which auto command is selected to run.
-    // Command autonomousCommand = robotContainer.getAutonomousCommand();
-    Command autonomousCommand = new PathPlannerAuto(RobotContainer.getAutonomousCommand(), this.flipAuto);
+    Command autonomousCommand = robotContainer.getAutonomousCommand();
+    // Command autonomousCommand = new PathPlannerAuto(RobotContainer.getAutonomousCommand(), this.flipAuto);
 
     // schedule the autonomous command (example)
     try {
