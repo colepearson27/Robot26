@@ -140,7 +140,7 @@ public class DriveCommand extends Command {
             // headingPID.setD(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_D, Constants.ROBOT_HEADING_KD));
 
             if (Math.abs(headingError) <= 5 || Math.abs(headingError) >= 355) {
-                RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0.1);
+                RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0.3);
             } else {
                 RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0);
             }
