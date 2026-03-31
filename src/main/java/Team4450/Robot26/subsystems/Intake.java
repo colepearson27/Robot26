@@ -147,7 +147,7 @@ public class Intake extends SubsystemBase {
 
     public void shootingPivitToggle() {
         if (this.pivitCurrentPosition >= 0.85) {
-            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.55);
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.40);
         } else {
             SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0.95);
         }

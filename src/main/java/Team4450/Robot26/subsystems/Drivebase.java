@@ -67,6 +67,7 @@ public class Drivebase extends SubsystemBase {
   private double maxSpeed = kMaxSpeed * kDriveReductionPct;
   private double maxRotRate = kMaxAngularRate * kRotationReductionPct;
   private boolean driverControlled = true;
+  private boolean bumpHappened = true;
 
   private double lastThrottle = 0;
   private double lastStrafe = 0;
@@ -150,10 +151,20 @@ public class Drivebase extends SubsystemBase {
 
     SmartDashboard.putString(Constants.SmartDashboardKeys.ROBOT_POSE, getPose().toString());
     SmartDashboard.putBoolean(Constants.SmartDashboardKeys.HUB_TRACKING, Constants.HUB_TRACKING);
-    if (SmartDashboard.getNumber(Constants.SmartDashboardKeys.ROBOT_DISTANCE, 0) > 1.25 && SmartDashboard.getNumber(Constants.SmartDashboardKeys.ROBOT_DISTANCE, 0) < 1.75) {
-        SmartDashboard.putBoolean("Distance Box", true);
+    SmartDashboard.putBoolean(Constants.SmartDashboardKeys.BUMP_HAPPENED, this.bumpHappened);
+
+    Pose2d drivebasePose = getPose();
+    if (Math.abs(drivebasePose.getX()) > Constants.FIELD_MAX_X || Math.abs(drivebasePose.getY()) > Constants.FIELD_MAX_Y) {
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.OUTSIDE_FIELD, true);
     } else {
-        SmartDashboard.putBoolean("Distance Box", false);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.OUTSIDE_FIELD, false);
+    }
+
+
+    if (SmartDashboard.getNumber(Constants.SmartDashboardKeys.ROBOT_DISTANCE, 0) > 1.25 && SmartDashboard.getNumber(Constants.SmartDashboardKeys.ROBOT_DISTANCE, 0) < 1.75) {
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISTANCE_BOX, true);
+    } else {
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISTANCE_BOX, false);
     }
 
     if (RobotContainer.inTestMode) {
@@ -415,16 +426,18 @@ public class Drivebase extends SubsystemBase {
 
   //
   public void addLimelightMeasurement(Pose2d pose, double timestampSeconds) {
-    // TODO: All the stuff below this
-    // Use the visionBuffer
-    // Truncate vision buffer
-    // Append current vision measurement
-    // Replay vision poses
-    // Remove any vision poses the break the laws of physics
-
-    // Basic vision update that just sets the pose, this is good enough for testing
-    // if it is working
     this.limelightPoseEstimate = pose;
+    Pose2d drivebasePose = getPose();
+
+    if (Math.abs(drivebasePose.getX()) > Constants.FIELD_MAX_X || Math.abs(drivebasePose.getY()) > Constants.FIELD_MAX_Y) {
+        resetOdometry(pose);
+    }
+
+    if (this.bumpHappened) {
+        resetOdometry(pose);
+        this.bumpHappened = false;
+    }
+
     this.sdsDrivebase.addVisionMeasurement(pose, timestampSeconds);
   }
 
@@ -554,5 +567,9 @@ public class Drivebase extends SubsystemBase {
   public void clearWallTacking() {
       this.wallTrackingLeft = false;
       this.wallTrackingRight = false;
+  }
+
+  public void setBumpHappened() {
+      this.bumpHappened = true;
   }
 }

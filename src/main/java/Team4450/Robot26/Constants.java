@@ -328,6 +328,9 @@ public final class Constants {
         public static final String Gyro_HEADING = "Gyro Heading";
         public static final String FIELD_ORIENTED = "Field Oriented";
         public static final String HUB_TRACKING = "Hub Tracking";
+        public static final String BUMP_HAPPENED = "Bump Happened";
+        public static final String DISTANCE_BOX = "Distance Box";
+        public static final String OUTSIDE_FIELD = "Outside Field";
     }
 
     public static final class DriveConstants {

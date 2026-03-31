@@ -6,6 +6,8 @@ import Team4450.Robot26.subsystems.Shooter;
 import Team4450.Robot26.subsystems.Intake;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import Team4450.Robot26.Constants;
 
 public class Shoot extends Command {
     private Shooter shooter;
@@ -66,7 +68,7 @@ public class Shoot extends Command {
         }
 
         if (!this.shooter.flywheelWithinSpeed()) {
-            shooter.stopInfeed();
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.INFEED_TARGET_RPM, Constants.INFEED_DEFAULT_TARGET_RPM - shooter.flywheelRPMError);
         }
 
         if (timer.hasElapsed(0.5) && pivitDelay.hasElapsed(2)) {

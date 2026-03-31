@@ -71,7 +71,7 @@ public class RobotContainer {
 
     // Vision based subsystems all send data to the drivebase for use
     public static VisionSubsystem visionSubsystem;
-    public static QuestNavSubsystem questNavSubsystem;
+    // public static QuestNavSubsystem questNavSubsystem;
 
     public final DriveCommand driveCommand;
 
@@ -170,7 +170,7 @@ public class RobotContainer {
         // while moving.
         drivebase = new Drivebase();
         visionSubsystem = new VisionSubsystem(drivebase);
-        questNavSubsystem = new QuestNavSubsystem(drivebase);
+        // questNavSubsystem = new QuestNavSubsystem(drivebase);
 
         intake = new Intake();
         shooter = new Shooter(drivebase);
@@ -382,8 +382,7 @@ public class RobotContainer {
         .onFalse(new InstantCommand(intake::stopIntake));
 
     new Trigger(() -> driverController.getAButton())
-        .onTrue(new InstantCommand(intake::startIntake))
-        .onFalse(new InstantCommand(intake::stopIntake));
+        .onTrue(new InstantCommand(drivebase::setBumpHappened));
 
     new Trigger(() -> driverController.getBButton())
         .onTrue(new InstantCommand(visionSubsystem::resetYaw))

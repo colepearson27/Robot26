@@ -68,6 +68,7 @@ public class Shooter extends SubsystemBase {
     private static final double CONVERSION_FACTOR_MPS_TO_RPM = 10000 / 47.93;
 
     private double targetRPM = Constants.FLYWHEEL_TARGET_RPM;
+    public double flywheelRPMError = 0;
     private double currentRPM = 0.0;
 
     public boolean flywheelEnabled = false; // Button-controlled enable
@@ -204,6 +205,8 @@ public class Shooter extends SubsystemBase {
         }
 
         targetRPM = SmartDashboard.getNumber(Constants.SmartDashboardKeys.FLYWHEEL_TARGET_RPM, 0);
+
+        flywheelRPMError = targetRPM - currentRPM;
 
         double targetRPS;
 

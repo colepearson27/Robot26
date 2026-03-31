@@ -1,5 +1,4 @@
-Make vision update the pose directly instead of using the stupid library
-Have some warning when the robot is though to be outside of the current play area
-Use the robot position to have a pathplanner auto that can correct for errors
-How to make the vision faster / more accurate
 Limelight mounts and is there a new way to mount the right Limelight so that it will do something
+Faster Throughput
+Higher pivit
+How to lower the peaks and have more consistant flywheel power draw
