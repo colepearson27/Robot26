@@ -1,4 +1,2 @@
 Limelight mounts and is there a new way to mount the right Limelight so that it will do something
-Faster Throughput
-Higher pivit
 How to lower the peaks and have more consistant flywheel power draw
