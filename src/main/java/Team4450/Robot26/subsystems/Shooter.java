@@ -217,8 +217,8 @@ public class Shooter extends SubsystemBase {
         if (flywheelEnabled && canFlywheel) {
 
             double curveMultiplier = 22; // Lower values of this increases the acceleration while higher vales decrese the acceleration
-            errorMultiplier  = slowAcceleration ? (flywheelRPMError * ((1 / ( -((beamBreakTimer.get() * 100) / curveMultiplier ) - 1 )) + 1)) / flywheelRPMError : 1; // Based off the parent function 1/x to limit the multiplier to a max of 1
-            targetRPS = targetRPM * errorMultiplier / 60.0;
+            errorMultiplier  = slowAcceleration ? ((1 / ( -((beamBreakTimer.get() * 100) / curveMultiplier ) - 1 )) + 1) : 1; // Based off the parent function 1/x to limit the multiplier to a max of 1
+            targetRPS = (flywheelRPMError * errorMultiplier + currentRPM) / 60.0;
 
             MotionMagicVelocityVoltage req =
                     new MotionMagicVelocityVoltage(targetRPS)
