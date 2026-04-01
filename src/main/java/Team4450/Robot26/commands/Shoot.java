@@ -46,6 +46,7 @@ public class Shoot extends Command {
         intake.slowIntake();
         infeedDelay.start();
         infeedDelay.reset();
+        shooter.enableSlowAcceleration();
     }
 
     @Override
@@ -64,7 +65,6 @@ public class Shoot extends Command {
                 hopper.start();
             }
             shooter.startInfeed();
-        } else {
         }
 
         if (!this.shooter.flywheelWithinSpeed()) {
@@ -89,6 +89,7 @@ public class Shoot extends Command {
         shooter.distableHood();
         shooter.stopFlywheel();
         shooter.stopInfeed();
+        shooter.disableSlowAcceleration();
         hopper.stop();
         intake.stopIntake();
     }
