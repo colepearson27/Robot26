@@ -6,6 +6,8 @@ import Team4450.Robot26.subsystems.Shooter;
 import Team4450.Robot26.subsystems.Intake;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import Team4450.Robot26.Constants;
 
 public class Shoot extends Command {
     private Shooter shooter;
@@ -14,6 +16,9 @@ public class Shoot extends Command {
     private Intake intake;
     private Timer timer;
     private Timer pivitDelay;
+    private Timer xTimer;
+    private Timer infeedDelay;
+    private boolean temp;
 
     public Shoot(Drivebase drivebase, Shooter shooter, Hopper hopper, Intake intake) {
         this.shooter = shooter;
@@ -22,6 +27,9 @@ public class Shoot extends Command {
         this.intake = intake;
         this.timer = new Timer();
         this.pivitDelay = new Timer();
+        this.xTimer = new Timer();
+        this.infeedDelay = new Timer();
+        this.temp = false;
     }
 
     @Override
@@ -33,19 +41,34 @@ public class Shoot extends Command {
         timer.reset();
         pivitDelay.start();
         pivitDelay.reset();
+        xTimer.start();
+        xTimer.reset();
         intake.slowIntake();
+        infeedDelay.start();
+        infeedDelay.reset();
+        shooter.enableSlowAcceleration();
     }
 
     @Override
     public void execute() {
-        drivebase.setX();
+        if (this.xTimer.hasElapsed(0.5)) {
+            drivebase.setX();
+            this.xTimer.reset();
+        }
+
         if (this.shooter.flywheelAtSpeed()) {
+            if (!temp) {
+                infeedDelay.reset();
+                temp = true;
+            }
+            if (infeedDelay.hasElapsed(0.2)) {
+                hopper.start();
+            }
             shooter.startInfeed();
-            hopper.start();
         }
 
         if (!this.shooter.flywheelWithinSpeed()) {
-            shooter.stopInfeed();
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.INFEED_TARGET_RPM, (Constants.INFEED_DEFAULT_TARGET_RPM - shooter.flywheelRPMError));
         }
 
         if (timer.hasElapsed(0.5) && pivitDelay.hasElapsed(2)) {
@@ -62,9 +85,11 @@ public class Shoot extends Command {
 
     @Override
     public void end(boolean interuppted) {
+        this.temp = false;
         shooter.distableHood();
         shooter.stopFlywheel();
         shooter.stopInfeed();
+        shooter.disableSlowAcceleration();
         hopper.stop();
         intake.stopIntake();
     }

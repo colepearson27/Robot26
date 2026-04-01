@@ -185,11 +185,11 @@ public final class Constants {
 
     public static double FIELD_MIDDLE_Y = 4.021;
 
-    public static double ROBOT_HEADING_KP = 0.04;
+    public static double ROBOT_HEADING_KP = 0.06;
     public static double ROBOT_HEADING_KI = 0;
     public static double ROBOT_HEADING_KI_MAX = 0;
-    public static double ROBOT_HEADING_KD = 0.004;
-    public static double ROBOT_HEADING_TOLERANCE_DEG = 0.0001;
+    public static double ROBOT_HEADING_KD = 0.01;
+    public static double ROBOT_HEADING_TOLERANCE_DEG = 6;
     public static boolean HUB_TRACKING = false;
 
     // Interpolation table
@@ -255,7 +255,6 @@ public final class Constants {
         public static final String HOOD_ANGLE = "Hood Angle";
         public static final String HOOD_MOTOR_POSITION = "Hood Motor Position";
         public static final String HOOD_TARGET_POSITION = "Hood Target Position";
-        public static final String HOOD_POWER = "Hood Power";
 
         // Flywheel telemetry
         public static final String FLYWHEEL_TARGET_RPM = "Flywheel/TargetRPM";
@@ -328,6 +327,9 @@ public final class Constants {
         public static final String Gyro_HEADING = "Gyro Heading";
         public static final String FIELD_ORIENTED = "Field Oriented";
         public static final String HUB_TRACKING = "Hub Tracking";
+        public static final String BUMP_HAPPENED = "Bump Happened";
+        public static final String DISTANCE_BOX = "Distance Box";
+        public static final String OUTSIDE_FIELD = "Outside Field";
     }
 
     public static final class DriveConstants {

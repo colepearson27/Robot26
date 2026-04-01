@@ -135,9 +135,9 @@ public class DriveCommand extends Command {
             throttle = Util.squareInput(throttle);
             strafe = Util.squareInput(strafe);
 
-            // headingPID.setP(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_P, Constants.ROBOT_HEADING_KP));
-            // headingPID.setI(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_I, Constants.ROBOT_HEADING_KI));
-            // headingPID.setD(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_D, Constants.ROBOT_HEADING_KD));
+            headingPID.setP(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_P, Constants.ROBOT_HEADING_KP));
+            headingPID.setI(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_I, Constants.ROBOT_HEADING_KI));
+            headingPID.setD(SmartDashboard.getNumber(Constants.SmartDashboardKeys.HEADING_D, Constants.ROBOT_HEADING_KD));
 
             if (Math.abs(headingError) <= 5 || Math.abs(headingError) >= 355) {
                 RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0.3);

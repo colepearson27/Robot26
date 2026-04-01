@@ -1,12 +1,2 @@
-Clear out old hood stuff
-Clear out outdated shooter functions and constants
-Fix pathplanner and swaping betweeen the two sides
-other auto stuff
-One Button to run the flywheel and the tracking and the hopper stuff but only when the flywheel hits a correct speed
-Disable driving when shooting (for now)
-Flywheel interpolation at the shop
-Hub tracking ignore velocity
-
-Test if hood offest radians will cause errors
-Test hood motion magic
-Test pivit motion magic
+Limelight mounts and is there a new way to mount the right Limelight so that it will do something
+How to lower the peaks and have more consistant flywheel power draw

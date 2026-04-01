@@ -71,7 +71,7 @@ public class RobotContainer {
 
     // Vision based subsystems all send data to the drivebase for use
     public static VisionSubsystem visionSubsystem;
-    public static QuestNavSubsystem questNavSubsystem;
+    // public static QuestNavSubsystem questNavSubsystem;
 
     public final DriveCommand driveCommand;
 
@@ -170,7 +170,7 @@ public class RobotContainer {
         // while moving.
         drivebase = new Drivebase();
         visionSubsystem = new VisionSubsystem(drivebase);
-        questNavSubsystem = new QuestNavSubsystem(drivebase);
+        // questNavSubsystem = new QuestNavSubsystem(drivebase);
 
         intake = new Intake();
         shooter = new Shooter(drivebase);
@@ -350,8 +350,8 @@ public class RobotContainer {
         // Toggle slow-mode
         // Right D-Pad button sets X pattern to stop movement.
 
-        new Trigger(() -> driverController.getLeftBumperButton()) // Rich
-                .onChange(new InstantCommand(drivebase::toggleSlowMode));
+    new Trigger(() -> driverController.getLeftBumperButton()) // Rich
+        .onChange(new InstantCommand(drivebase::toggleSlowMode));
 
     new Trigger(() -> driverController.getPOV() == 0) // Up D-pad
         .onTrue(new InstantCommand(shooter::toggleManualDistanceOne))
@@ -378,16 +378,15 @@ public class RobotContainer {
         .whileTrue(new Shoot(drivebase, shooter, hopper, intake));
 
     new Trigger(() -> driverController.getRightTrigger())
-        .onTrue(new InstantCommand(shooter::startInfeed))
-        .onFalse(new InstantCommand(shooter::stopInfeed));
-
-    new Trigger(() -> driverController.getAButton())
         .onTrue(new InstantCommand(intake::startIntake))
         .onFalse(new InstantCommand(intake::stopIntake));
 
-    new Trigger(() -> driverController.getBButton())
-        .onTrue(new InstantCommand(visionSubsystem::resetYaw))
-        .onTrue(new InstantCommand(drivebase::resetFieldOrientation));
+    new Trigger(() -> driverController.getAButton())
+        .onTrue(new InstantCommand(drivebase::setBumpHappened));
+
+    // new Trigger(() -> driverController.getBButton())
+    //     .onTrue(new InstantCommand(visionSubsystem::resetYaw))
+    //     .onTrue(new InstantCommand(drivebase::resetFieldOrientation));
 
     new Trigger(() -> driverController.getYButton())
         .onTrue(new InstantCommand(shooter::reverseInfeed))

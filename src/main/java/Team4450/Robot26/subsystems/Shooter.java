@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -59,6 +60,7 @@ public class Shooter extends SubsystemBase {
     public boolean driverEnabledInfeed = false;
 
     DigitalInput beamBreak;
+    private Timer beamBreakTimer;
 
     // Constants for launch calculations
     private static final double GRAVITY = 9.81;
@@ -68,9 +70,11 @@ public class Shooter extends SubsystemBase {
     private static final double CONVERSION_FACTOR_MPS_TO_RPM = 10000 / 47.93;
 
     private double targetRPM = Constants.FLYWHEEL_TARGET_RPM;
+    public double flywheelRPMError = 0;
     private double currentRPM = 0.0;
 
     public boolean flywheelEnabled = false; // Button-controlled enable
+    public boolean slowAcceleration = false; // Slows the acceleration of the flywheel so that it will only reach speed as the next fuel reaches the flywheel and not before to minimise voltage draw
 
     // Shuffleboard cached values
     private boolean sdInit = false;
@@ -100,6 +104,7 @@ public class Shooter extends SubsystemBase {
         this.hoodRotationOffset = this.hoodLeft.getPosition(true).getValueAsDouble();
 
         beamBreak = new DigitalInput(Constants.SHOOTER_UPPER_BEAM_BREAK_PORT);
+        beamBreakTimer.start();
 
         applyFlywheelConfig(
             Constants.FLYWHEEL_kP, Constants.FLYWHEEL_kI, Constants.FLYWHEEL_kD,
@@ -135,7 +140,6 @@ public class Shooter extends SubsystemBase {
 
         sdInit = true;
 
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.HOOD_POWER, 0.05);
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.INFEED_TARGET_RPM, Constants.INFEED_DEFAULT_TARGET_RPM);
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISABLE_AUTO_FLYWHEEL_UPDATE, this.disableAutomaticFlywheelUpdate);
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_ONE, this.manualDistanceOne);
@@ -147,13 +151,13 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Flywheel is controlled by TestSubsystem via Constants; no dashboard reads here.
-        
         // This line should be all that is needed when the flywheel should be spun up
         updateLaunchValues(true);
 
         // Update the beam break sensors
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.BEAM_BREAK, beamBreak.get());
+
+        if(!beamBreak.get()) beamBreakTimer.reset();
 
         hoodMotorPosition = hoodLeft.getPosition().getValueAsDouble();
 
@@ -205,10 +209,17 @@ public class Shooter extends SubsystemBase {
 
         targetRPM = SmartDashboard.getNumber(Constants.SmartDashboardKeys.FLYWHEEL_TARGET_RPM, 0);
 
+        flywheelRPMError = targetRPM - currentRPM;
+
         double targetRPS;
+        double errorMultiplier;
 
         if (flywheelEnabled && canFlywheel) {
-            targetRPS = targetRPM / 60.0;
+
+            double curveMultiplier = 22; // Lower values of this increases the acceleration while higher vales decrese the acceleration
+            errorMultiplier  = slowAcceleration ? ((1 / ( -((beamBreakTimer.get() * 100) / curveMultiplier ) - 1 )) + 1) : 1; // Based off the parent function 1/x to limit the multiplier to a max of 1
+            targetRPS = (flywheelRPMError * errorMultiplier + currentRPM) / 60.0;
+
             MotionMagicVelocityVoltage req =
                     new MotionMagicVelocityVoltage(targetRPS)
                             .withSlot(Constants.FLYWHEEL_PID_SLOT).withEnableFOC(true);
@@ -341,6 +352,14 @@ public class Shooter extends SubsystemBase {
         } else {
             return false;
         }
+    }
+
+    public void enableSlowAcceleration() {
+        slowAcceleration = true;
+    }
+
+    public void disableSlowAcceleration() {
+        slowAcceleration = false;
     }
 
     public void enabledHood() {

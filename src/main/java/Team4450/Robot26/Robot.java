@@ -292,9 +292,6 @@ public class Robot extends TimedRobot {
           RobotContainer.drivebase.limelightPoseEstimate.getY(),
           RobotContainer.drivebase.limelightPoseEstimate.getRotation());
       RobotContainer.drivebase.resetOdometry(RobotContainer.drivebase.robotPose);
-      RobotContainer.questNavSubsystem.resetQuestOdometry(new Pose3d(RobotContainer.drivebase.robotPose));
-    } else {
-      Util.consoleLog("Fail");
     }
 
     // robotContainer.fixPathPlannerGyro(); rich // Because of this only use blue
