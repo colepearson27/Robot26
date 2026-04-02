@@ -60,7 +60,11 @@ public class Shooter extends SubsystemBase {
     public boolean driverEnabledInfeed = false;
 
     DigitalInput beamBreak;
+<<<<<<< Updated upstream
     private Timer beamBreakTimer;
+=======
+    Timer beamBreakTimer;
+>>>>>>> Stashed changes
 
     // Constants for launch calculations
     private static final double GRAVITY = 9.81;
