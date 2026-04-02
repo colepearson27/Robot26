@@ -14,8 +14,6 @@ Auto
     Auto options that will go over the bump
     Have different delay options for auto, is there a way to do this through the code for running the thing
 
-Make it so that when the farrying is pressed, like the wall tracking we will target the alliance wall
-
 Auto score function that will combine hub tracking and run the shoot function
 
 Calibrated bump speed? Just set slow mode to something that will work
