@@ -408,6 +408,11 @@ public class RobotContainer {
         .onTrue(new InstantCommand(drivebase::enableHubTracking))
         .onFalse(new InstantCommand(drivebase::clearWallTacking))
         .onFalse(new InstantCommand(drivebase::disableHubTracking));
+
+    new Trigger(() -> driverController.getBButton())
+        .onTrue(new InstantCommand(drivebase::enableHubTracking))
+        .whileTrue(new Shoot(drivebase, shooter, hopper, intake))
+        .onFalse(new InstantCommand(drivebase::disableHubTracking));
     }
 
     /**
