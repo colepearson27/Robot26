@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -72,6 +73,7 @@ public class Shooter extends SubsystemBase {
     private double currentRPM = 0.0;
 
     public boolean flywheelEnabled = false; // Button-controlled enable
+    public boolean slowAcceleration = false; // Slows the acceleration of the flywheel so that it will only reach speed as the next fuel reaches the flywheel and not before to minimise voltage draw
 
     // Shuffleboard cached values
     private boolean sdInit = false;
@@ -206,10 +208,14 @@ public class Shooter extends SubsystemBase {
         flywheelRPMError = targetRPM - currentRPM;
 
         double targetRPS;
+        double curveMultiplier = currentRPM < 2500 ? 150 : 35.25; // Allowed acceleration in rps/s for slow acceleration
 
         if (flywheelEnabled && canFlywheel) {
             targetRPS = targetRPM / 60.0;
-            MotionMagicVelocityVoltage req =
+            SmartDashboard.putNumber("Target Flywheel RPS", targetRPS);
+
+            MotionMagicVelocityVoltage req = slowAcceleration ? new MotionMagicVelocityVoltage(targetRPS)
+                            .withSlot(Constants.FLYWHEEL_PID_SLOT).withEnableFOC(true).withAcceleration(curveMultiplier) :
                     new MotionMagicVelocityVoltage(targetRPS)
                             .withSlot(Constants.FLYWHEEL_PID_SLOT).withEnableFOC(true);
 
@@ -341,6 +347,14 @@ public class Shooter extends SubsystemBase {
         } else {
             return false;
         }
+    }
+
+    public void enableSlowAcceleration() {
+        slowAcceleration = true;
+    }
+
+    public void disableSlowAcceleration() {
+        slowAcceleration = false;
     }
 
     public void enabledHood() {
