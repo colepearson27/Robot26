@@ -60,7 +60,6 @@ public class Shooter extends SubsystemBase {
     public boolean driverEnabledInfeed = false;
 
     DigitalInput beamBreak;
-    private Timer beamBreakTimer = new Timer();
 
     // Constants for launch calculations
     private static final double GRAVITY = 9.81;
@@ -104,7 +103,6 @@ public class Shooter extends SubsystemBase {
         this.hoodRotationOffset = this.hoodLeft.getPosition(true).getValueAsDouble();
 
         beamBreak = new DigitalInput(Constants.SHOOTER_UPPER_BEAM_BREAK_PORT);
-        beamBreakTimer.start();
 
         applyFlywheelConfig(
             Constants.FLYWHEEL_kP, Constants.FLYWHEEL_kI, Constants.FLYWHEEL_kD,
@@ -156,8 +154,6 @@ public class Shooter extends SubsystemBase {
 
         // Update the beam break sensors
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.BEAM_BREAK, beamBreak.get());
-
-        if(!beamBreak.get()) beamBreakTimer.reset();
 
         hoodMotorPosition = hoodLeft.getPosition().getValueAsDouble();
 
@@ -212,15 +208,14 @@ public class Shooter extends SubsystemBase {
         flywheelRPMError = targetRPM - currentRPM;
 
         double targetRPS;
-        double errorMultiplier;
-        double curveMultiplier = 22; // Lower values of this increases the acceleration while higher vales decrese the acceleration
+        double curveMultiplier = currentRPM < 2500 ? 150 : 35.25; // Allowed acceleration in rps/s for slow acceleration
 
         if (flywheelEnabled && canFlywheel) {
+            targetRPS = targetRPM / 60.0;
+            SmartDashboard.putNumber("Target Flywheel RPS", targetRPS);
 
-            errorMultiplier  = slowAcceleration ? ((1 / ( -((beamBreakTimer.get() * 100) / curveMultiplier ) - 1 )) + 1) : 1; // Based off the parent function 1/x to limit the multiplier to a max of 1
-            targetRPS = (flywheelRPMError * errorMultiplier + currentRPM) / 60.0;
-
-            MotionMagicVelocityVoltage req =
+            MotionMagicVelocityVoltage req = slowAcceleration ? new MotionMagicVelocityVoltage(targetRPS)
+                            .withSlot(Constants.FLYWHEEL_PID_SLOT).withEnableFOC(true).withAcceleration(curveMultiplier) :
                     new MotionMagicVelocityVoltage(targetRPS)
                             .withSlot(Constants.FLYWHEEL_PID_SLOT).withEnableFOC(true);
 
