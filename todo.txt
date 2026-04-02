@@ -1,2 +1,22 @@
-Limelight mounts and is there a new way to mount the right Limelight so that it will do something
-How to lower the peaks and have more consistant flywheel power draw
+Vision position updates quicker after going over the bump
+    Test the changes Cole make to vision averging, mmt
+    Try to remove the linear velocity constraints for vision and just keep the roational constraints (maybe), Maybe with averaging it will not matter to be so hard on the vision estimates
+
+You can change the acceleration limits for the motion magic request on the fly
+    Increase lower roller velocity / even the infeed velocity
+
+Auto
+    When going through the trench in auto put the intake first so that the robot can see tags
+    Tell Toby to create a bump auto routine starting from the center
+    Center Auto that does more than shoot the preload
+    Auto options that will go over the bump
+    Have different delay options for auto, is there a way to do this through the code for running the thing
+
+Auto score function that will combine hub tracking and run the shoot function
+
+Calibrated bump speed? Just set slow mode to something that will work
+
+Beam break intigration into auto score
+
+Things to test at the practice field:
+    Going over the bump a lot to test vision and bring up the 
