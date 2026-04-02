@@ -261,6 +261,7 @@ public final class Constants {
         public static final String FLYWHEEL_MEASURED_RPM = "Flywheel/MeasuredRPM";
         public static final String FLYWHEEL_MEASURED_RPM_LEGACY = "Flywheel measured RPM";
         public static final String FLYWHEEL_CURRENT_DRAW = "Flywheel Current Draw";
+        public static final String FLYWHEEL_CURVE_MULTIPLIER = "Flywheel Curve Multiplier";
 
         // Flywheel PID / FF tuning
         public static final String FLYWHEEL_KP = "Flywheel/kP";

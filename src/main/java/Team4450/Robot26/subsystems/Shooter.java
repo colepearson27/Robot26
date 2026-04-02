@@ -103,6 +103,8 @@ public class Shooter extends SubsystemBase {
 
         this.hoodRotationOffset = this.hoodLeft.getPosition(true).getValueAsDouble();
 
+        this.beamBreakTimer = new Timer();
+
         beamBreak = new DigitalInput(Constants.SHOOTER_UPPER_BEAM_BREAK_PORT);
         beamBreakTimer.start();
 
@@ -120,6 +122,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.HOOD_POSITION, 0);
 
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.FLYWHEEL_TARGET_RPM, Constants.FLYWHEEL_TARGET_RPM);
+        SmartDashboard.putNumber(Constants.SmartDashboardKeys.FLYWHEEL_CURVE_MULTIPLIER, 22);
 
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.FLYWHEEL_KP, Constants.FLYWHEEL_kP);
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.FLYWHEEL_KI, Constants.FLYWHEEL_kI);
@@ -213,10 +216,11 @@ public class Shooter extends SubsystemBase {
 
         double targetRPS;
         double errorMultiplier;
+        double curveMultiplier;
 
         if (flywheelEnabled && canFlywheel) {
 
-            double curveMultiplier = 22; // Lower values of this increases the acceleration while higher vales decrese the acceleration
+            curveMultiplier = SmartDashboard.getNumber(Constants.SmartDashboardKeys.FLYWHEEL_CURVE_MULTIPLIER, 22); // Lower values of this increases the acceleration while higher vales decrese the acceleration
             errorMultiplier  = slowAcceleration ? ((1 / ( -((beamBreakTimer.get() * 100) / curveMultiplier ) - 1 )) + 1) : 1; // Based off the parent function 1/x to limit the multiplier to a max of 1
             targetRPS = (flywheelRPMError * errorMultiplier + currentRPM) / 60.0;
 
