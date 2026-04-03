@@ -129,9 +129,9 @@ public final class Constants {
 
     public static int LIMELIGHT_TAG_LIMIT = 2;
 
-    public static double LIMELIGHT_X_VELOCITY_LIMIT = 2;
-    public static double LIMELIGHT_Y_VELOCITY_LIMIT = 2;
-    public static double LIMELIGHT_ROT_VELOCITY_LIMIT = 0.3;
+    public static double LIMELIGHT_X_VELOCITY_LIMIT = 5;
+    public static double LIMELIGHT_Y_VELOCITY_LIMIT = 5;
+    public static double LIMELIGHT_ROT_VELOCITY_LIMIT = 1;
 
     // The rotation values are in radians
     public static Pose3d ROBOT_TO_QUEST = new Pose3d(0.305, 0, 0,
