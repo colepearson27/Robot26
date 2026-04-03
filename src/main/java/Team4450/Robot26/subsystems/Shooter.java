@@ -216,6 +216,7 @@ public class Shooter extends SubsystemBase {
 
         double targetRPS;
         double curveMultiplier = currentRPM < 2500 ? 150 : 35.25; // Allowed acceleration in rps/s for slow acceleration
+        SmartDashboard.putNumber("Shooter Curve Multiplier", curveMultiplier);
 
         if (flywheelEnabled && canFlywheel) {
             targetRPS = targetRPM / 60.0;
