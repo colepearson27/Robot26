@@ -400,10 +400,12 @@ public class RobotContainer {
         .onFalse(new InstantCommand(drivebase::disableHubTracking));
 
     new Trigger(() -> driverController.getRightStickButton())
-        .onTrue(new InstantCommand(drivebase::setWallTrackingRight))
-        .onTrue(new InstantCommand(drivebase::enableHubTracking))
-        .onFalse(new InstantCommand(drivebase::clearWallTacking))
-        .onFalse(new InstantCommand(drivebase::disableHubTracking));
+        // .onTrue(new InstantCommand(drivebase::setWallTrackingRight))
+        // .onTrue(new InstantCommand(drivebase::enableHubTracking))
+        // .onFalse(new InstantCommand(drivebase::clearWallTacking))
+        // .onFalse(new InstantCommand(drivebase::disableHubTracking));
+        .onTrue(new InstantCommand(intake::startIntake))
+        .onFalse(new InstantCommand(intake::stopIntake));
 
     new Trigger(() -> driverController.getBButton())
         .onTrue(new InstantCommand(drivebase::enableHubTracking))

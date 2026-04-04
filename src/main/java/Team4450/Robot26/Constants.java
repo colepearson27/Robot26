@@ -297,7 +297,7 @@ public final class Constants {
         public static final String HEADING_ERROR = "Heading Error";
 
         // Pivit
-        public static final String PIVIT_POSiTION = "Pivit Position";
+        public static final String PIVIT_POSITION = "Pivit Position";
 
         // Control Flow
         public static final String DISABLED = "Disabled";
