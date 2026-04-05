@@ -23,14 +23,14 @@ import com.ctre.phoenix6.CANBus;
 public class Intake extends SubsystemBase {
 
     // This motor is a Kraken x60
-    private final TalonFX pivitMotor = new TalonFX(Constants.INTAKE_MOTOR_PIVIT_CAN_ID,
+    private final TalonFX pivotMotor = new TalonFX(Constants.INTAKE_MOTOR_PIVOT_CAN_ID,
             new CANBus(Constants.CANIVORE_NAME));
     // This motor is a Kraken x44
     private final TalonFX intakeMotorLeft = new TalonFX(Constants.INTAKE_MOTOR_LEFT_CAN_ID);
     // This motor is a Kraken x44
     private final TalonFX intakeMotorRight = new TalonFX(Constants.INTAKE_MOTOR_RIGHT_CAN_ID);
 
-    private boolean canPivit;
+    private boolean canPivot;
     private boolean canSpin;
 
     // This value is expected to be between 0 and 1
@@ -47,15 +47,15 @@ public class Intake extends SubsystemBase {
     private boolean reverseIntake = false;
 
     public Intake() {
-        this.canPivit = pivitMotor.isConnected();
+        this.canPivot = pivotMotor.isConnected();
         this.canSpin = intakeMotorLeft.isConnected() && intakeMotorRight.isConnected();
 
         // Assume the pivit starting position is 0
         this.pivitCurrentPosition = 0;
         this.pivitTargetPosition = 0;
 
-        if (this.canPivit) {
-            this.pivitMotor.setPosition(0);
+        if (this.canPivot) {
+            this.pivotMotor.setPosition(0);
         }
 
         TalonFXConfiguration intakeCFG = new TalonFXConfiguration();
@@ -76,50 +76,51 @@ public class Intake extends SubsystemBase {
         this.intakeMotorLeft.getConfigurator().apply(intakeCFG);
         this.intakeMotorRight.getConfigurator().apply(intakeCFG);
 
-        TalonFXConfiguration pivitCFG = new TalonFXConfiguration();
+        TalonFXConfiguration pivotCFG = new TalonFXConfiguration();
 
         // Neutral + inversion
-        pivitCFG.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        pivitCFG.CurrentLimits = new CurrentLimitsConfigs()
-                .withSupplyCurrentLimit(Constants.INTAKE_PIVIT_CURRENT_LIMIT);
-        pivitCFG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        pivotCFG.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        pivotCFG.CurrentLimits = new CurrentLimitsConfigs()
+                .withSupplyCurrentLimit(Constants.INTAKE_PIVOT_CURRENT_LIMIT);
+        pivotCFG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         // Slot 0 PID
-        pivitCFG.Slot0.kP = 1;
-        pivitCFG.Slot0.kI = 0;
-        pivitCFG.Slot0.kD = 0.1;
+        pivotCFG.Slot0.kP = 1;
+        pivotCFG.Slot0.kI = 0;
+        pivotCFG.Slot0.kD = 0.1;
 
         // Slot 0 Feedforward (Talon internal)
-        pivitCFG.Slot0.kS = 0.5;
-        pivitCFG.Slot0.kV = 0;
-        pivitCFG.Slot0.kA = 0;
+        pivotCFG.Slot0.kS = 0.5;
+        pivotCFG.Slot0.kV = 0;
+        pivotCFG.Slot0.kA = 0;
 
-        this.pivitMotor.getConfigurator().apply(pivitCFG);
+        this.pivotMotor.getConfigurator().apply(pivotCFG);
 
-        SmartDashboard.putBoolean("Intake can Pivit", canPivit);
+        SmartDashboard.putBoolean("Intake can Pivot", canPivot);
         SmartDashboard.putBoolean("Intake can Spin", canSpin);
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 0);
+        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0);
     }
 
     @Override
     public void periodic() {
-        this.pivitTargetPosition = SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 0);
-        if (this.canPivit) {
+        this.pivitTargetPosition = SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0);
+        if (this.canPivot) {
             this.pivitTargetPositionMotorPosition = this.pivitPositionToMotorPosition(this.pivitTargetPosition);
             // Convert position input to rotations for the motor
-            // double power = Constants.INTAKE_PIVIT_MOTOR_POWER;
+            // double power = Constants.INTAKE_PIVOT_MOTOR_POWER;
 
             PositionVoltage req = new PositionVoltage(this.pivitTargetPositionMotorPosition);
 
-            this.pivitMotor.setControl(req);
+            this.pivotMotor.setControl(req);
 
             this.pivitCurrentPositionMotorPosition = this.getPivitPosition();
             this.pivitCurrentPosition = this.motorPositionToPivitPosition(this.pivitCurrentPositionMotorPosition);
 
             if (RobotContainer.inTestMode) {
                 SmartDashboard.putNumber("Intake RPM", getIntakeRPM());
-                SmartDashboard.putNumber("Intake Current Draw", getIntakeCurrent());
             }
+            SmartDashboard.putNumber("Intake Current Draw", getIntakeCurrent());
+            SmartDashboard.putNumber("Intake Pivot Current Draw", getPivotMotorCurrent());
         }
 
         if (this.runIntake) {
@@ -140,45 +141,45 @@ public class Intake extends SubsystemBase {
     }
 
     public void pivitDown() {
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 1.01);
+        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 1.01);
     }
 
     public void pivitUp() {
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 0);
+        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0);
     }
 
     public void shootingPivitToggle() {
         if (this.pivitCurrentPosition >= 0.85) {
-            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 0.40);
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0.40);
         } else {
-            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 0.95);
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0.95);
         }
     }
 
     public void incrementPivitUp(double incrementAmount) {
 
-        incrementAmount = SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 1) - incrementAmount;
+        incrementAmount = SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 1) - incrementAmount;
 
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, incrementAmount);
+        SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, incrementAmount);
     }
 
     // Linear interpolate the pivit position between zero and one with the motor
     // rotations of up and down on the pivit
     public double pivitPositionToMotorPosition(double pivitPosition) {
-        return Constants.INTAKE_PIVIT_MOTOR_POSITION_UP
-                + ((Constants.INTAKE_PIVIT_MOTOR_POSITION_DOWN - Constants.INTAKE_PIVIT_MOTOR_POSITION_UP)
+        return Constants.INTAKE_PIVOT_MOTOR_POSITION_UP
+                + ((Constants.INTAKE_PIVOT_MOTOR_POSITION_DOWN - Constants.INTAKE_PIVOT_MOTOR_POSITION_UP)
                         * pivitPosition);
     }
 
     public double motorPositionToPivitPosition(double motorPosition) {
-        return (motorPosition / Constants.INTAKE_PIVIT_GEAR_RATIO)
-                * (1 / (Constants.INTAKE_PIVIT_POSITION_DOWN_DEGREES / 360));
+        return (motorPosition / Constants.INTAKE_PIVOT_GEAR_RATIO)
+                * (1 / (Constants.INTAKE_PIVOT_POSITION_DOWN_DEGREES / 360));
     }
 
     public void startIntake() {
         if (canSpin) {
             this.runIntake = true;
-            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 0.95);
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0.95);
         }
     }
 
@@ -236,8 +237,8 @@ public class Intake extends SubsystemBase {
     }
 
     public void setPivitMotorSpeed(double speed) {
-        if (canPivit) {
-            pivitMotor.set(speed);
+        if (canPivot) {
+            pivotMotor.set(speed);
         }
     }
 
@@ -249,23 +250,23 @@ public class Intake extends SubsystemBase {
     // TODO:
     public double getPivitPosition() {
         // Need to convert
-        if (canPivit) {
-            return pivitMotor.getPosition(true).getValueAsDouble();
+        if (canPivot) {
+            return pivotMotor.getPosition(true).getValueAsDouble();
         } else {
             return -1;
         }
     }
 
-    public double getPivitMotorCurrent() {
-        if (canPivit) {
-            return pivitMotor.getSupplyCurrent(true).getValueAsDouble();
+    public double getPivotMotorCurrent() {
+        if (canPivot) {
+            return pivotMotor.getSupplyCurrent(true).getValueAsDouble();
         } else {
             return -1;
         }
     }
 
     public boolean hasDevices() {
-        return pivitMotor.isConnected() && intakeMotorLeft.isConnected() && intakeMotorRight.isConnected();
+        return pivotMotor.isConnected() && intakeMotorLeft.isConnected() && intakeMotorRight.isConnected();
     }
 
     /**
@@ -274,7 +275,7 @@ public class Intake extends SubsystemBase {
      * @param power The power level to set.
      */
     public void setPower(double power) {
-        this.pivitMotor.set(power);
+        this.pivotMotor.set(power);
     }
 
     public void setIntakeRPM(double targetRPM) {

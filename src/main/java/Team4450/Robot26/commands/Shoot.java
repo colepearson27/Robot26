@@ -14,8 +14,8 @@ public class Shoot extends Command {
     private Hopper hopper;
     private Drivebase drivebase;
     private Intake intake;
-    private Timer timer;
-    private Timer pivitDelay;
+    private Timer pviotIncrementTimer;
+    private Timer pivotDelay;
     private Timer xTimer;
     private Timer infeedDelay;
     private boolean temp;
@@ -25,11 +25,10 @@ public class Shoot extends Command {
         this.hopper = hopper;
         this.drivebase = drivebase;
         this.intake = intake;
-        this.timer = new Timer();
-        this.pivitDelay = new Timer();
+        this.pviotIncrementTimer = new Timer();
+        this.pivotDelay = new Timer();
         this.xTimer = new Timer();
         this.infeedDelay = new Timer();
-        this.temp = false;
     }
 
     @Override
@@ -37,10 +36,10 @@ public class Shoot extends Command {
         shooter.enabledHood();
         shooter.startFlywheel();
         drivebase.setX();
-        timer.start();
-        timer.reset();
-        pivitDelay.start();
-        pivitDelay.reset();
+        pviotIncrementTimer.start();
+        pviotIncrementTimer.reset();
+        pivotDelay.start();
+        pivotDelay.reset();
         xTimer.start();
         xTimer.reset();
         intake.slowIntake();
@@ -70,10 +69,9 @@ public class Shoot extends Command {
             SmartDashboard.putNumber(Constants.SmartDashboardKeys.INFEED_TARGET_RPM, (Constants.INFEED_DEFAULT_TARGET_RPM - shooter.flywheelRPMError));
         }
 
-        if (timer.hasElapsed(0.25) && pivitDelay.hasElapsed(2) && SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 0) > 0.1) {
-            // intake.shootingPivitToggle();
+        if (pviotIncrementTimer.hasElapsed(0.25) && pivotDelay.hasElapsed(2) && SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0) > 0.1) {
             intake.incrementPivitUp(0.05);
-            timer.reset();
+            pviotIncrementTimer.reset();
             
         }
     }
@@ -86,7 +84,6 @@ public class Shoot extends Command {
 
     @Override
     public void end(boolean interuppted) {
-        this.temp = false;
         shooter.distableHood();
         shooter.stopFlywheel();
         shooter.stopInfeed();

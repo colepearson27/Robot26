@@ -76,7 +76,7 @@ public final class Constants {
     public static int SHOOTER_INFEED_CURRENT_LIMIT = 40;
     public static int SHOOTER_HOOD_CURRENT_LIMIT = 8;
     public static int INTAKE_CURRENT_LIMIT = 30;
-    public static int INTAKE_PIVIT_CURRENT_LIMIT = 5;
+    public static int INTAKE_PIVOT_CURRENT_LIMIT = 5;
     public static int LOWER_ROLLERS_CURRENT_LIMIT = 25;
 
     public static double HOOD_GEAR_RATIO = 3.0 / 8.0;
@@ -94,32 +94,32 @@ public final class Constants {
     public static final double HOOD_MOTION_JERK = 0.0;
 
     // Intake Constants
-    public static int INTAKE_MOTOR_PIVIT_CAN_ID = 9;
+    public static int INTAKE_MOTOR_PIVOT_CAN_ID = 9;
     public static int INTAKE_MOTOR_LEFT_CAN_ID = 10;
     public static int INTAKE_MOTOR_RIGHT_CAN_ID = 11;
 
     // The intake gear ratio it 1 to 1
     public static int INTAKE_GEAR_RATIO = 1 / 1;
     // I was told that the gear box on the Kraken is a 25:1
-    // public static int INTAKE_PIVIT_GEAR_RATIO = (25 / 1) * (32 / 16);
-    public static double INTAKE_PIVIT_GEAR_RATIO = (62.4 / 1);
+    // public static int INTAKE_PIVOT_GEAR_RATIO = (25 / 1) * (32 / 16);
+    public static double INTAKE_PIVOT_GEAR_RATIO = (62.4 / 1);
 
     public static int INTAKE_MAX_THEORETICAL_RPM = KRAKEN_X44_MAX_THEORETICAL_RPM / INTAKE_GEAR_RATIO;
-    public static double INTAKE_MAX_THEORETICAL_PIVIT_RPM = KRAKEN_X60_MAX_THEORETICAL_RPM / INTAKE_PIVIT_GEAR_RATIO;
+    public static double INTAKE_MAX_THEORETICAL_PIVOT_RPM = KRAKEN_X60_MAX_THEORETICAL_RPM / INTAKE_PIVOT_GEAR_RATIO;
 
-    public static double INTAKE_PIVIT_MOTOR_POWER = 0.0;
+    public static double INTAKE_PIVOT_MOTOR_POWER = 0.0;
     // The format of this value is in rotations of the pivit motor
-    public static int INTAKE_PIVIT_MOTOR_POSITION_UP = 0;
-    public static double INTAKE_PIVIT_TARGET_POSITION_DOWN = 1.0;
+    public static int INTAKE_PIVOT_MOTOR_POSITION_UP = 0;
+    public static double INTAKE_PIVOT_TARGET_POSITION_DOWN = 1.0;
     // This is an assumed value and not exact
-    public static double INTAKE_PIVIT_POSITION_DOWN_DEGREES = 105;
+    public static double INTAKE_PIVOT_POSITION_DOWN_DEGREES = 105;
     // The format of this value is in rotations of the pivit motor
-    public static double INTAKE_PIVIT_MOTOR_POSITION_DOWN = (INTAKE_PIVIT_POSITION_DOWN_DEGREES / 360)
-            * INTAKE_PIVIT_GEAR_RATIO;
+    public static double INTAKE_PIVOT_MOTOR_POSITION_DOWN = (INTAKE_PIVOT_POSITION_DOWN_DEGREES / 360)
+            * INTAKE_PIVOT_GEAR_RATIO;
     // The format of this value is in rotations of the pivit motor
-    public static double INTAKE_PIVIT_TOLERENCE_MOTOR_ROTATIONS = 0.5;
-    public static double INTAKE_PIVIL_TOLERENCE_DEGREES = 360
-            * (INTAKE_PIVIT_TOLERENCE_MOTOR_ROTATIONS / INTAKE_PIVIT_GEAR_RATIO);
+    public static double INTAKE_PIVOT_TOLERENCE_MOTOR_ROTATIONS = 0.5;
+    public static double INTAKE_PIVOT_TOLERENCE_DEGREES = 360
+            * (INTAKE_PIVOT_TOLERENCE_MOTOR_ROTATIONS / INTAKE_PIVOT_GEAR_RATIO);
 
     public static String LIMELIGHT_FRONT = "limelight-front";
     public static String LIMELIGHT_RIGHT = "limelight-right";
@@ -129,9 +129,9 @@ public final class Constants {
 
     public static int LIMELIGHT_TAG_LIMIT = 2;
 
-    public static double LIMELIGHT_X_VELOCITY_LIMIT = 2;
-    public static double LIMELIGHT_Y_VELOCITY_LIMIT = 2;
-    public static double LIMELIGHT_ROT_VELOCITY_LIMIT = 0.3;
+    public static double LIMELIGHT_X_VELOCITY_LIMIT = 4;
+    public static double LIMELIGHT_Y_VELOCITY_LIMIT = 4;
+    public static double LIMELIGHT_ROT_VELOCITY_LIMIT = 2;
 
     // The rotation values are in radians
     public static Pose3d ROBOT_TO_QUEST = new Pose3d(0.305, 0, 0,
@@ -139,7 +139,6 @@ public final class Constants {
 
     public static Pose3d ROBOT_TO_LIMELIGHT_FRONT = new Pose3d(0.305, 0, 0, new Rotation3d(0, -0.3491, 0));
     public static Pose3d ROBOT_TO_LIMELIGHT_RIGHT = new Pose3d(0.0762, 0.318, 0, new Rotation3d(0, -0.3491, -1.5708));
-    public static int VISION_BUFFER_SIZE = 1;
 
     public static double LIMELIGHT_QUEST_ERROR_AMOUNT_METERS = 0.2;
 
@@ -297,7 +296,7 @@ public final class Constants {
         public static final String HEADING_ERROR = "Heading Error";
 
         // Pivit
-        public static final String PIVIT_POSITION = "Pivit Position";
+        public static final String PIVOT_POSITION = "Pivit Position";
 
         // Control Flow
         public static final String DISABLED = "Disabled";

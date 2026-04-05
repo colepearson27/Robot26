@@ -17,11 +17,10 @@ public class IntakeUp extends Command {
   }
 
   public void execute() {
-    SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 0);
+    SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0);
   }
 
   public boolean isFinished() {
-
     return intake.getPivitPosition() < 0.2;
   }
 
