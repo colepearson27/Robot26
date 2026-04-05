@@ -70,9 +70,11 @@ public class Shoot extends Command {
             SmartDashboard.putNumber(Constants.SmartDashboardKeys.INFEED_TARGET_RPM, (Constants.INFEED_DEFAULT_TARGET_RPM - shooter.flywheelRPMError));
         }
 
-        if (timer.hasElapsed(0.5) && pivitDelay.hasElapsed(2)) {
-            intake.shootingPivitToggle();
+        if (timer.hasElapsed(0.25) && pivitDelay.hasElapsed(2) && SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 0) > 0.1) {
+            // intake.shootingPivitToggle();
+            intake.incrementPivitUp(0.05);
             timer.reset();
+            
         }
     }
 
@@ -89,6 +91,8 @@ public class Shoot extends Command {
         shooter.stopFlywheel();
         shooter.stopInfeed();
         hopper.stop();
+        intake.pivitDown();
         intake.stopIntake();
+        
     }
 }

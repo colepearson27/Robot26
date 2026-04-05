@@ -17,7 +17,7 @@ public class IntakeUp extends Command {
   }
 
   public void execute() {
-    SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSiTION, 0);
+    SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVIT_POSITION, 0);
   }
 
   public boolean isFinished() {
