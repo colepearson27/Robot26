@@ -75,7 +75,6 @@ public class Drivebase extends SubsystemBase {
 
   public boolean wallTrackingLeft = false;
   public boolean wallTrackingRight = false;
-  public boolean ferryTracking = false;
 
   private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric()
       .withDeadband(kMaxSpeed * DRIVE_DEADBAND)
@@ -568,17 +567,9 @@ public class Drivebase extends SubsystemBase {
       this.wallTrackingRight = true;
   }
 
-  public void setFerryTracking() {
-      this.ferryTracking = true;
-  }
-
   public void clearWallTacking() {
       this.wallTrackingLeft = false;
       this.wallTrackingRight = false;
-  }
-
-  public void clearFerryTracking() {
-      this.ferryTracking = false;
   }
 
   public void setBumpHappened() {

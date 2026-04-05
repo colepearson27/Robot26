@@ -280,7 +280,7 @@ public class RobotContainer {
         }
 
         SmartDashboard.putData("String Auto", stringAutoChooser);
-        SmartDashboard.putData("Auto Command w/flipped", commandAutoChooser);
+        SmartDashboard.putData("Auto Chooser", commandAutoChooser);
 
         // Configure the button bindings.
         configureButtonBindings();

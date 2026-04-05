@@ -176,11 +176,11 @@ public final class Constants {
     public static double NEUTRAL_BLUE_ZONE_BARRIER_X = 4.572;
     public static double NEUTRAL_RED_ZONE_BARRIER_X = 11.938;
 
-    public static Pose2d FERRY_BLUE_OUTPOST_CORNER = new Pose2d(1.27, 0.635, Rotation2d.kZero);
-    public static Pose2d FERRY_BLUE_BLANK_CORNER = new Pose2d(1.27, 7.407, Rotation2d.kZero);
+    public static Pose2d FERRY_BLUE_OUTPOST_CORNER = new Pose2d(-6.27, 0.635, Rotation2d.kZero);
+    public static Pose2d FERRY_BLUE_BLANK_CORNER = new Pose2d(-6.27, 7.407, Rotation2d.kZero);
 
-    public static Pose2d FERRY_RED_OUTPOST_CORNER = new Pose2d(15.243, 7.407, Rotation2d.kZero);
-    public static Pose2d FERRY_RED_BLANK_CORNER = new Pose2d(15.243, 0.635, Rotation2d.kZero);
+    public static Pose2d FERRY_RED_OUTPOST_CORNER = new Pose2d(20.243, 7.407, Rotation2d.kZero);
+    public static Pose2d FERRY_RED_BLANK_CORNER = new Pose2d(20.243, 0.635, Rotation2d.kZero);
 
     public static double FIELD_MIDDLE_Y = 4.021;
 
@@ -196,7 +196,7 @@ public final class Constants {
                                                                                                 // percentages to
     // RPM
     public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = { 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5.5 };
-    public static double[] HOOD_ARC_TABLE = { 0.6, 0.9, 1.65, 1.8, 1.85, 1.85, 2.3, 3.3 };
+    public static double[] HOOD_ARC_TABLE = { 0.6, 0.9, 1.65, 1.8, 1.85, 1.85, 2.3, 3.0 };
 
     public static double[] FUEL_AIR_TIME_TABLE_SEC = { 1.1, 1.3, 1.4, 1.5, 1.8, 1.9, 2.1 };
 

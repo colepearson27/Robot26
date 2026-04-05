@@ -25,6 +25,7 @@ public class Shoot extends Command {
         this.hopper = hopper;
         this.drivebase = drivebase;
         this.intake = intake;
+        this.pivotDelay = new Timer();
         this.pviotIncrementTimer = new Timer();
         this.xTimer = new Timer();
         this.infeedDelay = new Timer();
@@ -37,6 +38,8 @@ public class Shoot extends Command {
         drivebase.setX();
         pviotIncrementTimer.start();
         pviotIncrementTimer.reset();
+        pivotDelay.start();
+        pivotDelay.reset();
         xTimer.start();
         xTimer.reset();
         intake.slowIntake();
@@ -63,10 +66,10 @@ public class Shoot extends Command {
         }
 
         if (!this.shooter.flywheelWithinSpeed()) {
-            SmartDashboard.putNumber(Constants.SmartDashboardKeys.INFEED_TARGET_RPM, (Constants.INFEED_DEFAULT_TARGET_RPM - (shooter.flywheelRPMError * 5)));
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.INFEED_TARGET_RPM, (Constants.INFEED_DEFAULT_TARGET_RPM - Math.max(shooter.flywheelRPMError * 5, 0)));
         }
 
-        if (pviotIncrementTimer.hasElapsed(0.20) && SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0) > 0.1) {
+        if (pivotDelay.hasElapsed(1) && pviotIncrementTimer.hasElapsed(0.15) && SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0) > 0.1) {
             intake.incrementPivitUp(0.05);
             pviotIncrementTimer.reset();
             
