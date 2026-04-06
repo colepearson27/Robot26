@@ -121,11 +121,11 @@
   "constraintZones": [
     {
       "name": "Intake Speed",
-      "minWaypointRelativePos": 1.2252252252252251,
-      "maxWaypointRelativePos": 4.0,
+      "minWaypointRelativePos": 1.3333333333333333,
+      "maxWaypointRelativePos": 3.648648648648649,
       "constraints": {
         "maxVelocity": 3.0,
-        "maxAcceleration": 3.0,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 270.0,
         "maxAngularAcceleration": 270.0,
         "nominalVoltage": 12.0,
@@ -133,12 +133,12 @@
       }
     },
     {
-      "name": "Safety Speed",
-      "minWaypointRelativePos": 3.38,
+      "name": "Stop Accel",
+      "minWaypointRelativePos": 4.6846846846846795,
       "maxWaypointRelativePos": 5.0,
       "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 1.0,
+        "maxVelocity": 5.2,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 270.0,
         "maxAngularAcceleration": 270.0,
         "nominalVoltage": 12.0,
@@ -173,7 +173,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.2,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 270.0,
     "nominalVoltage": 12.0,
@@ -189,5 +189,5 @@
     "velocity": 1.0,
     "rotation": 59.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

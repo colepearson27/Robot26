@@ -8,44 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.100660173160174,
-        "y": 3.5932792207792206
+        "x": 8.234633030813113,
+        "y": 3.5537706007532615
       },
       "isLocked": false,
       "linkedName": "Center Park"
     },
     {
       "anchor": {
-        "x": 2.917180517984162,
-        "y": 2.582796597406749
+        "x": 8.65362494778879,
+        "y": 3.9772630168845167
       },
       "prevControl": {
-        "x": 7.514166666666666,
-        "y": 2.258300865800866
+        "x": 8.288251159323098,
+        "y": 4.498045419512451
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Bump Shoot"
+      "linkedName": "Center Park"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.03627760252365931,
-      "rotationDegrees": 14.999999999999998
-    },
-    {
-      "waypointRelativePos": 0.2460567823343855,
-      "rotationDegrees": 20.0
-    },
-    {
-      "waypointRelativePos": 0.5709779179810729,
-      "rotationDegrees": 10.0
-    },
-    {
-      "waypointRelativePos": 0.8375394321766558,
-      "rotationDegrees": 10.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
@@ -57,17 +40,6 @@
         "type": "named",
         "data": {
           "name": "intake"
-        }
-      }
-    },
-    {
-      "name": "spinShooter",
-      "waypointRelativePos": 0.7063063063063049,
-      "endWaypointRelativePos": 0.9513513513513514,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "spinShooter"
         }
       }
     }
@@ -82,7 +54,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 40.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
