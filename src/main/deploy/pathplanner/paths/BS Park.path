@@ -20,12 +20,12 @@
         "y": 3.6436391061557165
       },
       "prevControl": {
-        "x": 6.567171123290532,
-        "y": 2.8814657851229137
+        "x": 6.709253246753247,
+        "y": 2.4742532467532476
       },
       "nextControl": {
-        "x": 6.848481287952608,
-        "y": 4.179820391255573
+        "x": 6.743123126642616,
+        "y": 4.1921548250538985
       },
       "isLocked": false,
       "linkedName": null
@@ -46,19 +46,6 @@
   ],
   "rotationTargets": [],
   "constraintZones": [
-    {
-      "name": "Bump",
-      "minWaypointRelativePos": 0.03243243243243243,
-      "maxWaypointRelativePos": 0.22342342342342342,
-      "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 2.0,
-        "maxAngularVelocity": 270.0,
-        "maxAngularAcceleration": 270.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
     {
       "name": "Approaching",
       "minWaypointRelativePos": 0.20900900900900907,
@@ -107,7 +94,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 3.0,
+    "velocity": 0.0,
     "rotation": 180.0
   },
   "reversed": false,

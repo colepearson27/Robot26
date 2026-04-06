@@ -23,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "lowHopperShoot"
                 }
               },
               {
@@ -54,7 +54,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "lowHopperShoot"
                 }
               },
               {

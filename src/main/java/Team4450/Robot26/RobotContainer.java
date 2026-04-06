@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import Team4450.Robot26.commands.DriveCommand;
 import Team4450.Robot26.commands.Shoot;
+import Team4450.Robot26.commands.LowHopperShoot;
 import Team4450.Robot26.commands.ShootWithX;
 import Team4450.Robot26.commands.intakeCommand;
 import Team4450.Robot26.commands.StopShoot;
@@ -186,13 +187,14 @@ public class RobotContainer {
 
         // Pathplanner NamedCommands
 
-    NamedCommands.registerCommand("intakeDown", new IntakeDown(intake));
-    NamedCommands.registerCommand("intakeUp", new IntakeUp(intake));
-    NamedCommands.registerCommand("intake", new intakeCommand(intake, hopper));
-    NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper, intake));
-    NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
-    NamedCommands.registerCommand("end", new StopAuto(drivebase));
-    NamedCommands.registerCommand("spinShooter", new spinShooter(shooter));
+        NamedCommands.registerCommand("intakeDown", new IntakeDown(intake));
+        NamedCommands.registerCommand("intakeUp", new IntakeUp(intake));
+        NamedCommands.registerCommand("intake", new intakeCommand(intake, hopper));
+        NamedCommands.registerCommand("lowHopperShoot", new LowHopperShoot(drivebase, shooter, hopper, intake));
+        NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper, intake));
+        NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
+        NamedCommands.registerCommand("end", new StopAuto(drivebase));
+        NamedCommands.registerCommand("spinShooter", new spinShooter(shooter));
         NamedCommands.registerCommand("hubTrack", new AutonHubTracking(drivebase, headingPID));
 
         // Set the default drive command. This command will be scheduled automatically
