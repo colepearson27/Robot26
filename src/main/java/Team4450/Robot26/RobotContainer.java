@@ -193,6 +193,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("lowHopperShoot", new LowHopperShoot(drivebase, shooter, hopper, intake));
         NamedCommands.registerCommand("shoot", new Shoot(drivebase, shooter, hopper, intake));
         NamedCommands.registerCommand("stopShooter", new StopShoot(shooter, hopper));
+        NamedCommands.registerCommand("shootWithX", new ShootWithX(drivebase, shooter, hopper, intake));
         NamedCommands.registerCommand("end", new StopAuto(drivebase));
         NamedCommands.registerCommand("spinShooter", new spinShooter(shooter));
         NamedCommands.registerCommand("hubTrack", new AutonHubTracking(drivebase, headingPID));
