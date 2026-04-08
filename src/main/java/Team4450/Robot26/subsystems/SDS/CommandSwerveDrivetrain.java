@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import Team4450.Robot26.RobotContainer;
 import Team4450.Robot26.subsystems.SDS.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -211,7 +211,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
       // This should not be changed
       // Here is the link to documentation for pathplanner setup:
       AutoBuilder.configure(
-          () -> getState().Pose, // Supplier of current robot pose
+          () -> RobotContainer.drivebase.getPose(), // Supplier of current robot pose
           this::resetPose, // Consumer for seeding pose against auto
           () -> getState().Speeds, // Supplier of current robot speeds
           // Consumer of ChassisSpeeds and feedforwards to drive the robot

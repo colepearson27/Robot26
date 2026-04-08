@@ -1,0 +1,123 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.5877597402597408,
+        "y": 3.0239502164502166
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.272652700015266,
+        "y": 2.5461052818060805
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.473668831164565,
+        "y": 2.6509415584419083
+      },
+      "prevControl": {
+        "x": 5.01055080907064,
+        "y": 2.595729557608174
+      },
+      "nextControl": {
+        "x": 6.993917748913483,
+        "y": 2.6705735930739434
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.89575757575331,
+        "y": 3.514751082251432
+      },
+      "prevControl": {
+        "x": 7.0233658008615345,
+        "y": 2.9257900432903923
+      },
+      "nextControl": {
+        "x": 6.779584963981675,
+        "y": 4.050932367351286
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 9.129,
+        "y": 4.008530732964796
+      },
+      "prevControl": {
+        "x": 8.222607824785168,
+        "y": 4.172424242424592
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Center Park"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Approaching",
+      "minWaypointRelativePos": 0.4,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 270.0,
+        "maxAngularAcceleration": 270.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "intake",
+      "waypointRelativePos": 0.9189189189189186,
+      "endWaypointRelativePos": 3.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "intake"
+        }
+      }
+    },
+    {
+      "name": "intakeDown",
+      "waypointRelativePos": 0.9459459459459458,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "intakeDown"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 270.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 2.0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}

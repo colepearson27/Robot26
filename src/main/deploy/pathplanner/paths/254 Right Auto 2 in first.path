@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.941619870410367,
-        "y": 0.9171874999969463
+        "x": 2.8024783549783554,
+        "y": 1.1098268398268407
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.392181425485961,
-        "y": 0.508866090712744
+        "x": 3.2530399100539493,
+        "y": 0.7015054305426387
       },
       "isLocked": false,
       "linkedName": "Shoot 254"
@@ -192,7 +192,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.2,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 270.0,
     "nominalVoltage": 12.0,

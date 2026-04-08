@@ -5,22 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "deadline",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CS-Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "startIntake"
-                }
-              }
-            ]
+            "pathName": "Shooter first Fast 254 Right Auto 1"
           }
         },
         {
@@ -30,16 +17,28 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.0
+                  "waitTime": 3.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "stopIntake"
+                  "name": "lowHopperShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "hubTrack"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shooter First 254 Right Auto 2"
           }
         },
         {
@@ -49,13 +48,19 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 7.0
+                  "waitTime": 4.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "lowHopperShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "hubTrack"
                 }
               }
             ]

@@ -75,7 +75,6 @@ public class Drivebase extends SubsystemBase {
 
   public boolean wallTrackingLeft = false;
   public boolean wallTrackingRight = false;
-  public boolean ferryTracking = false;
 
   private final SwerveRequest.FieldCentric driveField = new SwerveRequest.FieldCentric()
       .withDeadband(kMaxSpeed * DRIVE_DEADBAND)
@@ -168,10 +167,11 @@ public class Drivebase extends SubsystemBase {
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.DISTANCE_BOX, false);
     }
 
+    SmartDashboard.putNumber(Constants.SmartDashboardKeys.BATTERY_VOLTAGE, RobotController.getBatteryVoltage());
+
     if (RobotContainer.inTestMode) {
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.Gyro_HEADING, pigeonWrapper.startingYaw);
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.GYRO_STARTING_YAW, pigeonWrapper.getHeading());
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.BATTERY_VOLTAGE, RobotController.getBatteryVoltage());
         SmartDashboard.putString(Constants.SmartDashboardKeys.ROBOT_OD_POSE, getODPose().toString());
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.DRIVEBASE_CURRENT, getDrivetrainCurrent());
         SmartDashboard.putString(Constants.SmartDashboardKeys.LIMELIGHT_POSE, this.limelightPoseEstimate.toString());
@@ -567,17 +567,9 @@ public class Drivebase extends SubsystemBase {
       this.wallTrackingRight = true;
   }
 
-  public void setFerryTracking() {
-      this.ferryTracking = true;
-  }
-
   public void clearWallTacking() {
       this.wallTrackingLeft = false;
       this.wallTrackingRight = false;
-  }
-
-  public void clearFerryTracking() {
-      this.ferryTracking = false;
   }
 
   public void setBumpHappened() {

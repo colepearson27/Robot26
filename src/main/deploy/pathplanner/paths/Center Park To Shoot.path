@@ -1,0 +1,108 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 9.129,
+        "y": 4.008530732964796
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.576035225371383,
+        "y": 3.6245469368595
+      },
+      "isLocked": false,
+      "linkedName": "Center Park"
+    },
+    {
+      "anchor": {
+        "x": 2.917180517984162,
+        "y": 2.582796597406749
+      },
+      "prevControl": {
+        "x": 7.514166666666666,
+        "y": 2.258300865800866
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Bump Shoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.03627760252365931,
+      "rotationDegrees": 14.999999999999998
+    },
+    {
+      "waypointRelativePos": 0.2460567823343855,
+      "rotationDegrees": 20.0
+    },
+    {
+      "waypointRelativePos": 0.5709779179810729,
+      "rotationDegrees": 10.0
+    },
+    {
+      "waypointRelativePos": 0.8375394321766558,
+      "rotationDegrees": 10.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.08468468468468468,
+      "maxWaypointRelativePos": 0.18198198198198193,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 270.0,
+        "maxAngularAcceleration": 270.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "intake"
+        }
+      }
+    },
+    {
+      "name": "spinShooter",
+      "waypointRelativePos": 0.7063063063063049,
+      "endWaypointRelativePos": 0.9513513513513514,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "spinShooter"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 270.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 40.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

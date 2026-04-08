@@ -267,8 +267,6 @@ public class Shooter extends SubsystemBase {
             distToGoal = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
         }
 
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.ROBOT_LAUNCH_X, drivebase.getPose().getX());
-        SmartDashboard.putNumber(Constants.SmartDashboardKeys.ROBOT_LAUNCH_Y, drivebase.getPose().getY());
         SmartDashboard.putString(Constants.SmartDashboardKeys.GOAL_POSE, getGoalPose().toString());
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.ROBOT_DISTANCE, distToGoal);
 
@@ -331,6 +329,14 @@ public class Shooter extends SubsystemBase {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public boolean flywheelTooLow() {
+        if (Math.abs(this.currentRPM - this.targetRPM) < 500) {
+            return false;
+        } else {
+            return true;
         }
     }
 

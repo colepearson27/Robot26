@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CS-Shoot"
+            "pathName": "CS Shoot backwards"
           }
         },
         {
@@ -17,16 +17,22 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 6.0
+                  "waitTime": 3.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "hubTrack"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CS NO SHOOT left"
           }
         }
       ]

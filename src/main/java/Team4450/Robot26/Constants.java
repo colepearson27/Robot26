@@ -176,11 +176,11 @@ public final class Constants {
     public static double NEUTRAL_BLUE_ZONE_BARRIER_X = 4.572;
     public static double NEUTRAL_RED_ZONE_BARRIER_X = 11.938;
 
-    public static Pose2d FERRY_BLUE_OUTPOST_CORNER = new Pose2d(1.27, 0.635, Rotation2d.kZero);
-    public static Pose2d FERRY_BLUE_BLANK_CORNER = new Pose2d(1.27, 7.407, Rotation2d.kZero);
+    public static Pose2d FERRY_BLUE_OUTPOST_CORNER = new Pose2d(-6.27, 0.635, Rotation2d.kZero);
+    public static Pose2d FERRY_BLUE_BLANK_CORNER = new Pose2d(-6.27, 7.407, Rotation2d.kZero);
 
-    public static Pose2d FERRY_RED_OUTPOST_CORNER = new Pose2d(15.243, 7.407, Rotation2d.kZero);
-    public static Pose2d FERRY_RED_BLANK_CORNER = new Pose2d(15.243, 0.635, Rotation2d.kZero);
+    public static Pose2d FERRY_RED_OUTPOST_CORNER = new Pose2d(20.243, 7.407, Rotation2d.kZero);
+    public static Pose2d FERRY_RED_BLANK_CORNER = new Pose2d(20.243, 0.635, Rotation2d.kZero);
 
     public static double FIELD_MIDDLE_Y = 4.021;
 
@@ -192,11 +192,11 @@ public final class Constants {
     public static boolean HUB_TRACKING = false;
 
     // Interpolation table
-    public static double[] FLYWHEEL_SPEED_TABLE = { 3550, 3550, 3650, 3850, 4050, 4300, 4400, 4400 }; // Converted from
+    public static double[] FLYWHEEL_SPEED_TABLE = { 3550, 3550, 3650, 3850, 4050, 4300, 4400, 3200 }; // Converted from
                                                                                                 // percentages to
     // RPM
     public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = { 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5.5 };
-    public static double[] HOOD_ARC_TABLE = { 0.6, 0.9, 1.65, 1.8, 1.85, 1.85, 2.3, 3.3 };
+    public static double[] HOOD_ARC_TABLE = { 0.6, 0.9, 1.65, 1.8, 1.85, 1.85, 2.3, 3.0 };
 
     public static double[] FUEL_AIR_TIME_TABLE_SEC = { 1.1, 1.3, 1.4, 1.5, 1.8, 1.9, 2.1 };
 
@@ -243,7 +243,7 @@ public final class Constants {
     public static final double INTAKE_kP = 0.8;
 
     public static final int INFEED_DEFAULT_TARGET_RPM = 3500;
-    public static final int LOWER_ROLLERS_DEFAULT_TARGET_RPM = 1000;
+    public static final int LOWER_ROLLERS_DEFAULT_TARGET_RPM = 1500;
     // PID constants for Shooter Infeed
     public static final double INFEED_kP = 0.8;
 
@@ -280,8 +280,6 @@ public final class Constants {
         public static final String MANUAL_DISTANCE_ONE = "disableAutomaticDistanceUpdate";
         public static final String MANUAL_DISTANCE_TWO = "disableAutomaticDistanceUpdateTwo";
         public static final String MANUAL_DISTANCE_THREE = "disableAutomaticDistanceUpdateThree";
-        public static final String ROBOT_LAUNCH_X = "RobotLaunchX";
-        public static final String ROBOT_LAUNCH_Y = "RobotLaunchY";
         public static final String GOAL_POSE = "Goal Pose";
         public static final String ROBOT_DISTANCE = "Robot Distance";
         public static final String FLIP_AUTO = "Flip Auto";
@@ -353,10 +351,10 @@ public final class Constants {
         // for
         // full weight robot.
         public static final double kDriveReductionPct = 1; // Percentage of max linear speed. e.g. .50 == 50%
-        public static final double kRotationReductionPct = .50; // Percentage of max rotational speed. e.g. .70 == 70%
+        public static final double kRotationReductionPct = .75; // Percentage of max rotational speed. e.g. .70 == 70%
 
         // Factors used to slow robot speed for fine driving.
-        public static final double kSlowModeLinearPct = .35; // 15% of max linear speed.
+        public static final double kSlowModeLinearPct = .40; // 15% of max linear speed.
         public static final double kSlowModeRotationPct = .40; // 40% of max rotational speed.
 
         // Drive Motor ramp rate. Needs to be tuned for full weight robot.
