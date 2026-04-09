@@ -112,7 +112,7 @@ public final class Constants {
     public static int INTAKE_PIVOT_MOTOR_POSITION_UP = 0;
     public static double INTAKE_PIVOT_TARGET_POSITION_DOWN = 1.0;
     // This is an assumed value and not exact
-    public static double INTAKE_PIVOT_POSITION_DOWN_DEGREES = 105;
+    public static double INTAKE_PIVOT_POSITION_DOWN_DEGREES = 102;
     // The format of this value is in rotations of the pivit motor
     public static double INTAKE_PIVOT_MOTOR_POSITION_DOWN = (INTAKE_PIVOT_POSITION_DOWN_DEGREES / 360)
             * INTAKE_PIVOT_GEAR_RATIO;
@@ -244,6 +244,7 @@ public final class Constants {
 
     public static final int INFEED_DEFAULT_TARGET_RPM = 3500;
     public static final int LOWER_ROLLERS_DEFAULT_TARGET_RPM = 1500;
+    public static final int LOWER_ROLLERS_AUTO_TARGET_RPM = 2000;
     // PID constants for Shooter Infeed
     public static final double INFEED_kP = 0.8;
 
