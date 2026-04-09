@@ -86,7 +86,7 @@ public class Intake extends SubsystemBase {
 
         // Slot 0 PID
         pivotCFG.Slot0.kP = 1;
-        pivotCFG.Slot0.kI = 0;
+        pivotCFG.Slot0.kI = 0.3;
         pivotCFG.Slot0.kD = 0.1;
 
         // Slot 0 Feedforward (Talon internal)
@@ -119,8 +119,9 @@ public class Intake extends SubsystemBase {
             if (RobotContainer.inTestMode) {
                 SmartDashboard.putNumber("Intake RPM", getIntakeRPM());
             }
-            SmartDashboard.putNumber("Intake Current Draw", getIntakeCurrent());
-            SmartDashboard.putNumber("Intake Pivot Current Draw", getPivotMotorCurrent());
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.INTAKE_CURRENT_DRAW, getIntakeCurrent());
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_CURRENT_DRAW, getPivotMotorCurrent());
+            SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_CURRENT_POSITION, this.pivitCurrentPosition);
         }
 
         if (this.runIntake) {

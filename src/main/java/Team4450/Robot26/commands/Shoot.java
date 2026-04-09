@@ -43,6 +43,7 @@ public class Shoot extends Command {
         xTimer.start();
         xTimer.reset();
         intake.slowIntake();
+        intake.pivitDown();
         infeedDelay.start();
         infeedDelay.reset();
     }
