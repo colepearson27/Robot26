@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 
 import Team4450.Robot26.commands.DriveCommand;
 import Team4450.Robot26.commands.Shoot;
@@ -24,6 +25,7 @@ import Team4450.Robot26.commands.spinShooter;
 import Team4450.Robot26.commands.AutonHubTracking;
 import Team4450.Robot26.subsystems.Candle;
 import Team4450.Robot26.subsystems.Intake;
+import Team4450.Robot26.subsystems.LimelightHelpers;
 import Team4450.Robot26.subsystems.Drivebase;
 import Team4450.Robot26.subsystems.Shooter;
 import Team4450.Robot26.subsystems.ShuffleBoard;
@@ -314,6 +316,10 @@ public class RobotContainer {
         // new Trigger(()-> driverController.getPOV() != -1)
         // .onTrue(new PointToYaw(()->PointToYaw.yawFromPOV(driverController.getPOV()),
         // driveBase, false))
+        //
+        RobotModeTriggers.disabled()
+                .onTrue(Commands.either(visionSubsystem.recordAuto(), visionSubsystem.recordTeleop(), DriverStation::isAutonomous)
+                        .ignoringDisable(true));
 
         // Vibrate between 30 and 25 sec left in match.
         new Trigger(() -> Timer.getMatchTime() < 30 && Timer.getMatchTime() > 25).whileTrue(new StartEndCommand(
@@ -477,4 +483,6 @@ public class RobotContainer {
     // public void fixPathPlannerGyro() { rich
     // driveBase.fixPathPlannerGyro();
     // }
+    //
+    
 }

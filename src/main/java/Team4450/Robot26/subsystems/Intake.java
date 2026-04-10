@@ -50,6 +50,8 @@ public class Intake extends SubsystemBase {
     private Drivebase drivebase;
 
     public Intake() {
+        this.drivebase = drivebase;
+
         this.canPivot = pivotMotor.isConnected();
         this.canSpin = intakeMotorLeft.isConnected() && intakeMotorRight.isConnected();
 
