@@ -133,7 +133,14 @@ public class Intake extends SubsystemBase {
             if (this.reverseIntake) {
                 setIntakeRPM(-Constants.INTAKE_DEFAULT_TARGET_RPM);
             } else {
-                setIntakeRPM(Constants.INTAKE_DEFAULT_TARGET_RPM);
+                // gets intake speed based off of robot speed. Faster robot = faster intake
+                double scaledIntakeSpeed = Constants.INTAKE_DEFAULT_TARGET_RPM * (RobotContainer.drivebase.getTotalVelocity() * 2 / 5.21);
+                if (this.reverseIntake) {
+                    //set rpm to a value between max rpm and min rpm, scaled by robot speed
+                    setIntakeRPM(-clamp(Constants.INTAKE_DEFAULT_MINIMUM_RPM, Constants.INTAKE_DEFAULT_TARGET_RPM, scaledIntakeSpeed));
+                } else {
+                    setIntakeRPM(clamp(Constants.INTAKE_DEFAULT_MINIMUM_RPM, Constants.INTAKE_DEFAULT_TARGET_RPM, scaledIntakeSpeed));
+                }
             }
         } else {
             // gets intake speed based off of robot speed. Faster robot = faster intake
