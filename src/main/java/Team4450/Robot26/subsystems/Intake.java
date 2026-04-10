@@ -50,6 +50,8 @@ public class Intake extends SubsystemBase {
     private Drivebase drivebase;
 
     public Intake() {
+        this.drivebase = drivebase;
+
         this.canPivot = pivotMotor.isConnected();
         this.canSpin = intakeMotorLeft.isConnected() && intakeMotorRight.isConnected();
 
@@ -125,16 +127,11 @@ public class Intake extends SubsystemBase {
             SmartDashboard.putNumber(Constants.SmartDashboardKeys.INTAKE_CURRENT_DRAW, getIntakeCurrent());
             SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_CURRENT_DRAW, getPivotMotorCurrent());
             SmartDashboard.putNumber(Constants.SmartDashboardKeys.PIVOT_CURRENT_POSITION, this.pivitCurrentPosition);
-            SmartDashboard.putNumber("Intake RPM", getIntakeRPM());
         }
 
-        if (this.runIntake) {
-            if (Constants.robot.isAutonomous()) {
-                if (this.reverseIntake) {
-                    setIntakeRPM(-Constants.INTAKE_DEFAULT_TARGET_RPM);
-                } else {
-                    setIntakeRPM(Constants.INTAKE_DEFAULT_TARGET_RPM);
-                }
+        if (this.runIntake && Constants.robot.isAutonomous()) {
+            if (this.reverseIntake) {
+                setIntakeRPM(-Constants.INTAKE_DEFAULT_TARGET_RPM);
             } else {
                 // gets intake speed based off of robot speed. Faster robot = faster intake
                 double scaledIntakeSpeed = Constants.INTAKE_DEFAULT_TARGET_RPM * (RobotContainer.drivebase.getTotalVelocity() * 2 / 5.21);
@@ -144,6 +141,15 @@ public class Intake extends SubsystemBase {
                 } else {
                     setIntakeRPM(clamp(Constants.INTAKE_DEFAULT_MINIMUM_RPM, Constants.INTAKE_DEFAULT_TARGET_RPM, scaledIntakeSpeed));
                 }
+            }
+        } else {
+            // gets intake speed based off of robot speed. Faster robot = faster intake
+            double scaledIntakeSpeed = Constants.INTAKE_DEFAULT_TARGET_RPM * (drivebase.getTotalVelocity() * 2 / 5.21);
+            if (this.reverseIntake) {
+                //set rpm to a value between max rpm and min rpm, scaled by robot speed
+                setIntakeRPM(-clamp(Constants.INTAKE_DEFAULT_MINIMUM_RPM, Constants.INTAKE_DEFAULT_TARGET_RPM, scaledIntakeSpeed));
+            } else {
+                setIntakeRPM(clamp(Constants.INTAKE_DEFAULT_MINIMUM_RPM, Constants.INTAKE_DEFAULT_TARGET_RPM, scaledIntakeSpeed));
             }
         }
     }
