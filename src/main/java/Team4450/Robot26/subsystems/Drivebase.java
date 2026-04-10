@@ -2,6 +2,8 @@ package Team4450.Robot26.subsystems;
 
 import static Team4450.Robot26.Constants.DriveConstants.*;
 
+import org.opencv.core.Mat;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -383,6 +385,10 @@ public class Drivebase extends SubsystemBase {
   // Get the sds ordometry x velocity in meters per second
   public double getXVelocity() {
     return sdsDrivebase.getStateCopy().Speeds.vxMetersPerSecond;
+  }
+
+  public double getTotalVelocity() {
+      return Math.sqrt(Math.pow(getXVelocity(), 2) + Math.pow(getYVelocity(), 2));
   }
 
   // Get the sds ordometry y velocity in meters per second

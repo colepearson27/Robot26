@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Shooter first Fast 254 Right Auto 1"
+            "pathName": "CS-Shoot"
           }
         },
         {
@@ -17,19 +17,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 4.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "hubTrack"
+                  "name": "lowHopperShoot"
                 }
               }
             ]
@@ -38,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Shooter First 254 Right Auto 2"
+            "pathName": "C Shoot to Depot"
           }
         },
         {
@@ -48,19 +42,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 4.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "hubTrack"
+                  "name": "lowHopperShoot"
                 }
               }
             ]

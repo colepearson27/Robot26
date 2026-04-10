@@ -55,7 +55,13 @@ public class Hopper extends SubsystemBase {
     }
 
     public void start() {
-        VelocityVoltage velReq = new VelocityVoltage(Constants.LOWER_ROLLERS_DEFAULT_TARGET_RPM / 60).withEnableFOC(true);
+        VelocityVoltage velReq;
+
+        if (Constants.robot.isAutonomous()){
+            velReq = new VelocityVoltage(Constants.LOWER_ROLLERS_AUTO_TARGET_RPM / 60).withEnableFOC(true);
+        } else {
+            velReq = new VelocityVoltage(Constants.LOWER_ROLLERS_DEFAULT_TARGET_RPM / 60).withEnableFOC(true);
+        }
 
         hopperMotor.setControl(velReq);
         hopperMotorRight.setControl(new Follower(this.hopperMotor.getDeviceID(), MotorAlignmentValue.Opposed));

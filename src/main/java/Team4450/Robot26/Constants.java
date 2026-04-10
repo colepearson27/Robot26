@@ -76,7 +76,7 @@ public final class Constants {
     public static int SHOOTER_INFEED_CURRENT_LIMIT = 40;
     public static int SHOOTER_HOOD_CURRENT_LIMIT = 8;
     public static int INTAKE_CURRENT_LIMIT = 30;
-    public static int INTAKE_PIVOT_CURRENT_LIMIT = 5;
+    public static int INTAKE_PIVOT_CURRENT_LIMIT = 8;
     public static int LOWER_ROLLERS_CURRENT_LIMIT = 25;
 
     public static double HOOD_GEAR_RATIO = 3.0 / 8.0;
@@ -102,7 +102,7 @@ public final class Constants {
     public static int INTAKE_GEAR_RATIO = 1 / 1;
     // I was told that the gear box on the Kraken is a 25:1
     // public static int INTAKE_PIVOT_GEAR_RATIO = (25 / 1) * (32 / 16);
-    public static double INTAKE_PIVOT_GEAR_RATIO = (62.4 / 1);
+    public static double INTAKE_PIVOT_GEAR_RATIO = (44.44 / 1);
 
     public static int INTAKE_MAX_THEORETICAL_RPM = KRAKEN_X44_MAX_THEORETICAL_RPM / INTAKE_GEAR_RATIO;
     public static double INTAKE_MAX_THEORETICAL_PIVOT_RPM = KRAKEN_X60_MAX_THEORETICAL_RPM / INTAKE_PIVOT_GEAR_RATIO;
@@ -112,12 +112,12 @@ public final class Constants {
     public static int INTAKE_PIVOT_MOTOR_POSITION_UP = 0;
     public static double INTAKE_PIVOT_TARGET_POSITION_DOWN = 1.0;
     // This is an assumed value and not exact
-    public static double INTAKE_PIVOT_POSITION_DOWN_DEGREES = 105;
+    public static double INTAKE_PIVOT_POSITION_DOWN_DEGREES = 102;
     // The format of this value is in rotations of the pivit motor
     public static double INTAKE_PIVOT_MOTOR_POSITION_DOWN = (INTAKE_PIVOT_POSITION_DOWN_DEGREES / 360)
             * INTAKE_PIVOT_GEAR_RATIO;
     // The format of this value is in rotations of the pivit motor
-    public static double INTAKE_PIVOT_TOLERENCE_MOTOR_ROTATIONS = 0.5;
+    public static double INTAKE_PIVOT_TOLERENCE_MOTOR_ROTATIONS = 0.007;
     public static double INTAKE_PIVOT_TOLERENCE_DEGREES = 360
             * (INTAKE_PIVOT_TOLERENCE_MOTOR_ROTATIONS / INTAKE_PIVOT_GEAR_RATIO);
 
@@ -239,11 +239,13 @@ public final class Constants {
     public static final int HOPPER_MOTOR_CAN_ID = 12; // Example CAN ID for the Kraken X60 motor
 
     public static final int INTAKE_DEFAULT_TARGET_RPM = 6500;
+    public static final int INTAKE_DEFAULT_MINIMUM_RPM = 2000;
     // PID constants for Intake
     public static final double INTAKE_kP = 0.8;
 
     public static final int INFEED_DEFAULT_TARGET_RPM = 3500;
     public static final int LOWER_ROLLERS_DEFAULT_TARGET_RPM = 1500;
+    public static final int LOWER_ROLLERS_AUTO_TARGET_RPM = 2000;
     // PID constants for Shooter Infeed
     public static final double INFEED_kP = 0.8;
 
@@ -295,6 +297,12 @@ public final class Constants {
 
         // Pivit
         public static final String PIVOT_POSITION = "Pivit Position";
+        public static final String PIVOT_CURRENT_POSITION = "Pivit Current Position";
+        public static final String PIVOT_CURRENT_DRAW = "Pivit Current Draw";
+
+        //Intake
+        public static final String INTAKE_CURRENT_DRAW = "Intake Current Draw";
+        
 
         // Control Flow
         public static final String DISABLED = "Disabled";

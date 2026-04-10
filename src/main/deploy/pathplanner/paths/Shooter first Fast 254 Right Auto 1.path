@@ -36,12 +36,12 @@
         "y": 2.6479549700531195
       },
       "prevControl": {
-        "x": 8.197615917912966,
-        "y": 2.374082781719908
+        "x": 8.20550903336207,
+        "y": 2.3756190962749946
       },
       "nextControl": {
-        "x": 7.938200694500404,
-        "y": 3.0791644051576035
+        "x": 7.818463203463203,
+        "y": 4.221504329004329
       },
       "isLocked": false,
       "linkedName": null
@@ -78,7 +78,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.5520504731861196,
+      "waypointRelativePos": 1.8359621451104087,
       "rotationDegrees": -90.0
     },
     {
@@ -127,7 +127,7 @@
     {
       "name": "intake",
       "waypointRelativePos": 0.44964028776978404,
-      "endWaypointRelativePos": 4.62230215827338,
+      "endWaypointRelativePos": 3.5819819819819827,
       "command": {
         "type": "named",
         "data": {
@@ -168,7 +168,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": 75.0
   },
   "reversed": false,
   "folder": null,
