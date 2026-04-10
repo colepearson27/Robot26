@@ -245,7 +245,7 @@ public final class Constants {
 
     public static final int INFEED_DEFAULT_TARGET_RPM = 3500;
     public static final int LOWER_ROLLERS_DEFAULT_TARGET_RPM = 1500;
-    public static final int LOWER_ROLLERS_AUTO_TARGET_RPM = 2000;
+    public static final int LOWER_ROLLERS_AUTO_TARGET_RPM = 2500;
     // PID constants for Shooter Infeed
     public static final double INFEED_kP = 0.8;
 
