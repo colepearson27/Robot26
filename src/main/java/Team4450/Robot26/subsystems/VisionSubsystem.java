@@ -11,6 +11,8 @@ import java.lang.Math;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import Team4450.Robot26.RobotContainer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class VisionSubsystem extends SubsystemBase {
     // Info from: https://docs.limelightvision.io/docs/docs-limelight/pipeline-apriltag/apriltags
@@ -49,6 +51,8 @@ public class VisionSubsystem extends SubsystemBase {
         this.drivebase = drivebase;
         RobotOrientation rO = drivebase.getRobotOrientation(); // IDK if RobotOrientation works correctly, look there to see
                                                                
+        LimelightHelpers.setRewindEnabled(Constants.LIMELIGHT_FRONT, true);
+        LimelightHelpers.setRewindEnabled(Constants.LIMELIGHT_RIGHT, true);
 
         // Quick notes on the rotation 3d getX() return the roll in radians, getY() return the pitch in radians, getZ() return the yaw in radians
 
@@ -195,5 +199,19 @@ public class VisionSubsystem extends SubsystemBase {
         
         LimelightHelpers.SetRobotOrientation(Constants.LIMELIGHT_FRONT, rO.yaw, rO.yawRate, rO.pitch, rO.pitchRate, rO.roll, rO.rollRate);
         LimelightHelpers.SetRobotOrientation(Constants.LIMELIGHT_RIGHT, rO.yaw, rO.yawRate, rO.pitch, rO.pitchRate, rO.roll, rO.rollRate);
+    }
+
+    public Command recordAuto() {
+        return Commands.runOnce(() -> {
+            LimelightHelpers.triggerRewindCapture(Constants.LIMELIGHT_FRONT, 20);
+            LimelightHelpers.triggerRewindCapture(Constants.LIMELIGHT_RIGHT, 20);
+        });
+    }
+
+    public Command recordTeleop() {
+        return Commands.runOnce(() -> {
+            LimelightHelpers.triggerRewindCapture(Constants.LIMELIGHT_FRONT, 165);
+            LimelightHelpers.triggerRewindCapture(Constants.LIMELIGHT_RIGHT, 165);
+        });
     }
 }
