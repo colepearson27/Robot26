@@ -83,6 +83,7 @@ public class Shooter extends SubsystemBase {
     private boolean manualDistanceOne = false;
     private boolean manualDistanceTwo = false;
     private boolean manualDistanceThree = false;
+    private boolean manualDistanceFour = false;
 
     private boolean enabledHood = false;
 
@@ -147,6 +148,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_ONE, this.manualDistanceOne);
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_TWO, this.manualDistanceTwo);
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_THREE, this.manualDistanceThree);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_FOUR, this.manualDistanceFour);
 
         this.enabledHood = false;
     }
@@ -259,6 +261,8 @@ public class Shooter extends SubsystemBase {
             distToGoal = 2.5;
         } else if (SmartDashboard.getBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_THREE, this.manualDistanceThree)) {
             distToGoal = 5.5;
+        } else if (SmartDashboard.getBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_FOUR, this.manualDistanceFour)) {
+            distToGoal = 4;
         } else {
             // Calculate distance to goal & diffs
             Pose2d goalPose = (getGoalPose());
@@ -298,6 +302,12 @@ public class Shooter extends SubsystemBase {
         this.manualDistanceThree = !this.manualDistanceThree;
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_THREE, this.manualDistanceThree);
     }
+    
+    public void toggleManaualDistanceFour() {
+        this.manualDistanceFour = SmartDashboard.getBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_FOUR, this.manualDistanceFour);
+        this.manualDistanceFour = !this.manualDistanceFour;
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_FOUR, this.manualDistanceFour);
+    }
 
     public void disableManualDistanceOne() {
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_ONE, false);
@@ -321,6 +331,14 @@ public class Shooter extends SubsystemBase {
 
     public void enableManualDistanceThree() {
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_THREE, true);
+    }
+
+    public void disableManualDistanceFour() {
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_FOUR, false);
+    }
+
+    public void enableManualDistanceFour() {
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.MANUAL_DISTANCE_FOUR, true);
     }
 
     public boolean flywheelAtSpeed() {

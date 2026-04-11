@@ -46,6 +46,7 @@ public class Shoot extends Command {
         intake.pivitDown();
         infeedDelay.start();
         infeedDelay.reset();
+        drivebase.enabledSlowMode();
     }
 
     @Override
@@ -97,6 +98,6 @@ public class Shoot extends Command {
         hopper.stop();
         intake.pivitDown();
         intake.stopIntake();
-        
+        drivebase.disableSlowMode();
     }
 }

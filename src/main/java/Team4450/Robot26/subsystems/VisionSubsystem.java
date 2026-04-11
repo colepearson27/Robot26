@@ -120,19 +120,17 @@ public class VisionSubsystem extends SubsystemBase {
 
             double numTags = front_mt2.rawFiducials.length;
             for (LimelightHelpers.RawFiducial tag : front_mt2.rawFiducials) {
-                if (Math.abs(tag.txnc) > Constants.LIMELIGHT_TXNC_LIMIT) { // TODO: Convert 20 to a constants value
+                if (Math.abs(tag.txnc) > Constants.LIMELIGHT_TXNC_LIMIT) {
                     numTags--;
                 } else if (Math.abs(tag.tync) > Constants.LIMELIGHT_TYNC_LIMIT) {
                     numTags--;
                 }
             }
 
-            // TODO: Convert to a constants value
             if (numTags < Constants.LIMELIGHT_TAG_LIMIT) {
                 useFrontLimelight = false;
             }
 
-            // TODO: Convert these to constants
             if (Math.abs(drivebase.getXVelocity()) > Constants.LIMELIGHT_X_VELOCITY_LIMIT || Math.abs(drivebase.getYVelocity()) > Constants.LIMELIGHT_Y_VELOCITY_LIMIT || Math.abs(drivebase.getRotVelocity()) > Constants.LIMELIGHT_ROT_VELOCITY_LIMIT) {
                 useFrontLimelight = false;
             }
