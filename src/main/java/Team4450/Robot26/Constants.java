@@ -131,7 +131,7 @@ public final class Constants {
 
     public static double LIMELIGHT_X_VELOCITY_LIMIT = 4;
     public static double LIMELIGHT_Y_VELOCITY_LIMIT = 4;
-    public static double LIMELIGHT_ROT_VELOCITY_LIMIT = 2;
+    public static double LIMELIGHT_ROT_VELOCITY_LIMIT = 4;
 
     // The rotation values are in radians
     public static Pose3d ROBOT_TO_QUEST = new Pose3d(0.305, 0, 0,
@@ -282,6 +282,7 @@ public final class Constants {
         public static final String MANUAL_DISTANCE_ONE = "disableAutomaticDistanceUpdate";
         public static final String MANUAL_DISTANCE_TWO = "disableAutomaticDistanceUpdateTwo";
         public static final String MANUAL_DISTANCE_THREE = "disableAutomaticDistanceUpdateThree";
+        public static final String MANUAL_DISTANCE_FOUR = "disableAutomaticDistanceUpdateFour";
         public static final String GOAL_POSE = "Goal Pose";
         public static final String ROBOT_DISTANCE = "Robot Distance";
         public static final String FLIP_AUTO = "Flip Auto";
