@@ -357,20 +357,20 @@ public class RobotContainer {
         // Toggle slow-mode
         // Right D-Pad button sets X pattern to stop movement.
 
-        new Trigger(() -> driverController.getPOV() == 0) // Up D-pad
+        new Trigger(() -> driverController.getPOV() == 0)
                 .onTrue(new InstantCommand(shooter::toggleManualDistanceOne))
                 .onTrue(new InstantCommand(shooter::disableManualDistanceTwo))
                 .onTrue(new InstantCommand(shooter::disableManualDistanceThree));
 
-        new Trigger(() -> driverController.getPOV() == 90) // Rich // Right D-pad
+        new Trigger(() -> driverController.getPOV() == 90)
                 .onTrue(new InstantCommand(drivebase::setX));
 
-        new Trigger(() -> driverController.getPOV() == 180) // Left D-pad
+        new Trigger(() -> driverController.getPOV() == 180)
                 .onTrue(new InstantCommand(shooter::toggleManaualDistanceThree))
                 .onTrue(new InstantCommand(shooter::disableManualDistanceOne))
                 .onTrue(new InstantCommand(shooter::disableManualDistanceTwo));
 
-        new Trigger(() -> driverController.getPOV() == 270) // Down D-pad
+        new Trigger(() -> driverController.getPOV() == 270)
                 .onTrue(new InstantCommand(shooter::toggleManualDistanceTwo))
                 .onTrue(new InstantCommand(shooter::disableManualDistanceOne))
                 .onTrue(new InstantCommand(shooter::disableManualDistanceThree));
@@ -385,8 +385,9 @@ public class RobotContainer {
                 .whileTrue(new Shoot(drivebase, shooter, hopper, intake));
 
         new Trigger(() -> driverController.getRightTrigger())
-                .onTrue(new InstantCommand(intake::startIntake))
-                .onFalse(new InstantCommand(intake::stopIntake));
+                .onTrue(new InstantCommand(shooter::enableManualDistanceTwo))
+                .whileTrue(new Shoot(drivebase, shooter, hopper, intake))
+                .onFalse(new InstantCommand(shooter::disableManualDistanceTwo));
 
         new Trigger(() -> driverController.getAButton())
                 .onTrue(new InstantCommand(drivebase::setBumpHappened));
