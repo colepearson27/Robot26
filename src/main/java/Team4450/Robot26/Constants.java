@@ -226,7 +226,7 @@ public final class Constants {
     // ---------------- Motion Magic Velocity ----------------
     // These only affect ramp rate
 
-    public static final double FLYWHEEL_MOTION_ACCEL_RPMS = 9000.0; // RPM/s
+    public static final double FLYWHEEL_MOTION_ACCEL_RPMS = 3000.0; // RPM/s
     public static final double FLYWHEEL_MOTION_JERK = 0.0;
 
     // ---------------- Telemetry / limits ----------------

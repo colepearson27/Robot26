@@ -157,6 +157,8 @@ public class DriveCommand extends Command {
 
             if (Math.abs(headingError) <= 5 || Math.abs(headingError) >= 355) {
                 RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0.3);
+                rotation = 0;
+                drivebase.setX();
             } else {
                 RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0);
             }
