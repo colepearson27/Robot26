@@ -15,130 +15,30 @@ import Team4450.Robot26.utility.ConsoleEveryX;
 import edu.wpi.first.math.geometry.Pose2d;
 
 public class QuestNavSubsystem extends SubsystemBase {
-    private boolean hasQuest;
-    private QuestNav questNav;
-    private Transform3d ROBOT_TO_QUEST = new Transform3d(Constants.ROBOT_TO_QUEST.getX(), Constants.ROBOT_TO_QUEST.getY(), Constants.ROBOT_TO_QUEST.getZ(), Constants.ROBOT_TO_QUEST.getRotation());
-
-    final Pose3d nullPose = new Pose3d(-1, -1, -1, Rotation3d.kZero);
-    final Pose2d nullPose2d = new Pose2d(-1, -1, Rotation2d.kZero);
-    final Pose3d zeroPose = new Pose3d(0, 0, 0, Rotation3d.kZero);
-
-    private ConsoleEveryX questTestLogger = new ConsoleEveryX("Quest Test Logger", 100);
-    private ConsoleEveryX questLogger = new ConsoleEveryX("Quest Logger", 100);
-    private ConsoleEveryX limelightWarnLogger = new ConsoleEveryX("Limelight Warn Logger", 1000);
-
-    PoseFrame[] poseFrames;
-
-    /** Creates a new QuestNavSubsystem. */
-    private Drivebase drivebase;
-    private long lastResetTime = 0;
-    public QuestNavSubsystem(Drivebase drivebase) {
-        this.drivebase = drivebase;
-        questNav = new QuestNav();
-
-        // There is a bug with the 2026-1.0.0 version of the questnav library which caused the version check to fail and span the console every 10 seconds
-        questNav.setVersionCheckEnabled(false);
-
-        this.hasQuest = questNav.isConnected();
-
-        this.lastResetTime = System.currentTimeMillis();
-
-        resetToZeroPose();
-    }
-
-    public void resetToZeroPose() {
-        // Pose3d questPose3d = zeroPose.transformBy(ROBOT_TO_QUEST);
-        // Because the pose is set on the quest nav we will need to store an offset that is updated by the limelight in the drivebase class because we do not want to send constant updates to the questnav system
-        // questNav.setPose(questPose3d);
-        // System.out.println("QuestNav internal pose reset to: " + questPose3d.toString());
-    }
-
-    public Pose3d getQuestRobotPose() {
-        return (poseFrames != null && poseFrames.length > 0) ?
-            poseFrames[poseFrames.length - 1].questPose3d()
-            .transformBy(ROBOT_TO_QUEST.inverse()) : nullPose;
-    }
-
-    public double getQTimeStamp() {
-        return (poseFrames != null && poseFrames.length > 0) ?
-            poseFrames[poseFrames.length - 1].dataTimestamp() : 0;
-    }
-
-    public double getQAppTimeStamp() {
-        return (poseFrames != null && poseFrames.length > 0) ?
-            poseFrames[poseFrames.length - 1].appTimestamp() : 0;
-    }
-
-    public Pose3d getQuestPose() {
-        return (poseFrames != null && poseFrames.length > 0) ?
-            poseFrames[poseFrames.length - 1].questPose3d() : nullPose;
-    }
-
-    public void resetQuestOdometry(Pose3d rP) {
-        // Transform by the offset to get the Quest pose
-        Pose3d questPose3d = rP.transformBy(ROBOT_TO_QUEST);
-
-        // Send the reset operation
-        questNav.setPose(questPose3d);
-        Util.consoleLog("Quest Odometry Reset To: " + questPose3d.toString());
-        Util.consoleLog("QRP: " + rP.toString());
-    }
-
-    public void resetTestPose() {
-        questNav.setPose(drivebase.getPose3d());
-    }
-
-    public boolean hasQuest() {
-        return this.hasQuest;
-    }
+    QuestNav questNav = new QuestNav(); 
 
     @Override
     public void periodic() {
-        // Make these smartDashboard stuff send less data, maybe it is smart to not send data it does not need to
-        if (questNav.isConnected()) {
-            hasQuest = true;
-            // If the x or y difference from the robots current pose to the limelight estimate pose update the current quest estimate for the position
-            SmartDashboard.putBoolean(Constants.SmartDashboardKeys.QUEST_CONNECTED, true);
-            // 5000 miliseconds is 5 seconds
-            if (System.currentTimeMillis() - this.lastResetTime > 1500) {
-                if (RobotContainer.visionSubsystem.frontLimelightSee || RobotContainer.visionSubsystem.rightLimelightSee) { // One of the limelight must be seeing tags
-                    if (Math.abs(drivebase.getPose().getX() - drivebase.limelightPoseEstimate.getX()) > Constants.LIMELIGHT_QUEST_ERROR_AMOUNT_METERS || Math.abs(drivebase.getPose().getX() - drivebase.limelightPoseEstimate.getY()) > Constants.LIMELIGHT_QUEST_ERROR_AMOUNT_METERS) {
-                        // Setting the current yaw seems a little bad and might cause problems
-                        drivebase.pigeonWrapper.setCurrentYaw(drivebase.limelightPoseEstimate.getRotation().getDegrees());
-                        drivebase.limelightPoseEstimate = nullPose2d;
-                        this.lastResetTime = System.currentTimeMillis();
-                        }
-                } else {
-                    this.lastResetTime = System.currentTimeMillis();
-                }
-            }
-        } else {
-            hasQuest = false;
-            limelightWarnLogger.update("The Questnav is not found, force updating pose with limelight pose!");
-            drivebase.forceAddLimelightMeasurement(drivebase.limelightPoseEstimate);
-            SmartDashboard.putBoolean(Constants.SmartDashboardKeys.QUEST_CONNECTED, false);
-        }
-
-        if (questNav.isTracking()) {
-            SmartDashboard.putBoolean(Constants.SmartDashboardKeys.QUEST_TRACKING, true);
-        } else {
-            SmartDashboard.putBoolean(Constants.SmartDashboardKeys.QUEST_TRACKING, false);
-        }
-
-        questTestLogger.update("Quest periodic");
-
-        // This method must be called once per scheduler run
         questNav.commandPeriodic();
 
-        // Update pose Frames
-        poseFrames = questNav.getAllUnreadPoseFrames();
-        // Display number of frames provided
-        SmartDashboard.putNumber("qFrames", poseFrames.length);
-        for (PoseFrame questFrame : poseFrames) {
-            if (questNav.isTracking()) {
-                questLogger.update(questFrame.questPose3d().toPose2d().toString());
-                drivebase.addQuestMeasurement(questFrame.questPose3d().toPose2d(), questFrame.dataTimestamp());
-            }
+        PoseFrame[] questFrames = questNav.getAllUnreadPoseFrames();
+
+        for (PoseFrame questFrame : questFrames) {
+            //get quest pose
+            Pose3d questPose = questFrame.questPose3d();
+            //get timestamp for that pose
+            double timestamp = questFrame.dataTimestamp();
+
+            Pose3d robotPose = questPose.transformBy(Constants.ROBOT_TO_QUEST.inverse());
+
+            RobotContainer.drivebase.addQuestPose(robotPose.toPose2d(), timestamp);
+
+            String robotPoseString = robotPose.toString();
+            SmartDashboard.putString(Constants.SmartDashboardKeys.QUEST_POSE, robotPoseString);
         }
+    }
+
+    public void resetQuestPose(Pose3d newPose) {
+        questNav.setPose(newPose);
     }
 }

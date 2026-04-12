@@ -424,15 +424,6 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putBoolean(Constants.SmartDashboardKeys.FIELD_ORIENTED, fieldRelativeDriving);
   }
 
-  public void addQuestMeasurement(Pose2d pose, double timestampSeconds) {
-    robotPose = pose;
-  }
-
-  // This is for when the Questnav is not found.
-  public void forceAddLimelightMeasurement(Pose2d pose) {
-    robotPose = pose;
-  }
-
   //
   public void addLimelightMeasurement(Pose2d pose, double timestampSeconds) {
     this.limelightPoseEstimate = pose;
@@ -450,6 +441,11 @@ public class Drivebase extends SubsystemBase {
     this.sdsDrivebase.addVisionMeasurement(pose, timestampSeconds);
   }
 
+
+  public void addQuestPose(Pose2d pose, double timestampSeconds) {
+
+      this.sdsDrivebase.addVisionMeasurement(pose, timestampSeconds);
+  }
   /**
    * This function converts an ideal target position into an angle for the robot
    * to face accounting for velocity
