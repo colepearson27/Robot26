@@ -73,7 +73,7 @@ public class RobotContainer {
 
     // Vision based subsystems all send data to the drivebase for use
     public static VisionSubsystem visionSubsystem;
-    // public static QuestNavSubsystem questNavSubsystem;
+    public static QuestNavSubsystem questNavSubsystem;
 
     public final DriveCommand driveCommand;
 
@@ -172,7 +172,7 @@ public class RobotContainer {
         // while moving.
         drivebase = new Drivebase();
         visionSubsystem = new VisionSubsystem(drivebase);
-        // questNavSubsystem = new QuestNavSubsystem(drivebase);
+        questNavSubsystem = new QuestNavSubsystem();
 
         intake = new Intake();
         shooter = new Shooter(drivebase);
