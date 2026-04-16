@@ -135,7 +135,7 @@ public final class Constants {
     public static double LIMELIGHT_ROT_VELOCITY_LIMIT = 4;
 
     //TODO: Add quest transform values. 
-    public static Transform3d ROBOT_TO_QUEST = new Transform3d();
+    public static Transform3d ROBOT_TO_QUEST = new Transform3d(0.305, 0, 0, new Rotation3d(0, 0, 0));
     
     public static Pose3d ROBOT_TO_LIMELIGHT_FRONT = new Pose3d(0.305, 0, 0, new Rotation3d(0, -0.3491, 0));
     public static Pose3d ROBOT_TO_LIMELIGHT_RIGHT = new Pose3d(0.0762, 0.318, 0, new Rotation3d(0, -0.3491, -1.5708));
@@ -322,6 +322,7 @@ public final class Constants {
         // Vision
         public static final String SEND_FRONT_LIMELIGHT_INFO = "Send Front Limelight info";
         public static final String SEND_RIGHT_LIMELIGHT_INFO = "Send Right Limelight info";
+        public static final String USE_QUEST = "Use QuestNav?";
 
         // Drivebase
         public static final String PIGEON_GYRO = "Pigeon Gyro";
