@@ -47,10 +47,8 @@ public class Intake extends SubsystemBase {
     private boolean runIntake = false;
     private boolean reverseIntake = false;
 
-    private Drivebase drivebase;
 
     public Intake() {
-        this.drivebase = drivebase;
 
         this.canPivot = pivotMotor.isConnected();
         this.canSpin = intakeMotorLeft.isConnected() && intakeMotorRight.isConnected();
@@ -139,7 +137,7 @@ public class Intake extends SubsystemBase {
                 }
             } else {
                 // gets intake speed based off of robot speed. Faster robot = faster intake
-                double scaledIntakeSpeed = Constants.INTAKE_DEFAULT_TARGET_RPM * (RobotContainer.drivebase.getTotalVelocity() * 2 / 5.21);
+                double scaledIntakeSpeed = Constants.INTAKE_DEFAULT_TARGET_RPM * ((2 * RobotContainer.drivebase.getTotalVelocity()) / 5.21);
                 if (this.reverseIntake) {
                     //set rpm to a value between max rpm and min rpm, scaled by robot speed
                     setIntakeRPM(-clamp(Constants.INTAKE_DEFAULT_MINIMUM_RPM, Constants.INTAKE_DEFAULT_TARGET_RPM, scaledIntakeSpeed));

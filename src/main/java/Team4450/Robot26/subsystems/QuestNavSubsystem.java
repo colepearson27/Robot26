@@ -21,7 +21,7 @@ public class QuestNavSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.QUEST_CONNECTED, false);
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.QUEST_TRACKING, false);
         SmartDashboard.putBoolean(Constants.SmartDashboardKeys.QUEST_LOW_BATTERY, false);
-        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.USE_QUEST, false);
+        SmartDashboard.putBoolean(Constants.SmartDashboardKeys.USE_QUEST, true);
 
         questNav.onConnected(() -> SmartDashboard.putBoolean(Constants.SmartDashboardKeys.QUEST_CONNECTED, true));
         questNav.onDisconnected(() -> SmartDashboard.putBoolean(Constants.SmartDashboardKeys.QUEST_CONNECTED, false));
