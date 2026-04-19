@@ -374,7 +374,7 @@ public class Drivebase extends SubsystemBase {
      * @return Robot pose.
      */
     public Pose2d getPose() {
-        if (SmartDashboard.getBoolean(Constants.SmartDashboardKeys.USE_QUEST, false)) {
+        if (SmartDashboard.getBoolean(Constants.SmartDashboardKeys.USE_QUEST, true)) {
             return RobotContainer.questNavSubsystem.getQuestPose();
         } else {
             return getODPose();

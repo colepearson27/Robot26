@@ -192,7 +192,7 @@ public final class Constants {
     public static boolean HUB_TRACKING = false;
 
     // Interpolation table
-    public static double[] FLYWHEEL_SPEED_TABLE = { 3750, 3750, 3850, 4050, 4250, 4500, 4600, 3400 }; // Converted from
+    public static double[] FLYWHEEL_SPEED_TABLE = { 3650, 3650, 3750, 3950, 4150, 4400, 4500, 3300 }; // Converted from
                                                                                                 // percentages to
     // RPM
     public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = { 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5.5 };
@@ -238,8 +238,8 @@ public final class Constants {
     // Hopper motor constants
     public static final int HOPPER_MOTOR_CAN_ID = 12; // Example CAN ID for the Kraken X60 motor
 
-    public static final int INTAKE_DEFAULT_TARGET_RPM = 6500;
-    public static final int INTAKE_DEFAULT_MINIMUM_RPM = 2000;
+    public static final int INTAKE_DEFAULT_TARGET_RPM = 7000;
+    public static final int INTAKE_DEFAULT_MINIMUM_RPM = 5000;
     // PID constants for Intake
     public static final double INTAKE_kP = 0.8;
 

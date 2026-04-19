@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.DoubleSupplier;
+
+import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentricFacingAngle;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -158,10 +161,24 @@ public class DriveCommand extends Command {
             if (Math.abs(headingError) <= 5 || Math.abs(headingError) >= 355) {
                 RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0.3);
                 rotation = 0;
-                drivebase.setX();
             } else {
-                RobotContainer.shooter.stopFlywheel();
                 RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0);
+            }
+
+            Pose2d goalPose = (RobotContainer.shooter.getGoalPose());
+            double xDiff = Math.abs(goalPose.getX() - drivebase.getPose().getX());
+            double yDiff = Math.abs(goalPose.getY() - drivebase.getPose().getY());
+            double distToGoal = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+
+            if (distToGoal < 2 && Math.abs(headingError) < 8) {
+                rotation = 0;
+                drivebase.setX();
+            } else if (distToGoal > 2 && distToGoal < 4 && Math.abs(headingError) < 5) {
+                rotation = 0;
+                drivebase.setX();
+            } else if (distToGoal > 4 && Math.abs(headingError) < 3) {
+                rotation = 0;
+                drivebase.setX();
             }
 
             drivebase.drive(throttle, strafe, rotation);
