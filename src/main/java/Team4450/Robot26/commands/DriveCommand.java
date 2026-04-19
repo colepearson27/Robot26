@@ -160,6 +160,7 @@ public class DriveCommand extends Command {
                 rotation = 0;
                 drivebase.setX();
             } else {
+                RobotContainer.shooter.stopFlywheel();
                 RobotContainer.driverController.setRumble(RumbleType.kBothRumble, 0);
             }
 

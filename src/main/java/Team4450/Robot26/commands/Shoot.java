@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import Team4450.Robot26.Constants;
+import Team4450.Robot26.RobotContainer;
 
 public class Shoot extends Command {
     private Shooter shooter;
