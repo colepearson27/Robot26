@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import Team4450.Robot26.Constants;
+import Team4450.Robot26.RobotContainer;
 
 public class Shoot extends Command {
     private Shooter shooter;
@@ -77,7 +78,7 @@ public class Shoot extends Command {
             SmartDashboard.putNumber(Constants.SmartDashboardKeys.INFEED_TARGET_RPM, (Constants.INFEED_DEFAULT_TARGET_RPM - Math.max(shooter.flywheelRPMError * 5, 0)));
         }
 
-        if (pivotDelay.hasElapsed(1) && pviotIncrementTimer.hasElapsed(0.3) && SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0) > 0.1) {
+        if (pivotDelay.hasElapsed(1) && pviotIncrementTimer.hasElapsed(0.25) && SmartDashboard.getNumber(Constants.SmartDashboardKeys.PIVOT_POSITION, 0) > 0.1) {
             intake.incrementPivitUp(0.05);
             pviotIncrementTimer.reset();
             

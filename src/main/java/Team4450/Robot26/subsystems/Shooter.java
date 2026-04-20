@@ -351,7 +351,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean flywheelTooLow() {
-        if (Math.abs(this.currentRPM - this.targetRPM) < 500) {
+        if (Math.abs(this.currentRPM - this.targetRPM) < 300) {
             return false;
         } else {
             return true;

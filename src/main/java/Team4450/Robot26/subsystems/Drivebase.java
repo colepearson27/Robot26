@@ -374,7 +374,19 @@ public class Drivebase extends SubsystemBase {
      * @return Robot pose.
      */
     public Pose2d getPose() {
-        return getODPose();
+        if (RobotContainer.questNavSubsystem.useQuest()) {
+
+            if(!SmartDashboard.getBoolean(Constants.SmartDashboardKeys.ROBOT_CURRENTLY_USING_QUEST, false)){ 
+                RobotContainer.questNavSubsystem.resetQuest2d(getODPose());
+            }
+
+            SmartDashboard.putBoolean(Constants.SmartDashboardKeys.ROBOT_CURRENTLY_USING_QUEST, true);
+            return RobotContainer.questNavSubsystem.getQuestPose();
+
+        } else {
+            SmartDashboard.putBoolean(Constants.SmartDashboardKeys.ROBOT_CURRENTLY_USING_QUEST, false);
+            return getODPose();
+        }
     }
 
   // Get the sds ordometry rotation velocity in radians per second

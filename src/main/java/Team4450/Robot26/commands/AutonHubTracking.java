@@ -65,7 +65,7 @@ public class AutonHubTracking extends Command {
 
         // Decides where to track
         // If both inputs are zero and the alliance is blue then
-        Pose2d drivebasePose = drivebase.getODPose();
+        Pose2d drivebasePose = drivebase.getPose();
         if (!drivebase.wallTrackingLeft && !drivebase.wallTrackingRight) {
             targetHeading = drivebase.getAngleToAim(drivebasePose, hubPosition);
         } else {

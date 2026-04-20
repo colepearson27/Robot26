@@ -1,0 +1,132 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.41896429513573,
+        "y": 0.44992390344897104
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.629367536044942,
+        "y": 0.4399692597909073
+      },
+      "isLocked": false,
+      "linkedName": "RS"
+    },
+    {
+      "anchor": {
+        "x": 8.34206714133785,
+        "y": 1.427639233596832
+      },
+      "prevControl": {
+        "x": 7.856813794357109,
+        "y": 0.4891963874260312
+      },
+      "nextControl": {
+        "x": 8.595674683477919,
+        "y": 1.9180968165009473
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.783205047395953,
+        "y": 2.9666594615291317
+      },
+      "prevControl": {
+        "x": 8.462870472255153,
+        "y": 2.629156061158669
+      },
+      "nextControl": {
+        "x": 7.458313445865273,
+        "y": 3.12799181162054
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.917180517984162,
+        "y": 2.582796597406749
+      },
+      "prevControl": {
+        "x": 6.2808798386315425,
+        "y": 2.407797367586111
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Bump Shoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 2.6277602523659302,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Bum",
+      "minWaypointRelativePos": 2.697297297297297,
+      "maxWaypointRelativePos": 2.902702702702705,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 270.0,
+        "maxAngularAcceleration": 270.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "intakeDown",
+      "waypointRelativePos": 0.3027027027027027,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "intakeDown"
+        }
+      }
+    },
+    {
+      "name": "intake",
+      "waypointRelativePos": 0.5621621621621622,
+      "endWaypointRelativePos": 2.7189189189189182,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "intake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 270.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 40.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 2.0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": false
+}

@@ -47,10 +47,8 @@ public class Intake extends SubsystemBase {
     private boolean runIntake = false;
     private boolean reverseIntake = false;
 
-    private Drivebase drivebase;
 
     public Intake() {
-        this.drivebase = drivebase;
 
         this.canPivot = pivotMotor.isConnected();
         this.canSpin = intakeMotorLeft.isConnected() && intakeMotorRight.isConnected();
@@ -131,20 +129,23 @@ public class Intake extends SubsystemBase {
         }
 
         if (this.runIntake) {
-            if (Constants.robot.isAutonomous()) {
+            if (SmartDashboard.getBoolean(Constants.SmartDashboardKeys.AUTONOMOUS_ACTIVE, true)) {
                 if (this.reverseIntake) {
                     setIntakeRPM(-Constants.INTAKE_DEFAULT_TARGET_RPM);
                 } else {
                     setIntakeRPM(Constants.INTAKE_DEFAULT_TARGET_RPM);
                 }
             } else {
+                double maxRPM = Constants.INTAKE_DEFAULT_TARGET_RPM;
+                double minRPM = Constants.INTAKE_DEFAULT_MINIMUM_RPM;
                 // gets intake speed based off of robot speed. Faster robot = faster intake
-                double scaledIntakeSpeed = Constants.INTAKE_DEFAULT_TARGET_RPM * (RobotContainer.drivebase.getTotalVelocity() * 2 / 5.21);
+                double scaledIntakeSpeed = (maxRPM - minRPM) * ((2 * RobotContainer.drivebase.getTotalVelocity()) / 5.21);
+                SmartDashboard.putNumber("scaledIntakeSpeed", scaledIntakeSpeed);
                 if (this.reverseIntake) {
                     //set rpm to a value between max rpm and min rpm, scaled by robot speed
-                    setIntakeRPM(-clamp(Constants.INTAKE_DEFAULT_MINIMUM_RPM, Constants.INTAKE_DEFAULT_TARGET_RPM, scaledIntakeSpeed));
+                    setIntakeRPM(-clamp(minRPM, maxRPM, scaledIntakeSpeed));
                 } else {
-                    setIntakeRPM(clamp(Constants.INTAKE_DEFAULT_MINIMUM_RPM, Constants.INTAKE_DEFAULT_TARGET_RPM, scaledIntakeSpeed));
+                    setIntakeRPM(clamp(minRPM, maxRPM, scaledIntakeSpeed));
                 }
             }
         }
@@ -219,7 +220,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void slowIntake() {
-        this.intakeMotorLeft.set(0.30);
+        this.intakeMotorLeft.set(0.60);
         this.intakeMotorRight.setControl(new Follower(this.intakeMotorLeft.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
