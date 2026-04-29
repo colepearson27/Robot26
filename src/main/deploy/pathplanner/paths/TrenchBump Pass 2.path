@@ -36,28 +36,28 @@
         "y": 0.7073701298701303
       },
       "prevControl": {
-        "x": 6.69943722943723,
-        "y": 0.5306818181818187
+        "x": 6.708664114174569,
+        "y": 0.5123905415223707
       },
       "nextControl": {
-        "x": 8.036537871366491,
-        "y": 1.1640452801483123
+        "x": 9.111685141030843,
+        "y": 1.8003606517180741
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.925205627705627,
-        "y": 3.750335497835498
+        "x": 6.87217612790855,
+        "y": 3.3910539265422086
       },
       "prevControl": {
-        "x": 7.327662337662337,
-        "y": 3.7012554112554117
+        "x": 7.698792148606602,
+        "y": 3.317740547213205
       },
       "nextControl": {
-        "x": 6.175500446079191,
-        "y": 3.841762959009453
+        "x": 6.119869734330578,
+        "y": 3.4577767127246495
       },
       "isLocked": false,
       "linkedName": null
@@ -102,12 +102,20 @@
       "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 2.2634069400630903,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 2.0560183359621447,
+      "rotationDegrees": -119.99999999999999
     },
     {
       "waypointRelativePos": 3.563091482649841,
       "rotationDegrees": 29.999999999999996
+    },
+    {
+      "waypointRelativePos": 4.046295839905364,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 4.64412460567823,
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
@@ -125,12 +133,12 @@
       }
     },
     {
-      "name": "Stop Accel",
-      "minWaypointRelativePos": 4.85,
-      "maxWaypointRelativePos": 5.0,
+      "name": "Bump",
+      "minWaypointRelativePos": 4.0018651463963995,
+      "maxWaypointRelativePos": 4.65772804054054,
       "constraints": {
-        "maxVelocity": 5.2,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 2.0,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 270.0,
         "maxAngularAcceleration": 270.0,
         "nominalVoltage": 12.0,
@@ -154,7 +162,7 @@
     {
       "name": "intake",
       "waypointRelativePos": 1.9279279279279287,
-      "endWaypointRelativePos": 4.541366906474815,
+      "endWaypointRelativePos": 4.847902590090091,
       "command": {
         "type": "named",
         "data": {

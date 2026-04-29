@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.41896429513573,
-        "y": 0.44992390344897104
+        "x": 4.419028182263155,
+        "y": 0.6418832800539678
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.629367536044942,
-        "y": 0.4399692597909073
+        "x": 6.629431423172367,
+        "y": 0.631928636395904
       },
       "isLocked": false,
       "linkedName": "RS"
     },
     {
       "anchor": {
-        "x": 8.34206714133785,
-        "y": 1.427639233596832
+        "x": 7.858685868168289,
+        "y": 1.5044614109848489
       },
       "prevControl": {
-        "x": 7.856813794357109,
-        "y": 0.4891963874260312
+        "x": 7.087681847339563,
+        "y": 0.7821743585250212
       },
       "nextControl": {
-        "x": 8.595674683477919,
-        "y": 1.9180968165009473
+        "x": 8.368428579883657,
+        "y": 1.9819953158820351
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.783205047395953,
-        "y": 2.9666594615291317
+        "x": 6.875742102949134,
+        "y": 3.2681236471861475
       },
       "prevControl": {
-        "x": 8.462870472255153,
-        "y": 2.629156061158669
+        "x": 8.586604902259198,
+        "y": 4.127485288149352
       },
       "nextControl": {
-        "x": 7.458313445865273,
-        "y": 3.12799181162054
+        "x": 6.186982375791459,
+        "y": 2.922161545725831
       },
       "isLocked": false,
       "linkedName": null
@@ -63,21 +63,29 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.7,
+      "rotationDegrees": -125.00000000000001
+    },
+    {
+      "waypointRelativePos": 1.3772673501577288,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 2.6277602523659302,
+      "waypointRelativePos": 2.3657087933753944,
+      "rotationDegrees": 20.0
+    },
+    {
+      "waypointRelativePos": 2.8820361790220823,
       "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
     {
       "name": "Bum",
-      "minWaypointRelativePos": 2.697297297297297,
+      "minWaypointRelativePos": 2.7520270270270273,
       "maxWaypointRelativePos": 2.902702702702705,
       "constraints": {
-        "maxVelocity": 4.0,
-        "maxAcceleration": 2.0,
+        "maxVelocity": 2.0,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 270.0,
         "maxAngularAcceleration": 270.0,
         "nominalVoltage": 12.0,
@@ -126,7 +134,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 2.0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }
