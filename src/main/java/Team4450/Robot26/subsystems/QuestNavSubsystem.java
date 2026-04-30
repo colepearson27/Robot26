@@ -38,7 +38,6 @@ public class QuestNavSubsystem extends SubsystemBase {
         // Initialize a blank pose3d
         questNav.setPose(new Pose3d());
     }
-
     @Override
     public void periodic() {
         questNav.commandPeriodic();
@@ -88,7 +87,7 @@ public class QuestNavSubsystem extends SubsystemBase {
     }
 
     public boolean questAgainstWall() {
-        if ((robotPose.getX() < 0.50 && robotRotation > 172 && robotRotation < -172) 
+        if ((robotPose.getX() < 0.65 && robotRotation > 172 && robotRotation < -172) 
                 || (robotPose.getX() > 16 && robotRotation < 8 && robotRotation > -8)
                 || (robotPose.getY() < 0.6 && robotRotation > -98 && robotRotation < -82)
                 || (robotPose.getY() > 7.5 && robotRotation < 98 && robotRotation > 82)) {

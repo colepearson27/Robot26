@@ -37,6 +37,18 @@ public class AutonHubTracking extends Command {
 
     @Override
     public void execute() {
+        // This is the default command for the Drivebase. When running in autonmous, the
+        // auto commands
+        // require Drivebase, which preempts the default Drivebase command. However, if
+        // our auto code ends
+        // before end of auto period, then this drive command resumes and is feeding
+        // drivebase during remainder
+        // of auto period. This was not an issue until the joystick drift problems
+        // arose, so the resumption of a
+        // driving command during auto had the robot driving randomly after our auto
+        // program completed. The if
+        // statment below prevents this.
+
         // Somewhere in here for the pose estimate for the robot there is a problem
         // where on the red side the robot seems to point to the left. There does not
         // seem to be a problem with the blue side
