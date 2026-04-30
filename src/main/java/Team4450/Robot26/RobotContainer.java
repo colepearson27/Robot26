@@ -385,9 +385,13 @@ public class RobotContainer {
                 .whileTrue(new Shoot(drivebase, shooter, hopper, intake));
 
         new Trigger(() -> driverController.getRightTrigger())
-                .onTrue(new InstantCommand(shooter::enableManualDistanceFour))
+                .onTrue(new InstantCommand(shooter::enableManualDistanceTwo))
                 .whileTrue(new Shoot(drivebase, shooter, hopper, intake))
-                .onFalse(new InstantCommand(shooter::disableManualDistanceFour));
+                .onTrue(new InstantCommand(shooter::disableManualDistanceTwo));
+
+                // .onTrue(new InstantCommand(shooter::enableManualDistanceFour))
+                // .whileTrue(new Shoot(drivebase, shooter, hopper, intake))
+                // .onFalse(new InstantCommand(shooter::disableManualDistanceFour));
 
         new Trigger(() -> driverController.getAButton())
                 .onTrue(new InstantCommand(drivebase::setBumpHappened));

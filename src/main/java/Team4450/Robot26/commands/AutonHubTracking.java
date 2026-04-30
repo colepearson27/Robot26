@@ -69,8 +69,7 @@ public class AutonHubTracking extends Command {
         targetHeading = normalizeAngle(targetHeading);
         SmartDashboard.putNumber(Constants.SmartDashboardKeys.TARGET_HEADING, targetHeading);
 
-        // double drivebaseYaw = drivebase.getODPose().getRotation().getDegrees();
-        double drivebaseYaw = drivebase.getPose().getRotation().getDegrees();
+        double drivebaseYaw = drivebase.getODPose().getRotation().getDegrees();
         double headingError = drivebaseYaw - targetHeading;
         SmartDashboard.putNumber("Heading Error", headingError);
 
