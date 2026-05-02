@@ -234,6 +234,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
   }
 
+  public void resetRobotAndQuestPose(Pose2d pose) {
+      this.resetPose(pose);
+
+      RobotContainer.questNavSubsystem.resetQuest2d(pose);
+  }
+
   public ChassisSpeeds getSpeeds() {
     return getSpeeds();
   }

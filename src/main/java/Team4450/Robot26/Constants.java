@@ -135,7 +135,7 @@ public final class Constants {
     public static double LIMELIGHT_ROT_VELOCITY_LIMIT = 4;
 
     //TODO: Add quest transform values. 
-    public static Transform3d ROBOT_TO_QUEST = new Transform3d();
+    public static Transform3d ROBOT_TO_QUEST = new Transform3d(0.305, 0, 0, new Rotation3d(0, 0, 0));
     
     public static Pose3d ROBOT_TO_LIMELIGHT_FRONT = new Pose3d(0.305, 0, 0, new Rotation3d(0, -0.3491, 0));
     public static Pose3d ROBOT_TO_LIMELIGHT_RIGHT = new Pose3d(0.0762, 0.318, 0, new Rotation3d(0, -0.3491, -1.5708));
@@ -192,7 +192,7 @@ public final class Constants {
     public static boolean HUB_TRACKING = false;
 
     // Interpolation table
-    public static double[] FLYWHEEL_SPEED_TABLE = { 3550, 3550, 3650, 3850, 4050, 4300, 4400, 3200 }; // Converted from
+    public static double[] FLYWHEEL_SPEED_TABLE = { 3650, 3650, 3750, 3950, 4150, 4400, 4500, 4000 }; // Converted from
                                                                                                 // percentages to
     // RPM
     public static double[] FLYWHEEL_SPEED_DISTANCE_TABLE = { 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5.5 };
@@ -238,8 +238,8 @@ public final class Constants {
     // Hopper motor constants
     public static final int HOPPER_MOTOR_CAN_ID = 12; // Example CAN ID for the Kraken X60 motor
 
-    public static final int INTAKE_DEFAULT_TARGET_RPM = 6500;
-    public static final int INTAKE_DEFAULT_MINIMUM_RPM = 2000;
+    public static final int INTAKE_DEFAULT_TARGET_RPM = 7000;
+    public static final int INTAKE_DEFAULT_MINIMUM_RPM = 5000;
     // PID constants for Intake
     public static final double INTAKE_kP = 0.8;
 
@@ -310,6 +310,8 @@ public final class Constants {
         public static final String QUEST_LOW_BATTERY = "Quest Low Battery";
         public static final String QUEST_BATTERY_PERCENTAGE = "Quest Battery Percentage";
         public static final String QUEST_POSE = "Quest Pose";
+        public static final String USE_QUEST = "Use QuestNav?";
+        public static final String ROBOT_CURRENTLY_USING_QUEST = "ROBOT IS USING QUEST";
 
         // Control Flow
         public static final String DISABLED = "Disabled";
